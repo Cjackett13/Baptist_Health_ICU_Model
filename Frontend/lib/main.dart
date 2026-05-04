@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'alert_system.dart';
+import 'empty_rooms.dart';
 import 'plus_sign.dart';
 
 void main() {
@@ -221,9 +222,13 @@ class _HomePageState extends State<HomePage> {
                   child: const Text('Select hospital'),
                 ),
               ),
-              const SizedBox(width: 10),
+              const Spacer(),
               PlusSignButton(onPatientCreated: _addPatient),
               const Spacer(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: const EmptyRoomsButton(),
+              ),
             ],
           ),
         ),
