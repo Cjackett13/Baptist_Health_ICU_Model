@@ -101,10 +101,16 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
   }
 
   @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
@@ -112,6 +118,17 @@ class _HomePageState extends State<HomePage> {
   late final List<PatientRecord> _patients = List<PatientRecord>.from(
     _seedPatients,
   );
+
+  List<PatientRecord> get _filteredPatients {
+    final query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) return _patients;
+    return _patients.where((patient) {
+      return patient.name.toLowerCase().contains(query) ||
+          patient.id.toLowerCase().contains(query) ||
+          patient.roomNumber.toLowerCase().contains(query) ||
+          patient.condition.toLowerCase().contains(query);
+    }).toList();
+  }
 
   void _addPatient(PatientRecord patient) {
     setState(() {
@@ -147,6 +164,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final filteredPatients = _filteredPatients;
     return Scaffold(
       body: Stack(
         children: [
@@ -161,17 +179,92 @@ class _HomePageState extends State<HomePage> {
                   hintText: 'Search patients…',
                 ),
               ),
-              const Expanded(
-                child: ColoredBox(color: BhColors.background),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 100),
+                  itemCount: filteredPatients.length,
+                  itemBuilder: (context, index) {
+                    final patient = filteredPatients[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: BhColors.slate.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 14,
+                            backgroundColor: BhColors.primary.withValues(alpha: 0.2),
+                            child: Text(
+                              '${patient.rank}',
+                              style: const TextStyle(
+                                color: BhColors.ink,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  patient.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${patient.id}  •  ${patient.roomNumber}',
+                                  style: TextStyle(
+                                    color: BhColors.ink.withValues(alpha: 0.7),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  patient.condition,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                if (patient.issue != null) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    patient.issue!,
+                                    style: TextStyle(
+                                      color: BhColors.ink.withValues(alpha: 0.75),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
           Align(
-            alignment: Alignment.bottomLeft,
+            alignment: Alignment.bottomRight,
             child: SafeArea(
               top: false,
               child: Padding(
-                padding: const EdgeInsets.only(left: 14, bottom: 14),
+                padding: const EdgeInsets.only(right: 14, bottom: 14),
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -188,26 +281,8 @@ class _HomePageState extends State<HomePage> {
                       color: BhColors.slate.withValues(alpha: 0.12),
                     ),
                   ),
-                  child: FilledButton(
-                    onPressed: () {},
-                    style: FilledButton.styleFrom(
-                      backgroundColor: BhColors.slate,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 22,
-                        vertical: 14,
-                      ),
-                      textStyle: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        letterSpacing: 0.2,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text('Select hospital'),
+                  child: PlusSignButton(
+                    onPatientCreated: _addPatient,
                   ),
                 ),
               ),
