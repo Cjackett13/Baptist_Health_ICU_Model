@@ -7,8 +7,9 @@ class PatientRecord {
     required this.id,
     required this.condition,
     required this.roomNumber,
-    required this.primaryDoctor,
-    required this.issue,
+    this.primaryDoctor,
+    this.issue,
+    this.vitals,
   });
 
   final int rank;
@@ -16,8 +17,9 @@ class PatientRecord {
   final String id;
   final String condition;
   final String roomNumber;
-  final String primaryDoctor;
-  final String issue;
+  final String? primaryDoctor;
+  final String? issue;
+  final String? vitals;
 }
 
 class PatientListCard extends StatelessWidget {
@@ -203,6 +205,8 @@ void showPatientDetails(BuildContext context, PatientRecord patient) {
             _detailRow('Primary care doctor', patient.primaryDoctor),
             const SizedBox(height: 12),
             _detailRow('Issue', patient.issue),
+            const SizedBox(height: 12),
+            _detailRow('Vitals', patient.vitals),
             const SizedBox(height: 24),
             Center(
               child: FilledButton(
@@ -254,7 +258,8 @@ Color _conditionColor(String condition) {
   return Colors.green;
 }
 
-Widget _detailRow(String title, String value) {
+Widget _detailRow(String title, String? value) {
+  final displayValue = (value == null || value.trim().isEmpty) ? 'N/A' : value;
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -270,7 +275,7 @@ Widget _detailRow(String title, String value) {
       ),
       Expanded(
         child: Text(
-          value,
+          displayValue,
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w500,

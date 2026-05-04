@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'alert_system.dart';
+import 'plus_sign.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,10 +39,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static final _patients = <PatientRecord>[
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  static final _seedPatients = <PatientRecord>[
     const PatientRecord(
       rank: 1,
       name: 'Jordan Smith',
@@ -88,6 +94,42 @@ class HomePage extends StatelessWidget {
       issue: 'Routine monitoring and support',
     ),
   ];
+
+  late final List<PatientRecord> _patients = List<PatientRecord>.from(
+    _seedPatients,
+  );
+
+  void _addPatient(PatientRecord patient) {
+    setState(() {
+      _patients.insert(
+        0,
+        PatientRecord(
+          rank: 1,
+          name: patient.name,
+          id: patient.id,
+          condition: patient.condition,
+          roomNumber: patient.roomNumber,
+          primaryDoctor: patient.primaryDoctor,
+          issue: patient.issue,
+          vitals: patient.vitals,
+        ),
+      );
+
+      for (var i = 0; i < _patients.length; i++) {
+        final current = _patients[i];
+        _patients[i] = PatientRecord(
+          rank: i + 1,
+          name: current.name,
+          id: current.id,
+          condition: current.condition,
+          roomNumber: current.roomNumber,
+          primaryDoctor: current.primaryDoctor,
+          issue: current.issue,
+          vitals: current.vitals,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +221,8 @@ class HomePage extends StatelessWidget {
                   child: const Text('Select hospital'),
                 ),
               ),
+              const SizedBox(width: 10),
+              PlusSignButton(onPatientCreated: _addPatient),
               const Spacer(),
             ],
           ),
