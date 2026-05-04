@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'alert_system.dart';
+import 'plus_sign.dart';
 import 'package:flutter_application_1/search_input.dart';
 
 void main() {
@@ -46,6 +48,53 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static final _seedPatients = <PatientRecord>[
+    const PatientRecord(
+      rank: 1,
+      name: 'Jordan Smith',
+      id: 'P-32491',
+      condition: 'Critical',
+      roomNumber: 'ICU 4A',
+      primaryDoctor: 'Dr. Maya Chen',
+      issue: 'Acute respiratory distress with elevated heart rate',
+    ),
+    const PatientRecord(
+      rank: 2,
+      name: 'Layla Torres',
+      id: 'P-45102',
+      condition: 'Moderate',
+      roomNumber: 'ICU 2C',
+      primaryDoctor: 'Dr. David Patel',
+      issue: 'Sepsis and unstable blood pressure',
+    ),
+    const PatientRecord(
+      rank: 3,
+      name: 'Rajiv Kumar',
+      id: 'P-88014',
+      condition: 'Moderate',
+      roomNumber: 'Step-down 1B',
+      primaryDoctor: 'Dr. Naomi Lee',
+      issue: 'Post-operative respiratory support',
+    ),
+    const PatientRecord(
+      rank: 4,
+      name: 'Amelia Johnson',
+      id: 'P-66520',
+      condition: 'Moderate',
+      roomNumber: 'Step-down 3D',
+      primaryDoctor: 'Dr. Jordan Ng',
+      issue: 'Recovering from pneumonia',
+    ),
+    const PatientRecord(
+      rank: 5,
+      name: 'Marcus Reed',
+      id: 'P-99133',
+      condition: 'Stable',
+      roomNumber: 'Ward 5A',
+      primaryDoctor: 'Dr. Emily Brooks',
+      issue: 'Routine monitoring and support',
+    ),
+  ];
   late final TextEditingController _searchController;
 
   @override
@@ -58,6 +107,42 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  late final List<PatientRecord> _patients = List<PatientRecord>.from(
+    _seedPatients,
+  );
+
+  void _addPatient(PatientRecord patient) {
+    setState(() {
+      _patients.insert(
+        0,
+        PatientRecord(
+          rank: 1,
+          name: patient.name,
+          id: patient.id,
+          condition: patient.condition,
+          roomNumber: patient.roomNumber,
+          primaryDoctor: patient.primaryDoctor,
+          issue: patient.issue,
+          vitals: patient.vitals,
+        ),
+      );
+
+      for (var i = 0; i < _patients.length; i++) {
+        final current = _patients[i];
+        _patients[i] = PatientRecord(
+          rank: i + 1,
+          name: current.name,
+          id: current.id,
+          condition: current.condition,
+          roomNumber: current.roomNumber,
+          primaryDoctor: current.primaryDoctor,
+          issue: current.issue,
+          vitals: current.vitals,
+        );
+      }
+    });
   }
 
   @override
