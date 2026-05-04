@@ -12,18 +12,10 @@ class SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bg = Theme.of(context).scaffoldBackgroundColor;
     return Container(
       height: 80,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(12, 26),
-            blurRadius: 50,
-            spreadRadius: 0,
-            color: Colors.grey.withOpacity(0.1),
-          ),
-        ],
-      ),
+      color: bg,
       child: TextField(
         controller: textController,
         onChanged: (value) {
@@ -35,7 +27,7 @@ class SearchInput extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurface,
           ),
           filled: true,
-          fillColor: Theme.of(context).colorScheme.surface,
+          fillColor: bg,
           hintText: hintText,
           hintStyle: TextStyle(
             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
