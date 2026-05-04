@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'alert_system.dart';
+import 'empty_rooms.dart';
 import 'plus_sign.dart';
 import 'package:flutter_application_1/search_input.dart';
 
@@ -259,36 +260,44 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 14, bottom: 14),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: BhColors.ink.withValues(alpha: 0.08),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                    border: Border.all(
-                      color: BhColors.slate.withValues(alpha: 0.12),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: Colors.black12)),
+          ),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+          child: Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: 52,
+                child: FilledButton(
+                  onPressed: () {},
+                  style: FilledButton.styleFrom(
+                    backgroundColor: BhColors.slate,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: PlusSignButton(
-                    onPatientCreated: _addPatient,
-                  ),
+                  child: const Text('Select hospital'),
                 ),
               ),
-            ),
+              const Spacer(),
+              PlusSignButton(onPatientCreated: _addPatient),
+              const Spacer(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: const EmptyRoomsButton(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
