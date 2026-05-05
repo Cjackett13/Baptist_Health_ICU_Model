@@ -192,6 +192,16 @@ class _HomePageState extends State<HomePage> {
                   onFilterTap: _openFilterSheet,
                   isFilterActive: _hasActiveFilters,
                 ),
+                const SizedBox(height: 8),
+                Text(
+                  '${_filteredPatients.length} '
+                  '${_filteredPatients.length == 1 ? 'entry' : 'entries'} shown',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 16),
               ],
             ),
