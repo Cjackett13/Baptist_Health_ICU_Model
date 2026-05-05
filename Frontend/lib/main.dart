@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'alert_system.dart';
+import 'demo_hospitals.dart';
 import 'empty_rooms.dart';
 import 'patient_search_bar.dart';
 import 'plus_sign.dart';
@@ -50,16 +51,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static final _seedPatients = _buildSeedPatients();
-
-  late final List<PatientRecord> _patients = List<PatientRecord>.from(
-    _seedPatients,
-  );
+  late DemoHospital _selectedHospital = demoHospitals.first;
+  late List<String> _emptyRooms = List<String>.from(_selectedHospital.emptyIcuRooms);
+  late List<PatientRecord> _patients = _buildSeedPatientsForHospital(_selectedHospital);
 
   final TextEditingController _searchController = TextEditingController();
   String? _selectedCondition;
   String? _selectedDoctor;
   String? _selectedUnit;
+
+  void _setHospital(DemoHospital hospital) {
+    setState(() {
+      _selectedHospital = hospital;
+      _emptyRooms = List<String>.from(hospital.emptyIcuRooms);
+      _patients = _buildSeedPatientsForHospital(hospital);
+      _searchController.clear();
+      _selectedCondition = null;
+      _selectedDoctor = null;
+      _selectedUnit = null;
+    });
+  }
 
   List<PatientRecord> get _filteredPatients {
     final query = _searchController.text.trim().toLowerCase();
@@ -232,11 +243,17 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
-              const SizedBox(width: 52, child: SelectHospitalButton()),
+              SelectHospitalButton(
+                selectedHospital: _selectedHospital,
+                onHospitalSelected: _setHospital,
+              ),
               const Spacer(),
               PlusSignButton(onPatientCreated: _addPatient),
               const Spacer(),
-              const SizedBox(width: 52, child: EmptyRoomsButton()),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: EmptyRoomsButton(emptyRooms: _emptyRooms),
+              ),
             ],
           ),
         ),
@@ -245,7 +262,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-List<PatientRecord> _buildSeedPatients() {
+List<PatientRecord> _buildSeedPatientsForHospital(DemoHospital hospital) {
   const firstNames = <String>[
     'Jordan',
     'Layla',
@@ -288,20 +305,24 @@ List<PatientRecord> _buildSeedPatients() {
   ];
   const conditions = <String>['Critical', 'Moderate', 'Stable'];
 
+  final roomPool = hospital.emptyIcuRooms.isEmpty
+      ? const <String>['ICU 1A', 'ICU 1B', 'ICU 1C']
+      : hospital.emptyIcuRooms;
+
+  final salt = hospital.id.codeUnits.fold<int>(0, (acc, c) => acc + c);
   final patients = <PatientRecord>[];
   for (var i = 0; i < 100; i++) {
-    final firstName = firstNames[i % firstNames.length];
-    final lastName = lastNames[(i ~/ firstNames.length) % lastNames.length];
-    final floor = (i % 5) + 1;
-    final wing = String.fromCharCode(65 + (i % 4));
+    final firstName = firstNames[(i + salt) % firstNames.length];
+    final lastName = lastNames[((i + (salt ~/ 3)) ~/ firstNames.length) % lastNames.length];
+    final room = roomPool[(i + (salt % 7)) % roomPool.length];
 
     patients.add(
       PatientRecord(
         rank: i + 1,
         name: '$firstName $lastName',
-        id: 'P-${30000 + i}',
+        id: 'P-${30000 + i + (salt % 900)}',
         condition: conditions[i % conditions.length],
-        roomNumber: 'ICU $floor$wing',
+        roomNumber: room,
         primaryDoctor: doctors[i % doctors.length],
         issue: issues[i % issues.length],
       ),
