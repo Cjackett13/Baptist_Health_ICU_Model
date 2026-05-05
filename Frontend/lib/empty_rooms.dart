@@ -28,12 +28,13 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
         style: FilledButton.styleFrom(
           backgroundColor: const Color(0xFF393E46),
           foregroundColor: Colors.white,
+          padding: const EdgeInsets.all(12),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text('Empty rooms'),
+        child: const Icon(Icons.hotel),
       ),
     );
   }

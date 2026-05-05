@@ -189,22 +189,17 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Colors.black12)),
-          ),
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
-              const SelectHospitalButton(),
-              const Spacer(),
-              PlusSignButton(onPatientCreated: _addPatient),
-              const Spacer(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: const EmptyRoomsButton(),
-              ),
+              Spacer(flex: 1),
+              Expanded(flex: 1, child: const SelectHospitalButton()),
+              Spacer(flex: 1),
+              Expanded(flex: 1, child: PlusSignButton(onPatientCreated: _addPatient)),
+              Spacer(flex: 1),
+              Expanded(flex: 1, child: const EmptyRoomsButton()),
+              Spacer(flex: 1),
             ],
           ),
         ),
