@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'alert_system.dart';
 import 'empty_rooms.dart';
+import 'patient_search_bar.dart';
 import 'plus_sign.dart';
-import 'package:flutter_application_1/search_input.dart';
+import 'select_hospital_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -96,39 +97,18 @@ class _HomePageState extends State<HomePage> {
       issue: 'Routine monitoring and support',
     ),
   ];
-  late final TextEditingController _searchController;
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController = TextEditingController();
-    _searchController.addListener(_onSearchChanged);
-  }
+  late final List<PatientRecord> _patients = List<PatientRecord>.from(
+    _seedPatients,
+  );
 
-  void _onSearchChanged() {
-    setState(() {});
-  }
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
-  }
-
-  late final List<PatientRecord> _patients = List<PatientRecord>.from(
-    _seedPatients,
-  );
-
-  List<PatientRecord> get _filteredPatients {
-    final query = _searchController.text.trim().toLowerCase();
-    if (query.isEmpty) return _patients;
-    return _patients.where((patient) {
-      return patient.name.toLowerCase().contains(query) ||
-          patient.id.toLowerCase().contains(query) ||
-          patient.roomNumber.toLowerCase().contains(query) ||
-          patient.condition.toLowerCase().contains(query);
-    }).toList();
   }
 
   void _addPatient(PatientRecord patient) {
@@ -167,98 +147,47 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final filteredPatients = _filteredPatients;
     return Scaffold(
-      body: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const _PineAppHeader(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: SearchInput(
-                  textController: _searchController,
-                  hintText: 'Search patients…',
+          const _PineAppHeader(),
+          Container(
+            color: const Color(0xFFF2F2F2),
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Patient priority list',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
+                const SizedBox(height: 12),
+                PatientSearchBar(controller: _searchController),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: const Color(0xFFF2F2F2),
+              child: ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                itemCount: _patients.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final patient = _patients[index];
+                  return PatientListCard(
+                    patient: patient,
+                    onTap: () => showPatientDetails(context, patient),
+                  );
+                },
               ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 100),
-                  itemCount: filteredPatients.length,
-                  itemBuilder: (context, index) {
-                    final patient = filteredPatients[index];
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: BhColors.slate.withValues(alpha: 0.15),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 14,
-                            backgroundColor: BhColors.primary.withValues(alpha: 0.2),
-                            child: Text(
-                              '${patient.rank}',
-                              style: const TextStyle(
-                                color: BhColors.ink,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  patient.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '${patient.id}  •  ${patient.roomNumber}',
-                                  style: TextStyle(
-                                    color: BhColors.ink.withValues(alpha: 0.7),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  patient.condition,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                if (patient.issue != null) ...[
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    patient.issue!,
-                                    style: TextStyle(
-                                      color: BhColors.ink.withValues(alpha: 0.75),
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
@@ -272,22 +201,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: 52,
-                child: FilledButton(
-                  onPressed: () {},
-                  style: FilledButton.styleFrom(
-                    backgroundColor: BhColors.slate,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Select hospital'),
-                ),
-              ),
+              const SelectHospitalButton(),
               const Spacer(),
               PlusSignButton(onPatientCreated: _addPatient),
               const Spacer(),
@@ -340,19 +254,19 @@ class _PineAppHeader extends StatelessWidget {
                 Text(
                   'Baptist Health',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Georgia',
-                        letterSpacing: 0.2,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Georgia',
+                    letterSpacing: 0.2,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'ICU planning workspace',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.78),
-                        fontWeight: FontWeight.w500,
-                      ),
+                    color: Colors.white.withValues(alpha: 0.78),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
