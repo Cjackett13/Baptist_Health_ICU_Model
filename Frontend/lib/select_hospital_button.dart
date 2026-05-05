@@ -19,19 +19,20 @@ class SelectHospitalButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
+      width: height,
+      height: height,
       child: FilledButton(
         onPressed: onPressed ?? () {},
         style: FilledButton.styleFrom(
           backgroundColor: _kSlate,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.zero,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Icon(Icons.business),
+        child: const Icon(Icons.location_pin, size: 28),
       ),
     );
   }
