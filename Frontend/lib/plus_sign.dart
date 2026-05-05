@@ -10,7 +10,6 @@ class PlusSignButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 52,
       height: 52,
       child: FilledButton(
         onPressed: () => _showCreatePatientDialog(context),

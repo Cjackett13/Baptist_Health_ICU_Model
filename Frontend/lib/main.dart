@@ -203,6 +203,16 @@ class _HomePageState extends State<HomePage> {
                   onFilterTap: _openFilterSheet,
                   isFilterActive: _hasActiveFilters,
                 ),
+                const SizedBox(height: 8),
+                Text(
+                  '${_filteredPatients.length} '
+                  '${_filteredPatients.length == 1 ? 'entry' : 'entries'} shown',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 16),
               ],
             ),
@@ -229,11 +239,7 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Colors.black12)),
-          ),
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
