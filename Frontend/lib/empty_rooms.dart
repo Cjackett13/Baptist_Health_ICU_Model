@@ -34,7 +34,7 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(widget.label),
+        child: const Icon(Icons.bed_rounded, size: 24),
       ),
     );
   }

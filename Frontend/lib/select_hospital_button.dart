@@ -36,10 +36,7 @@ class SelectHospitalButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(
-          selectedHospital == null ? 'Select hospital' : 'Hospital: ${selectedHospital!.city}',
-          overflow: TextOverflow.ellipsis,
-        ),
+        child: const Icon(Icons.location_on_rounded, size: 24),
       ),
     );
   }
