@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'alert_system.dart';
 
 class PlusSignButton extends StatelessWidget {
-  const PlusSignButton({
-    required this.onPatientCreated,
-    super.key,
-  });
+  const PlusSignButton({required this.onPatientCreated, super.key});
 
   final ValueChanged<PatientRecord> onPatientCreated;
 
@@ -22,7 +19,9 @@ class PlusSignButton extends StatelessWidget {
           foregroundColor: Colors.white,
           padding: const EdgeInsets.all(12),
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: const Icon(Icons.add, size: 28),
       ),
@@ -35,7 +34,6 @@ class PlusSignButton extends StatelessWidget {
     final roomController = TextEditingController();
     final issueController = TextEditingController();
     final doctorController = TextEditingController();
-    final vitalsController = TextEditingController();
 
     final createdPatient = await showDialog<PatientRecord>(
       context: context,
@@ -72,12 +70,6 @@ class PlusSignButton extends StatelessWidget {
                     controller: doctorController,
                     label: 'Doctor',
                   ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    controller: vitalsController,
-                    label: 'Vitals',
-                    maxLines: 2,
-                  ),
                 ],
               ),
             ),
@@ -96,7 +88,9 @@ class PlusSignButton extends StatelessWidget {
                 if (name.isEmpty || id.isEmpty || room.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Please fill in name, ID, and room number.'),
+                      content: Text(
+                        'Please fill in name, ID, and room number.',
+                      ),
                     ),
                   );
                   return;
@@ -109,9 +103,8 @@ class PlusSignButton extends StatelessWidget {
                     id: id,
                     condition: 'Stable',
                     roomNumber: room,
-                    issue: _optionalValue(issueController.text),
-                    primaryDoctor: _optionalValue(doctorController.text),
-                    vitals: _optionalValue(vitalsController.text),
+                    issue: _optionalValue(issueController.text) ?? '',
+                    primaryDoctor: _optionalValue(doctorController.text) ?? '',
                   ),
                 );
               },
@@ -131,7 +124,6 @@ class PlusSignButton extends StatelessWidget {
     roomController.dispose();
     issueController.dispose();
     doctorController.dispose();
-    vitalsController.dispose();
   }
 
   static Widget _buildTextField({
