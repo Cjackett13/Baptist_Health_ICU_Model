@@ -122,7 +122,6 @@ class _HomePageState extends State<HomePage> {
           roomNumber: patient.roomNumber,
           primaryDoctor: patient.primaryDoctor,
           issue: patient.issue,
-          vitals: patient.vitals,
         ),
       );
 
@@ -136,7 +135,6 @@ class _HomePageState extends State<HomePage> {
           roomNumber: current.roomNumber,
           primaryDoctor: current.primaryDoctor,
           issue: current.issue,
-          vitals: current.vitals,
         );
       }
     });
