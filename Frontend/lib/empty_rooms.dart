@@ -22,6 +22,7 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       key: _buttonKey,
+      width: 52,
       height: 52,
       child: FilledButton(
         onPressed: () => _showEmptyRooms(context),
@@ -34,7 +35,7 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Icon(Icons.hotel),
+        child: const Icon(Icons.hotel, size: 28),
       ),
     );
   }

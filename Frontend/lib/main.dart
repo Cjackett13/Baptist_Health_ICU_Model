@@ -232,13 +232,11 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
-              Spacer(flex: 1),
-              Expanded(flex: 1, child: const SelectHospitalButton()),
-              Spacer(flex: 1),
-              Expanded(flex: 1, child: PlusSignButton(onPatientCreated: _addPatient)),
-              Spacer(flex: 1),
-              Expanded(flex: 1, child: const EmptyRoomsButton()),
-              Spacer(flex: 1),
+              const SizedBox(width: 52, child: SelectHospitalButton()),
+              const Spacer(),
+              PlusSignButton(onPatientCreated: _addPatient),
+              const Spacer(),
+              const SizedBox(width: 52, child: EmptyRoomsButton()),
             ],
           ),
         ),
