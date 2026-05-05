@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class EmptyRoomsButton extends StatefulWidget {
-  const EmptyRoomsButton({super.key});
+  const EmptyRoomsButton({
+    super.key,
+    required this.emptyRooms,
+    this.label = 'Empty rooms',
+  });
+
+  final List<String> emptyRooms;
+  final String label;
 
   @override
   State<EmptyRoomsButton> createState() => _EmptyRoomsButtonState();
@@ -9,14 +16,6 @@ class EmptyRoomsButton extends StatefulWidget {
 
 class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
   final GlobalKey _buttonKey = GlobalKey();
-
-  static const List<String> _emptyRooms = <String>[
-    'ICU 1A',
-    'ICU 1C',
-    'ICU 2B',
-    'ICU 3A',
-    'ICU 4D',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text('Empty rooms'),
+        child: Text(widget.label),
       ),
     );
   }
@@ -44,11 +43,18 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
       return;
     }
 
+    if (widget.emptyRooms.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No empty ICU rooms for this hospital.')),
+      );
+      return;
+    }
+
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final buttonBox = buttonContext.findRenderObject() as RenderBox;
     final buttonTopLeft = buttonBox.localToGlobal(Offset.zero, ancestor: overlay);
 
-    final menuHeight = (_emptyRooms.length + 1) * 48.0;
+    final menuHeight = (widget.emptyRooms.length + 1) * 48.0;
     final menuWidth = buttonBox.size.width;
     final left = buttonTopLeft.dx;
     final top = buttonTopLeft.dy - menuHeight - 8;
@@ -70,7 +76,7 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
-        ..._emptyRooms.map(
+        ...widget.emptyRooms.map(
           (room) => PopupMenuItem<void>(
             enabled: false,
             child: Text(room),
