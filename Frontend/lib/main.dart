@@ -199,14 +199,11 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
-              const SelectHospitalButton(),
+              const SizedBox(width: 52, child: SelectHospitalButton()),
               const Spacer(),
               PlusSignButton(onPatientCreated: _addPatient),
               const Spacer(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: const EmptyRoomsButton(),
-              ),
+              const SizedBox(width: 52, child: EmptyRoomsButton()),
             ],
           ),
         ),
