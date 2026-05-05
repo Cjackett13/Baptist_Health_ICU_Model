@@ -29,7 +29,7 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
         style: FilledButton.styleFrom(
           backgroundColor: const Color(0xFF393E46),
           foregroundColor: Colors.white,
-          padding: EdgeInsets.zero,
+          padding: const EdgeInsets.all(12),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
