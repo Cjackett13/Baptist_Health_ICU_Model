@@ -421,7 +421,7 @@ class _PatientFilterSheetState extends State<_PatientFilterSheet> {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String?>(
-            value: _condition,
+            initialValue: _condition,
             decoration: const InputDecoration(
               labelText: 'Condition',
               border: OutlineInputBorder(),
@@ -440,7 +440,7 @@ class _PatientFilterSheetState extends State<_PatientFilterSheet> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String?>(
-            value: _doctor,
+            initialValue: _doctor,
             decoration: const InputDecoration(
               labelText: 'Doctor',
               border: OutlineInputBorder(),
@@ -461,7 +461,7 @@ class _PatientFilterSheetState extends State<_PatientFilterSheet> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String?>(
-            value: _unit,
+            initialValue: _unit,
             decoration: const InputDecoration(
               labelText: 'ICU unit',
               border: OutlineInputBorder(),
