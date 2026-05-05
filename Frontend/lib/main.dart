@@ -250,10 +250,7 @@ class _HomePageState extends State<HomePage> {
               const Spacer(),
               PlusSignButton(onPatientCreated: _addPatient),
               const Spacer(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: EmptyRoomsButton(emptyRooms: _emptyRooms),
-              ),
+              EmptyRoomsButton(emptyRooms: _emptyRooms),
             ],
           ),
         ),
