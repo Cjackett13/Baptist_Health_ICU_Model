@@ -97,6 +97,7 @@ class _HomePageState extends State<HomePage> {
       issue: 'Routine monitoring and support',
     ),
   ];
+<<<<<<< HEAD
 
   late final List<PatientRecord> _patients = List<PatientRecord>.from(
     _seedPatients,
@@ -111,6 +112,21 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+=======
+
+  late final List<PatientRecord> _patients = List<PatientRecord>.from(
+    _seedPatients,
+  );
+
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+>>>>>>> 64e436f5e218419a7d41cf86bc183e56d3dfde75
   void _addPatient(PatientRecord patient) {
     setState(() {
       _patients.insert(
