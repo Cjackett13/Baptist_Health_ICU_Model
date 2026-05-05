@@ -6,11 +6,15 @@ class PatientSearchBar extends StatelessWidget {
     super.key,
     required this.controller,
     this.onChanged,
+    this.onFilterTap,
+    this.isFilterActive = false,
     this.hintText = 'Search patients',
   });
 
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
+  final VoidCallback? onFilterTap;
+  final bool isFilterActive;
   final String hintText;
 
   @override
@@ -26,6 +30,17 @@ class PatientSearchBar extends StatelessWidget {
         onChanged: onChanged,
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.search),
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: IconButton(
+              onPressed: onFilterTap,
+              tooltip: 'Filter patients',
+              icon: Icon(
+                Icons.tune_rounded,
+                color: isFilterActive ? Theme.of(context).colorScheme.primary : Colors.black54,
+              ),
+            ),
+          ),
           hintText: hintText,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(

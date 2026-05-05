@@ -50,59 +50,83 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static final _seedPatients = <PatientRecord>[
-    const PatientRecord(
-      rank: 1,
-      name: 'Jordan Smith',
-      id: 'P-32491',
-      condition: 'Critical',
-      roomNumber: 'ICU 4A',
-      primaryDoctor: 'Dr. Maya Chen',
-      issue: 'Acute respiratory distress with elevated heart rate',
-    ),
-    const PatientRecord(
-      rank: 2,
-      name: 'Layla Torres',
-      id: 'P-45102',
-      condition: 'Moderate',
-      roomNumber: 'ICU 2C',
-      primaryDoctor: 'Dr. David Patel',
-      issue: 'Sepsis and unstable blood pressure',
-    ),
-    const PatientRecord(
-      rank: 3,
-      name: 'Rajiv Kumar',
-      id: 'P-88014',
-      condition: 'Moderate',
-      roomNumber: 'Step-down 1B',
-      primaryDoctor: 'Dr. Naomi Lee',
-      issue: 'Post-operative respiratory support',
-    ),
-    const PatientRecord(
-      rank: 4,
-      name: 'Amelia Johnson',
-      id: 'P-66520',
-      condition: 'Moderate',
-      roomNumber: 'Step-down 3D',
-      primaryDoctor: 'Dr. Jordan Ng',
-      issue: 'Recovering from pneumonia',
-    ),
-    const PatientRecord(
-      rank: 5,
-      name: 'Marcus Reed',
-      id: 'P-99133',
-      condition: 'Stable',
-      roomNumber: 'Ward 5A',
-      primaryDoctor: 'Dr. Emily Brooks',
-      issue: 'Routine monitoring and support',
-    ),
-  ];
+  static final _seedPatients = _buildSeedPatients();
 
   late final List<PatientRecord> _patients = List<PatientRecord>.from(
     _seedPatients,
   );
 
   final TextEditingController _searchController = TextEditingController();
+  String? _selectedCondition;
+  String? _selectedDoctor;
+  String? _selectedUnit;
+
+  List<PatientRecord> get _filteredPatients {
+    final query = _searchController.text.trim().toLowerCase();
+    return _patients.where((patient) {
+      final parts = patient.name.toLowerCase().split(RegExp(r'\s+'));
+      final firstName = parts.isNotEmpty ? parts.first : '';
+      final lastName = parts.length > 1 ? parts.last : '';
+      final matchesName =
+          query.isEmpty || firstName.contains(query) || lastName.contains(query);
+
+      final matchesCondition =
+          _selectedCondition == null || patient.condition == _selectedCondition;
+
+      final matchesDoctor =
+          _selectedDoctor == null || patient.primaryDoctor == _selectedDoctor;
+
+      final matchesUnit =
+          _selectedUnit == null || patient.roomNumber.contains(_selectedUnit!);
+
+      return matchesName && matchesCondition && matchesDoctor && matchesUnit;
+    }).toList();
+  }
+
+  bool get _hasActiveFilters =>
+      _selectedCondition != null || _selectedDoctor != null || _selectedUnit != null;
+
+  Future<void> _openFilterSheet() async {
+    final conditions = _patients.map((p) => p.condition).toSet().toList()..sort();
+    final doctors = _patients
+        .map((p) => p.primaryDoctor)
+        .whereType<String>()
+        .toSet()
+        .toList()
+      ..sort();
+    final units = _patients
+        .map((p) {
+          final roomParts = p.roomNumber.split(' ');
+          return roomParts.isNotEmpty ? roomParts.last : p.roomNumber;
+        })
+        .toSet()
+        .toList()
+      ..sort();
+
+    final result = await showModalBottomSheet<_FilterState>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _PatientFilterSheet(
+        conditions: conditions,
+        doctors: doctors,
+        units: units,
+        initialCondition: _selectedCondition,
+        initialDoctor: _selectedDoctor,
+        initialUnit: _selectedUnit,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        _selectedCondition = result.condition;
+        _selectedDoctor = result.doctor;
+        _selectedUnit = result.unit;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -162,7 +186,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                PatientSearchBar(controller: _searchController),
+                PatientSearchBar(
+                  controller: _searchController,
+                  onChanged: (_) => setState(() {}),
+                  onFilterTap: _openFilterSheet,
+                  isFilterActive: _hasActiveFilters,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '${_filteredPatients.length} '
+                  '${_filteredPatients.length == 1 ? 'entry' : 'entries'} shown',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 16),
               ],
             ),
@@ -172,11 +211,11 @@ class _HomePageState extends State<HomePage> {
               color: const Color(0xFFF2F2F2),
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                itemCount: _patients.length,
+                itemCount: _filteredPatients.length,
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-                  final patient = _patients[index];
+                  final patient = _filteredPatients[index];
                   return PatientListCard(
                     patient: patient,
                     onTap: () => showPatientDetails(context, patient),
@@ -206,6 +245,72 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+List<PatientRecord> _buildSeedPatients() {
+  const firstNames = <String>[
+    'Jordan',
+    'Layla',
+    'Rajiv',
+    'Amelia',
+    'Marcus',
+    'Noah',
+    'Avery',
+    'Elijah',
+    'Mia',
+    'Liam',
+  ];
+  const lastNames = <String>[
+    'Smith',
+    'Torres',
+    'Kumar',
+    'Johnson',
+    'Reed',
+    'Nguyen',
+    'Carter',
+    'Patel',
+    'Brooks',
+    'Diaz',
+  ];
+  const doctors = <String>[
+    'Dr. Maya Chen',
+    'Dr. David Patel',
+    'Dr. Naomi Lee',
+    'Dr. Jordan Ng',
+    'Dr. Emily Brooks',
+    'Dr. Samuel Rivera',
+  ];
+  const issues = <String>[
+    'Acute respiratory distress with elevated heart rate',
+    'Sepsis and unstable blood pressure',
+    'Post-operative respiratory support',
+    'Recovering from pneumonia',
+    'Routine monitoring and support',
+    'Cardiac rhythm irregularities under observation',
+  ];
+  const conditions = <String>['Critical', 'Moderate', 'Stable'];
+
+  final patients = <PatientRecord>[];
+  for (var i = 0; i < 100; i++) {
+    final firstName = firstNames[i % firstNames.length];
+    final lastName = lastNames[(i ~/ firstNames.length) % lastNames.length];
+    final floor = (i % 5) + 1;
+    final wing = String.fromCharCode(65 + (i % 4));
+
+    patients.add(
+      PatientRecord(
+        rank: i + 1,
+        name: '$firstName $lastName',
+        id: 'P-${30000 + i}',
+        condition: conditions[i % conditions.length],
+        roomNumber: 'ICU $floor$wing',
+        primaryDoctor: doctors[i % doctors.length],
+        issue: issues[i % issues.length],
+      ),
+    );
+  }
+
+  return patients;
 }
 
 class _PineAppHeader extends StatelessWidget {
@@ -261,6 +366,150 @@ class _PineAppHeader extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterState {
+  const _FilterState({this.condition, this.doctor, this.unit});
+
+  final String? condition;
+  final String? doctor;
+  final String? unit;
+}
+
+class _PatientFilterSheet extends StatefulWidget {
+  const _PatientFilterSheet({
+    required this.conditions,
+    required this.doctors,
+    required this.units,
+    required this.initialCondition,
+    required this.initialDoctor,
+    required this.initialUnit,
+  });
+
+  final List<String> conditions;
+  final List<String> doctors;
+  final List<String> units;
+  final String? initialCondition;
+  final String? initialDoctor;
+  final String? initialUnit;
+
+  @override
+  State<_PatientFilterSheet> createState() => _PatientFilterSheetState();
+}
+
+class _PatientFilterSheetState extends State<_PatientFilterSheet> {
+  late String? _condition = widget.initialCondition;
+  late String? _doctor = widget.initialDoctor;
+  late String? _unit = widget.initialUnit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Filter patients',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 16),
+          DropdownButtonFormField<String?>(
+            initialValue: _condition,
+            decoration: const InputDecoration(
+              labelText: 'Condition',
+              border: OutlineInputBorder(),
+            ),
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('All conditions'),
+              ),
+              ...widget.conditions.map(
+                (condition) =>
+                    DropdownMenuItem<String?>(value: condition, child: Text(condition)),
+              ),
+            ],
+            onChanged: (value) => setState(() => _condition = value),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String?>(
+            initialValue: _doctor,
+            decoration: const InputDecoration(
+              labelText: 'Doctor',
+              border: OutlineInputBorder(),
+            ),
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('All doctors'),
+              ),
+              ...widget.doctors.map(
+                (doctor) => DropdownMenuItem<String?>(
+                  value: doctor,
+                  child: Text(doctor),
+                ),
+              ),
+            ],
+            onChanged: (value) => setState(() => _doctor = value),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String?>(
+            initialValue: _unit,
+            decoration: const InputDecoration(
+              labelText: 'ICU unit',
+              border: OutlineInputBorder(),
+            ),
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('All ICU units'),
+              ),
+              ...widget.units.map(
+                (unit) => DropdownMenuItem<String?>(value: unit, child: Text(unit)),
+              ),
+            ],
+            onChanged: (value) => setState(() => _unit = value),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _condition = null;
+                    _doctor = null;
+                    _unit = null;
+                  });
+                },
+                child: const Text('Clear'),
+              ),
+              const Spacer(),
+              FilledButton(
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                    _FilterState(
+                      condition: _condition,
+                      doctor: _doctor,
+                      unit: _unit,
+                    ),
+                  );
+                },
+                child: const Text('Apply filters'),
+              ),
+            ],
           ),
         ],
       ),
