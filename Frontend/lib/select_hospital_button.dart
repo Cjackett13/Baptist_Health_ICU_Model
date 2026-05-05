@@ -22,15 +22,15 @@ class SelectHospitalButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width * widthFactor;
     return SizedBox(
-      width: width,
+      width: height,
       height: height,
       child: FilledButton(
         onPressed: () => _openHospitalPicker(context),
         style: FilledButton.styleFrom(
           backgroundColor: _kSlate,
           foregroundColor: Colors.white,
+          padding: EdgeInsets.zero,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

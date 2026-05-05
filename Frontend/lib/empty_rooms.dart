@@ -21,12 +21,14 @@ class _EmptyRoomsButtonState extends State<EmptyRoomsButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       key: _buttonKey,
+      width: 52,
       height: 52,
       child: FilledButton(
         onPressed: () => _showEmptyRooms(context),
         style: FilledButton.styleFrom(
           backgroundColor: const Color(0xFF393E46),
           foregroundColor: Colors.white,
+          padding: const EdgeInsets.all(12),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
