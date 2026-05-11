@@ -1,3 +1,5 @@
+// lib/main.dart
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'alert_system.dart';
 import 'demo_hospitals.dart';
@@ -10,7 +12,6 @@ void main() {
   runApp(const MyApp());
 }
 
-/// Baptist Health PineApp–inspired palette (provided hex).
 abstract final class BhColors {
   static const primary = Color(0xFF7BC74D);
   static const ink = Color(0xFF222831);
@@ -52,8 +53,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late DemoHospital _selectedHospital = demoHospitals.first;
-  late List<String> _emptyRooms = List<String>.from(_selectedHospital.emptyIcuRooms);
-  late List<PatientRecord> _patients = _buildSeedPatientsForHospital(_selectedHospital);
+  late List<String> _emptyRooms =
+      List<String>.from(_selectedHospital.emptyIcuRooms);
+  late List<PatientRecord> _patients =
+      _buildSeedPatientsForHospital(_selectedHospital);
 
   final TextEditingController _searchController = TextEditingController();
   String? _selectedCondition;
@@ -74,31 +77,28 @@ class _HomePageState extends State<HomePage> {
 
   List<PatientRecord> get _filteredPatients {
     final query = _searchController.text.trim().toLowerCase();
-    return _patients.where((patient) {
-      final parts = patient.name.toLowerCase().split(RegExp(r'\s+'));
-      final firstName = parts.isNotEmpty ? parts.first : '';
-      final lastName = parts.length > 1 ? parts.last : '';
-      final matchesName =
-          query.isEmpty || firstName.contains(query) || lastName.contains(query);
-
+    return _patients.where((p) {
+      final parts = p.name.toLowerCase().split(RegExp(r'\s+'));
+      final matchesName = query.isEmpty ||
+          parts.any((part) => part.contains(query));
       final matchesCondition =
-          _selectedCondition == null || patient.condition == _selectedCondition;
-
+          _selectedCondition == null || p.condition == _selectedCondition;
       final matchesDoctor =
-          _selectedDoctor == null || patient.primaryDoctor == _selectedDoctor;
-
+          _selectedDoctor == null || p.primaryDoctor == _selectedDoctor;
       final matchesUnit =
-          _selectedUnit == null || patient.roomNumber.contains(_selectedUnit!);
-
+          _selectedUnit == null || p.roomNumber.contains(_selectedUnit!);
       return matchesName && matchesCondition && matchesDoctor && matchesUnit;
     }).toList();
   }
 
   bool get _hasActiveFilters =>
-      _selectedCondition != null || _selectedDoctor != null || _selectedUnit != null;
+      _selectedCondition != null ||
+      _selectedDoctor != null ||
+      _selectedUnit != null;
 
   Future<void> _openFilterSheet() async {
-    final conditions = _patients.map((p) => p.condition).toSet().toList()..sort();
+    final conditions =
+        _patients.map((p) => p.condition).toSet().toList()..sort();
     final doctors = _patients
         .map((p) => p.primaryDoctor)
         .whereType<String>()
@@ -107,8 +107,8 @@ class _HomePageState extends State<HomePage> {
       ..sort();
     final units = _patients
         .map((p) {
-          final roomParts = p.roomNumber.split(' ');
-          return roomParts.isNotEmpty ? roomParts.last : p.roomNumber;
+          final parts = p.roomNumber.split(' ');
+          return parts.isNotEmpty ? parts.last : p.roomNumber;
         })
         .toSet()
         .toList()
@@ -147,36 +147,23 @@ class _HomePageState extends State<HomePage> {
 
   void _addPatient(PatientRecord patient) {
     setState(() {
-      _patients.insert(
-        0,
-        PatientRecord(
-          rank: 1,
-          name: patient.name,
-          id: patient.id,
-          condition: patient.condition,
-          roomNumber: patient.roomNumber,
-          primaryDoctor: patient.primaryDoctor,
-          issue: patient.issue,
-        ),
-      );
-
+      _patients.insert(0, patient);
       for (var i = 0; i < _patients.length; i++) {
-        final current = _patients[i];
-        _patients[i] = PatientRecord(
-          rank: i + 1,
-          name: current.name,
-          id: current.id,
-          condition: current.condition,
-          roomNumber: current.roomNumber,
-          primaryDoctor: current.primaryDoctor,
-          issue: current.issue,
-        );
+        _patients[i] = _patients[i].copyWithRank(i + 1);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Summary counts for header strip
+    final critical =
+        _patients.where((p) => p.condition == 'Critical').length;
+    final watch =
+        _patients.where((p) => p.condition == 'Moderate').length;
+    final stable =
+        _patients.where((p) => p.condition == 'Stable').length;
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -184,7 +171,7 @@ class _HomePageState extends State<HomePage> {
           const _PineAppHeader(),
           Container(
             color: const Color(0xFFF2F2F2),
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -196,22 +183,32 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                const SizedBox(height: 10),
+                // Risk summary strip
+                Row(
+                  children: [
+                    _SummaryChip(
+                        label: 'Critical',
+                        count: critical,
+                        color: const Color(0xFFE05A5A)),
+                    const SizedBox(width: 8),
+                    _SummaryChip(
+                        label: 'Watch',
+                        count: watch,
+                        color: const Color(0xFFD4A030)),
+                    const SizedBox(width: 8),
+                    _SummaryChip(
+                        label: 'Stable',
+                        count: stable,
+                        color: const Color(0xFF4A9E6A)),
+                  ],
+                ),
                 const SizedBox(height: 12),
                 PatientSearchBar(
                   controller: _searchController,
                   onChanged: (_) => setState(() {}),
                   onFilterTap: _openFilterSheet,
                   isFilterActive: _hasActiveFilters,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${_filteredPatients.length} '
-                  '${_filteredPatients.length == 1 ? 'entry' : 'entries'} shown',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w600,
-                  ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -223,8 +220,7 @@ class _HomePageState extends State<HomePage> {
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 itemCount: _filteredPatients.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 12),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final patient = _filteredPatients[index];
                   return PatientListCard(
@@ -239,7 +235,11 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Padding(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: Colors.black12)),
+          ),
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
@@ -259,76 +259,169 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SUMMARY CHIP
+// ─────────────────────────────────────────────────────────────────────────────
+class _SummaryChip extends StatelessWidget {
+  const _SummaryChip({
+    required this.label,
+    required this.count,
+    required this.color,
+  });
+  final String label;
+  final int count;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: color),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '$count $label',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SEED PATIENT GENERATOR
+// Sorted by icuTransferRisk descending — highest risk at top.
+// Replace with real Firestore fetch when backend is ready.
+// ─────────────────────────────────────────────────────────────────────────────
 List<PatientRecord> _buildSeedPatientsForHospital(DemoHospital hospital) {
-  const firstNames = <String>[
-    'Jordan',
-    'Layla',
-    'Rajiv',
-    'Amelia',
-    'Marcus',
-    'Noah',
-    'Avery',
-    'Elijah',
-    'Mia',
-    'Liam',
+  const firstNames = [
+    'Jordan', 'Layla', 'Rajiv', 'Amelia', 'Marcus',
+    'Noah', 'Avery', 'Elijah', 'Mia', 'Liam',
+    'Sofia', 'Ethan', 'Isabella', 'Lucas', 'Emma',
+    'Aiden', 'Olivia', 'Jackson', 'Ava', 'Logan',
   ];
-  const lastNames = <String>[
-    'Smith',
-    'Torres',
-    'Kumar',
-    'Johnson',
-    'Reed',
-    'Nguyen',
-    'Carter',
-    'Patel',
-    'Brooks',
-    'Diaz',
+  const lastNames = [
+    'Smith', 'Torres', 'Kumar', 'Johnson', 'Reed',
+    'Nguyen', 'Carter', 'Patel', 'Brooks', 'Diaz',
+    'Kim', 'Okafor', 'Martinez', 'Chen', 'Williams',
+    'Garcia', 'Brown', 'Davis', 'Wilson', 'Moore',
   ];
-  const doctors = <String>[
-    'Dr. Maya Chen',
-    'Dr. David Patel',
-    'Dr. Naomi Lee',
-    'Dr. Jordan Ng',
-    'Dr. Emily Brooks',
-    'Dr. Samuel Rivera',
+  const doctors = [
+    'Dr. Maya Chen', 'Dr. David Patel', 'Dr. Naomi Lee',
+    'Dr. Jordan Ng', 'Dr. Emily Brooks', 'Dr. Samuel Rivera',
   ];
-  const issues = <String>[
+  const diagnoses = [
+    'CHF', 'ACS', 'Afib', 'HTN', 'COPD',
+    'Pneumonia', 'Sepsis', 'MI', 'PE', 'DVT',
+  ];
+  const genders = ['M', 'F'];
+  const issues = [
     'Acute respiratory distress with elevated heart rate',
     'Sepsis and unstable blood pressure',
     'Post-operative respiratory support',
-    'Recovering from pneumonia',
-    'Routine monitoring and support',
+    'Recovering from pneumonia with O2 support',
+    'Routine monitoring and vital stabilisation',
     'Cardiac rhythm irregularities under observation',
+    'Fluid overload with reduced ejection fraction',
+    'Uncontrolled hypertension post-procedure',
   ];
-  const conditions = <String>['Critical', 'Moderate', 'Stable'];
 
   final roomPool = hospital.emptyIcuRooms.isEmpty
-      ? const <String>['ICU 1A', 'ICU 1B', 'ICU 1C']
+      ? const ['ICU 1A', 'ICU 1B', 'ICU 1C']
       : hospital.emptyIcuRooms;
 
-  final salt = hospital.id.codeUnits.fold<int>(0, (acc, c) => acc + c);
+  final salt =
+      hospital.id.codeUnits.fold<int>(0, (acc, c) => acc + c);
+  final rng = Random(salt);
   final patients = <PatientRecord>[];
-  for (var i = 0; i < 100; i++) {
+
+  for (var i = 0; i < 20; i++) {
     final firstName = firstNames[(i + salt) % firstNames.length];
-    final lastName = lastNames[((i + (salt ~/ 3)) ~/ firstNames.length) % lastNames.length];
+    final lastName =
+        lastNames[((i * 3 + salt) ~/ 2) % lastNames.length];
     final room = roomPool[(i + (salt % 7)) % roomPool.length];
+    final age = 45 + rng.nextInt(45);
+    final gender = genders[rng.nextInt(2)];
+    final diagnosis = diagnoses[rng.nextInt(diagnoses.length)];
+    final daysAdmitted = 1 + rng.nextInt(10);
+
+    // Realistic risk distribution
+    final double icuRisk;
+    final tier = rng.nextDouble();
+    if (tier < 0.15) {
+      icuRisk = 0.65 + rng.nextDouble() * 0.34;
+    } else if (tier < 0.50) {
+      icuRisk = 0.40 + rng.nextDouble() * 0.24;
+    } else {
+      icuRisk = 0.05 + rng.nextDouble() * 0.34;
+    }
+
+    final features = PatientFeatures(
+      numMedications: icuRisk >= 0.65
+          ? 12 + rng.nextInt(20)
+          : icuRisk >= 0.40
+              ? 7 + rng.nextInt(12)
+              : 2 + rng.nextInt(8),
+      numberInpatient:
+          icuRisk >= 0.65 ? 2 + rng.nextInt(6) : rng.nextInt(3),
+      numLabProcedures: 20 + rng.nextInt(80),
+      timeInHospital: daysAdmitted.clamp(1, 14),
+      numberDiagnoses: 2 + rng.nextInt(8),
+      numberEmergency:
+          icuRisk >= 0.65 ? rng.nextInt(4) : rng.nextInt(2),
+      numberOutpatient: rng.nextInt(5),
+      ageMid: age.toDouble(),
+    );
 
     patients.add(
       PatientRecord(
         rank: i + 1,
         name: '$firstName $lastName',
         id: 'P-${30000 + i + (salt % 900)}',
-        condition: conditions[i % conditions.length],
         roomNumber: room,
+        predictions: generateMockPredictions(icuRisk, features, rng),
+        features: features,
         primaryDoctor: doctors[i % doctors.length],
         issue: issues[i % issues.length],
+        age: age,
+        gender: gender,
+        diagnosis: diagnosis,
+        daysAdmitted: daysAdmitted,
       ),
     );
   }
 
-  return patients;
+  // Sort highest ICU risk first
+  patients.sort(
+      (a, b) => b.predictions.icuTransferRisk
+          .compareTo(a.predictions.icuTransferRisk));
+
+  // Re-rank after sort
+  return List.generate(
+    patients.length,
+    (i) => patients[i].copyWithRank(i + 1),
+  );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// HEADER
+// ─────────────────────────────────────────────────────────────────────────────
 class _PineAppHeader extends StatelessWidget {
   const _PineAppHeader();
 
@@ -355,7 +448,6 @@ class _PineAppHeader extends StatelessWidget {
             'assets/baptist_logo.png',
             height: 44,
             fit: BoxFit.contain,
-            alignment: Alignment.centerLeft,
             filterQuality: FilterQuality.high,
           ),
           const SizedBox(width: 14),
@@ -365,20 +457,22 @@ class _PineAppHeader extends StatelessWidget {
               children: [
                 Text(
                   'Baptist Health',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Georgia',
-                    letterSpacing: 0.2,
-                  ),
+                  style:
+                      Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Georgia',
+                            letterSpacing: 0.2,
+                          ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'ICU planning workspace',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.78),
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style:
+                      Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.78),
+                            fontWeight: FontWeight.w500,
+                          ),
                 ),
               ],
             ),
@@ -389,9 +483,11 @@ class _PineAppHeader extends StatelessWidget {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// FILTER SHEET
+// ─────────────────────────────────────────────────────────────────────────────
 class _FilterState {
   const _FilterState({this.condition, this.doctor, this.unit});
-
   final String? condition;
   final String? doctor;
   final String? unit;
@@ -406,7 +502,6 @@ class _PatientFilterSheet extends StatefulWidget {
     required this.initialDoctor,
     required this.initialUnit,
   });
-
   final List<String> conditions;
   final List<String> doctors;
   final List<String> units;
@@ -427,102 +522,76 @@ class _PatientFilterSheetState extends State<_PatientFilterSheet> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        16,
-        16,
-        16,
+        16, 16, 16,
         MediaQuery.of(context).viewInsets.bottom + 20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Filter patients',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
+          const Text('Filter patients',
+              style:
+                  TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
           const SizedBox(height: 16),
           DropdownButtonFormField<String?>(
             initialValue: _condition,
             decoration: const InputDecoration(
-              labelText: 'Condition',
-              border: OutlineInputBorder(),
-            ),
+                labelText: 'Risk tier', border: OutlineInputBorder()),
             items: [
               const DropdownMenuItem<String?>(
-                value: null,
-                child: Text('All conditions'),
-              ),
-              ...widget.conditions.map(
-                (condition) =>
-                    DropdownMenuItem<String?>(value: condition, child: Text(condition)),
-              ),
+                  value: null, child: Text('All tiers')),
+              ...widget.conditions.map((c) =>
+                  DropdownMenuItem<String?>(value: c, child: Text(c))),
             ],
-            onChanged: (value) => setState(() => _condition = value),
+            onChanged: (v) => setState(() => _condition = v),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String?>(
             initialValue: _doctor,
             decoration: const InputDecoration(
-              labelText: 'Doctor',
-              border: OutlineInputBorder(),
-            ),
+                labelText: 'Doctor', border: OutlineInputBorder()),
             items: [
               const DropdownMenuItem<String?>(
-                value: null,
-                child: Text('All doctors'),
-              ),
-              ...widget.doctors.map(
-                (doctor) => DropdownMenuItem<String?>(
-                  value: doctor,
-                  child: Text(doctor),
-                ),
-              ),
+                  value: null, child: Text('All doctors')),
+              ...widget.doctors.map((d) =>
+                  DropdownMenuItem<String?>(value: d, child: Text(d))),
             ],
-            onChanged: (value) => setState(() => _doctor = value),
+            onChanged: (v) => setState(() => _doctor = v),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String?>(
             initialValue: _unit,
             decoration: const InputDecoration(
-              labelText: 'ICU unit',
-              border: OutlineInputBorder(),
-            ),
+                labelText: 'ICU unit', border: OutlineInputBorder()),
             items: [
               const DropdownMenuItem<String?>(
-                value: null,
-                child: Text('All ICU units'),
-              ),
-              ...widget.units.map(
-                (unit) => DropdownMenuItem<String?>(value: unit, child: Text(unit)),
-              ),
+                  value: null, child: Text('All ICU units')),
+              ...widget.units.map((u) =>
+                  DropdownMenuItem<String?>(value: u, child: Text(u))),
             ],
-            onChanged: (value) => setState(() => _unit = value),
+            onChanged: (v) => setState(() => _unit = v),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               TextButton(
-                onPressed: () {
-                  setState(() {
-                    _condition = null;
-                    _doctor = null;
-                    _unit = null;
-                  });
-                },
+                onPressed: () => setState(() {
+                  _condition = null;
+                  _doctor = null;
+                  _unit = null;
+                }),
                 child: const Text('Clear'),
               ),
               const Spacer(),
               FilledButton(
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                    _FilterState(
-                      condition: _condition,
-                      doctor: _doctor,
-                      unit: _unit,
-                    ),
-                  );
-                },
+                onPressed: () => Navigator.pop(
+                  context,
+                  _FilterState(
+                    condition: _condition,
+                    doctor: _doctor,
+                    unit: _unit,
+                  ),
+                ),
                 child: const Text('Apply filters'),
               ),
             ],
