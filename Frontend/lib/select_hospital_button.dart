@@ -96,7 +96,7 @@ class _HospitalPickerDialogState extends State<_HospitalPickerDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: const Text('Select a hospital (demo)'),
+      title: const Text('Select a hospital'),
       content: SizedBox(
         width: 520,
         child: Column(
