@@ -282,6 +282,40 @@ class LengthOfStaySection extends StatelessWidget {
   }
 }
 
+/// LOS tiles only — for collapsible profile sections.
+class LengthOfStayBody extends StatelessWidget {
+  const LengthOfStayBody({required this.predictions, super.key});
+  final PatientPredictions predictions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _LosTile(
+            label: 'Hospital stay',
+            days: predictions.hospitalLosDays,
+            description: 'Total predicted\nhospital duration',
+          ),
+        ),
+        Container(
+          width: 1,
+          height: 80,
+          color: const Color(0xFFF0F0F0),
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+        ),
+        Expanded(
+          child: _LosTile(
+            label: 'ICU stay',
+            days: predictions.icuLosDays,
+            description: 'Predicted time\nin ICU specifically',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _LosTile extends StatelessWidget {
   const _LosTile({
     required this.label,
@@ -992,6 +1026,539 @@ class _SimResultTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VITALS (from clinical_event parquet columns)
+// ─────────────────────────────────────────────────────────────────────────────
+class VitalsSection extends StatelessWidget {
+  const VitalsSection({required this.patient, super.key});
+  final PatientRecord patient;
+
+  static const _vitalOrder = [
+    'HR',
+    'SBP',
+    'DBP',
+    'MAP',
+    'RR',
+    'SPO2',
+    'TEMP',
+    'URINE_OUT_HR',
+    'CVP',
+    'CO',
+    'CI',
+    'LACTATE',
+    'CREATININE',
+    'BUN',
+    'NT_PROBNP',
+    'TROPONIN_I',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final sorted = [...patient.clinicalVitals];
+    sorted.sort((a, b) {
+      final ai = _vitalOrder.indexOf(a.code);
+      final bi = _vitalOrder.indexOf(b.code);
+      return (ai == -1 ? 999 : ai).compareTo(bi == -1 ? 999 : bi);
+    });
+
+    if (sorted.isEmpty) {
+      return const Text(
+        'No vitals on file for this encounter.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: sorted.map((v) => _VitalChip(vital: v)).toList(),
+    );
+  }
+}
+
+class _VitalChip extends StatelessWidget {
+  const _VitalChip({required this.vital});
+  final PatientVital vital;
+
+  Color get _normalcyColor {
+    switch (vital.normalcy.toUpperCase()) {
+      case 'HIGH':
+      case 'LOW':
+      case 'CRITICAL':
+        return const Color(0xFFE05A5A);
+      default:
+        return const Color(0xFF4A9E6A);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final units = vital.units.isNotEmpty ? ' ${vital.units}' : '';
+    return Container(
+      width: 160,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F8F8),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _normalcyColor.withOpacity(0.25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            vital.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 10, color: Colors.black45),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${vital.value}$units',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: _normalcyColor,
+            ),
+          ),
+          Text(
+            vital.normalcy,
+            style: TextStyle(fontSize: 9, color: _normalcyColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CLINICIAN — ML PREDICTIONS (cardiogenic shock model outputs)
+// ─────────────────────────────────────────────────────────────────────────────
+class ClinicalPredictionsSection extends StatelessWidget {
+  const ClinicalPredictionsSection({
+    required this.predictions,
+    super.key,
+  });
+  final PatientPredictions predictions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _PredictionRow(
+                label: 'SCAI stage deterioration (6h)',
+                subtitle:
+                    'Current stage ${predictions.currentScaiStage} · ${predictions.scaiDeterioration6hLabel}',
+                value: predictions.scaiDeterioration6hProb,
+                trailing: predictions.scaiDeterioration6hLabel,
+              ),
+              const SizedBox(height: 14),
+              _PredictionRow(
+                label: 'Vasopressor need',
+                subtitle:
+                    'Predicted count: ${predictions.predictedVasopressorCount}',
+                value: predictions.vasopressorProbability,
+                trailing: '${predictions.predictedVasopressorCount} agents',
+              ),
+              const SizedBox(height: 14),
+              _PredictionRow(
+                label: 'Mortality risk',
+                subtitle: 'In-hospital mortality probability',
+                value: predictions.mortalityRisk,
+              ),
+              const SizedBox(height: 14),
+              _LosPredictionRow(
+                label: 'Length of stay (hospital)',
+                days: predictions.hospitalLosDays,
+              ),
+              const SizedBox(height: 10),
+              _LosPredictionRow(
+                label: 'Length of stay (ICU)',
+                days: predictions.icuLosDays,
+              ),
+              const SizedBox(height: 14),
+              _BinaryPredictionRow(
+                label: 'MCS within 12 hours',
+                probability: predictions.mcs12hProbability,
+                needed: predictions.mcs12hNeeded,
+              ),
+              const SizedBox(height: 14),
+        _BinaryPredictionRow(
+          label: 'VA-ECMO within 12 hours',
+          probability: predictions.vaEcmo12hProbability,
+          needed: predictions.vaEcmo12hNeeded,
+        ),
+      ],
+    );
+  }
+}
+
+class _PredictionRow extends StatelessWidget {
+  const _PredictionRow({
+    required this.label,
+    required this.subtitle,
+    required this.value,
+    this.trailing,
+  });
+
+  final String label;
+  final String subtitle;
+  final double value;
+  final String? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = riskColor(value);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Text(
+              '${(value * 100).round()}%',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(subtitle,
+            style: const TextStyle(fontSize: 10, color: Colors.black38)),
+        if (trailing != null) ...[
+          const SizedBox(height: 2),
+          Text(trailing!,
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: color)),
+        ],
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(3),
+          child: LinearProgressIndicator(
+            value: value,
+            backgroundColor: const Color(0xFFEEEEEE),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LosPredictionRow extends StatelessWidget {
+  const _LosPredictionRow({required this.label, required this.days});
+  final String label;
+  final double days;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = losColor(days);
+    return Row(
+      children: [
+        Expanded(
+          child: Text(label,
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87)),
+        ),
+        Text(
+          '${days.toStringAsFixed(1)} days',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BinaryPredictionRow extends StatelessWidget {
+  const _BinaryPredictionRow({
+    required this.label,
+    required this.probability,
+    required this.needed,
+  });
+
+  final String label;
+  final double probability;
+  final bool needed;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = riskColor(probability);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: (needed ? color : const Color(0xFF4A9E6A))
+                    .withOpacity(0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                needed ? 'Likely needed' : 'Unlikely',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: needed ? color : const Color(0xFF4A9E6A),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${(probability * 100).round()}%',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(3),
+          child: LinearProgressIndicator(
+            value: probability,
+            backgroundColor: const Color(0xFFEEEEEE),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DiagnosesSection extends StatelessWidget {
+  const DiagnosesSection({required this.diagnoses, super.key});
+  final List<PatientDiagnosis> diagnoses;
+
+  @override
+  Widget build(BuildContext context) {
+    if (diagnoses.isEmpty) {
+      return const Text(
+        'No diagnoses on file.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Column(
+      children: diagnoses.map((d) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF2F2F2),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  d.code,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  d.text,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PATIENT PORTAL SECTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+class PatientLengthOfStaySection extends StatelessWidget {
+  const PatientLengthOfStaySection({required this.predictions, super.key});
+  final PatientPredictions predictions;
+
+  @override
+  Widget build(BuildContext context) =>
+      LengthOfStayBody(predictions: predictions);
+}
+
+class PatientRecommendationsSection extends StatelessWidget {
+  const PatientRecommendationsSection({
+    required this.recommendations,
+    super.key,
+  });
+  final List<HomeCareSuggestion> recommendations;
+
+  @override
+  Widget build(BuildContext context) {
+    if (recommendations.isEmpty) {
+      return const Text(
+        'No recommendations at this time.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Column(
+      children: recommendations
+          .map(
+            (s) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _PredictionCard(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(categoryIcon(s.category),
+                        style: const TextStyle(fontSize: 24)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s.title,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            s.description,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                              height: 1.4,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            s.impact,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF4A9E6A),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class PatientMedicationsSection extends StatelessWidget {
+  const PatientMedicationsSection({required this.medications, super.key});
+  final List<PatientMedication> medications;
+
+  @override
+  Widget build(BuildContext context) {
+    if (medications.isEmpty) {
+      return const Text(
+        'No medications on file.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Column(
+      children: medications.map((m) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                m.isVasopressor
+                    ? Icons.bolt_outlined
+                    : Icons.medication_liquid_outlined,
+                size: 20,
+                color: m.isVasopressor
+                    ? const Color(0xFFE05A5A)
+                    : Colors.black38,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      m.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (m.dosage.isNotEmpty)
+                      Text(
+                        'Dosage: ${m.dosage}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    Text(
+                      'Route: ${m.route}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

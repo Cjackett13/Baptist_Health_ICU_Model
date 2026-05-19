@@ -148,38 +148,117 @@ class HomeCareSuggestion {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// CLINICAL VITAL / MEDICATION (from parquet clinical_event & medication_admin)
+// ─────────────────────────────────────────────────────────────────────────────
+class PatientVital {
+  const PatientVital({
+    required this.code,
+    required this.title,
+    required this.value,
+    required this.units,
+    required this.normalcy,
+    this.recordedAt,
+  });
+
+  final String code;
+  final String title;
+  final double value;
+  final String units;
+  final String normalcy;
+  final DateTime? recordedAt;
+
+  factory PatientVital.fromJson(Map<String, dynamic> json) => PatientVital(
+        code: json['code'] as String,
+        title: json['title'] as String,
+        value: (json['value'] as num).toDouble(),
+        units: json['units'] as String? ?? '',
+        normalcy: json['normalcy'] as String? ?? 'NORMAL',
+        recordedAt: json['recorded_at'] != null
+            ? DateTime.tryParse(json['recorded_at'] as String)
+            : null,
+      );
+}
+
+class PatientMedication {
+  const PatientMedication({
+    required this.name,
+    required this.code,
+    required this.dosage,
+    required this.route,
+    required this.isVasopressor,
+    this.start,
+  });
+
+  final String name;
+  final String code;
+  final String dosage;
+  final String route;
+  final bool isVasopressor;
+  final DateTime? start;
+
+  factory PatientMedication.fromJson(Map<String, dynamic> json) =>
+      PatientMedication(
+        name: json['name'] as String,
+        code: json['code'] as String,
+        dosage: json['dosage'] as String? ?? '',
+        route: json['route'] as String? ?? 'IV',
+        isVasopressor: json['is_vasopressor'] as bool? ?? false,
+        start: json['start'] != null
+            ? DateTime.tryParse(json['start'] as String)
+            : null,
+      );
+}
+
+class PatientDiagnosis {
+  const PatientDiagnosis({
+    required this.code,
+    required this.text,
+    required this.priority,
+    required this.classification,
+  });
+
+  final String code;
+  final String text;
+  final int priority;
+  final String classification;
+
+  factory PatientDiagnosis.fromJson(Map<String, dynamic> json) =>
+      PatientDiagnosis(
+        code: json['code'] as String,
+        text: json['text'] as String,
+        priority: json['priority'] as int,
+        classification: json['classification'] as String,
+      );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PATIENT PREDICTIONS
-// All 7 model outputs in one object.
-// Replaces icuRisk + readmissionRisk scattered across PatientRecord.
-// Plug real FastAPI values in here — nothing else in the app changes.
+// ML outputs + legacy fields for list cards / home care.
 // ─────────────────────────────────────────────────────────────────────────────
 class PatientPredictions {
   const PatientPredictions({
-    // Prediction 1 — readmission
     required this.readmissionRisk,
-
-    // Prediction 2 — length of stay (regression, output is days)
     required this.hospitalLosDays,
     required this.icuLosDays,
-
-    // Prediction 3 — home care (generated text)
     required this.homeCareSuggestions,
-
-    // Predictions 4, 5, 6 — mortality (grouped)
     required this.hospitalMortality,
     required this.icuMortality,
     required this.inHospitalExpiry,
-
-    // Prediction 7 — ICU transfer
     required this.icuTransferRisk,
-
-    // SHAP values per prediction group
     required this.shapTransfer,
     required this.shapReadmission,
     required this.shapMortality,
-
-    // Metadata
     required this.lastUpdated,
+    required this.scaiDeterioration6hProb,
+    required this.scaiDeterioration6hLabel,
+    required this.currentScaiStage,
+    required this.vasopressorProbability,
+    required this.predictedVasopressorCount,
+    required this.mortalityRisk,
+    required this.mcs12hProbability,
+    required this.mcs12hNeeded,
+    required this.vaEcmo12hProbability,
+    required this.vaEcmo12hNeeded,
   });
 
   final double readmissionRisk;
@@ -195,22 +274,71 @@ class PatientPredictions {
   final List<ShapValue> shapMortality;
   final DateTime lastUpdated;
 
+  /// SCAI shock stage worsening within 6 hours (probability 0–1).
+  final double scaiDeterioration6hProb;
+  final String scaiDeterioration6hLabel;
+  final String currentScaiStage;
+  final double vasopressorProbability;
+  final int predictedVasopressorCount;
+  final double mortalityRisk;
+  final double mcs12hProbability;
+  final bool mcs12hNeeded;
+  final double vaEcmo12hProbability;
+  final bool vaEcmo12hNeeded;
+
   // Convenience — highest mortality across all three scopes
   double get peakMortality =>
       [hospitalMortality, icuMortality, inHospitalExpiry].reduce(
         (a, b) => a > b ? a : b,
       );
 
-  // Overall risk tier — driven by the most critical prediction
   String get overallTier {
     final maxRisk = [
       icuTransferRisk,
       readmissionRisk,
       peakMortality,
+      mortalityRisk,
+      scaiDeterioration6hProb,
+      mcs12hProbability,
+      vaEcmo12hProbability,
     ].reduce((a, b) => a > b ? a : b);
     if (maxRisk >= 0.65) return 'Critical';
     if (maxRisk >= 0.40) return 'Moderate';
     return 'Stable';
+  }
+
+  factory PatientPredictions.fromSeedMap(Map<String, dynamic> p) {
+    final lastUpdated = DateTime.tryParse(p['last_updated'] as String? ?? '') ??
+        DateTime.now();
+    final mortality = (p['mortality_risk'] as num).toDouble();
+    final icuRisk = (p['icu_transfer_risk'] as num?)?.toDouble() ?? mortality;
+    final readmit = (p['readmission_risk'] as num?)?.toDouble() ?? mortality * 0.7;
+
+    return PatientPredictions(
+      readmissionRisk: readmit,
+      hospitalLosDays: (p['hospital_los_days'] as num).toDouble(),
+      icuLosDays: (p['icu_los_days'] as num).toDouble(),
+      homeCareSuggestions: const [],
+      hospitalMortality: mortality,
+      icuMortality: (mortality * 1.1).clamp(0.0, 1.0),
+      inHospitalExpiry: mortality,
+      icuTransferRisk: icuRisk,
+      shapTransfer: const [],
+      shapReadmission: const [],
+      shapMortality: const [],
+      lastUpdated: lastUpdated,
+      scaiDeterioration6hProb:
+          (p['scai_deterioration_6h_prob'] as num).toDouble(),
+      scaiDeterioration6hLabel: p['scai_deterioration_6h_label'] as String,
+      currentScaiStage: p['current_scai_stage'] as String,
+      vasopressorProbability: (p['vasopressor_probability'] as num).toDouble(),
+      predictedVasopressorCount: p['predicted_vasopressor_count'] as int,
+      mortalityRisk: mortality,
+      mcs12hProbability: (p['mcs_12h_probability'] as num).toDouble(),
+      mcs12hNeeded: p['mcs_12h_needed'] as bool,
+      vaEcmo12hProbability: (p['va_ecmo_12h_probability'] as num).toDouble(),
+      vaEcmo12hNeeded: p['va_ecmo_12h_needed'] as bool,
+    );
   }
 
   factory PatientPredictions.fromJson(Map<String, dynamic> json) =>
@@ -248,6 +376,50 @@ class PatientPredictions {
                     ShapValue.fromJson(e as Map<String, dynamic>))
                 .toList(),
         lastUpdated: DateTime.parse(json['last_updated'] as String),
+        scaiDeterioration6hProb:
+            (json['scai_deterioration_6h_prob'] as num?)?.toDouble() ?? 0.2,
+        scaiDeterioration6hLabel:
+            json['scai_deterioration_6h_label'] as String? ?? 'Unknown',
+        currentScaiStage: json['current_scai_stage'] as String? ?? 'B',
+        vasopressorProbability:
+            (json['vasopressor_probability'] as num?)?.toDouble() ?? 0.2,
+        predictedVasopressorCount:
+            json['predicted_vasopressor_count'] as int? ?? 0,
+        mortalityRisk:
+            (json['mortality_risk'] as num?)?.toDouble() ??
+                (json['hospital_mortality'] as num).toDouble(),
+        mcs12hProbability:
+            (json['mcs_12h_probability'] as num?)?.toDouble() ?? 0.15,
+        mcs12hNeeded: json['mcs_12h_needed'] as bool? ?? false,
+        vaEcmo12hProbability:
+            (json['va_ecmo_12h_probability'] as num?)?.toDouble() ?? 0.1,
+        vaEcmo12hNeeded: json['va_ecmo_12h_needed'] as bool? ?? false,
+      );
+
+  PatientPredictions copyWithHomeCare(List<HomeCareSuggestion> recs) =>
+      PatientPredictions(
+        readmissionRisk: readmissionRisk,
+        hospitalLosDays: hospitalLosDays,
+        icuLosDays: icuLosDays,
+        homeCareSuggestions: recs,
+        hospitalMortality: hospitalMortality,
+        icuMortality: icuMortality,
+        inHospitalExpiry: inHospitalExpiry,
+        icuTransferRisk: icuTransferRisk,
+        shapTransfer: shapTransfer,
+        shapReadmission: shapReadmission,
+        shapMortality: shapMortality,
+        lastUpdated: lastUpdated,
+        scaiDeterioration6hProb: scaiDeterioration6hProb,
+        scaiDeterioration6hLabel: scaiDeterioration6hLabel,
+        currentScaiStage: currentScaiStage,
+        vasopressorProbability: vasopressorProbability,
+        predictedVasopressorCount: predictedVasopressorCount,
+        mortalityRisk: mortalityRisk,
+        mcs12hProbability: mcs12hProbability,
+        mcs12hNeeded: mcs12hNeeded,
+        vaEcmo12hProbability: vaEcmo12hProbability,
+        vaEcmo12hNeeded: vaEcmo12hNeeded,
       );
 
   Map<String, dynamic> toJson() => {
@@ -283,13 +455,21 @@ class PatientRecord {
     required this.roomNumber,
     required this.predictions,
     required this.features,
+    this.encounterId,
     this.primaryDoctor,
     this.issue,
-    this.vitals,
     this.age,
     this.gender,
     this.diagnosis,
     this.daysAdmitted,
+    this.unitCd,
+    this.facilityCd,
+    this.scaiStageCurrent,
+    this.clinicalVitals = const [],
+    this.diagnoses = const [],
+    this.medications = const [],
+    this.recommendations = const [],
+    this.conditionOverride,
   });
 
   final int rank;
@@ -298,19 +478,80 @@ class PatientRecord {
   final String roomNumber;
   final PatientPredictions predictions;
   final PatientFeatures features;
+  final String? encounterId;
   final String? primaryDoctor;
   final String? issue;
-  final String? vitals;
   final int? age;
   final String? gender;
   final String? diagnosis;
   final int? daysAdmitted;
+  final String? unitCd;
+  final String? facilityCd;
+  final String? scaiStageCurrent;
+  final List<PatientVital> clinicalVitals;
+  final List<PatientDiagnosis> diagnoses;
+  final List<PatientMedication> medications;
+  final List<HomeCareSuggestion> recommendations;
+  final String? conditionOverride;
 
-  // Convenience getters — so existing widgets don't need updating
   double get icuRisk => predictions.icuTransferRisk;
   double get readmissionRisk => predictions.readmissionRisk;
-  String get condition => predictions.overallTier;
+  String get condition =>
+      conditionOverride ?? predictions.overallTier;
   List<ShapValue> get shapValues => predictions.shapTransfer;
+
+  factory PatientRecord.fromSeedJson(Map<String, dynamic> json) {
+    final predMap = json['predictions'] as Map<String, dynamic>;
+    final predictions = PatientPredictions.fromSeedMap(predMap);
+    final recs = (json['recommendations'] as List<dynamic>? ?? [])
+        .map((e) => HomeCareSuggestion.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final vitals = (json['vitals'] as List<dynamic>? ?? [])
+        .map((e) => PatientVital.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final dx = (json['diagnoses'] as List<dynamic>? ?? [])
+        .map((e) => PatientDiagnosis.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final meds = (json['medications'] as List<dynamic>? ?? [])
+        .map((e) => PatientMedication.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    final age = json['age'] as int?;
+    final days = json['days_admitted'] as int?;
+
+    return PatientRecord(
+      rank: json['rank'] as int,
+      name: json['name'] as String,
+      id: json['id'] as String,
+      encounterId: json['encounter_id'] as String?,
+      roomNumber: json['room_number'] as String,
+      predictions: predictions.copyWithHomeCare(recs),
+      features: PatientFeatures(
+        numMedications: meds.length,
+        numberInpatient: 1,
+        numLabProcedures: vitals.where((v) => v.code.length > 3).length,
+        timeInHospital: days ?? 1,
+        numberDiagnoses: dx.length.clamp(1, 16),
+        numberEmergency: 1,
+        numberOutpatient: 0,
+        ageMid: (age ?? 65).toDouble(),
+      ),
+      primaryDoctor: json['primary_doctor'] as String?,
+      issue: json['issue'] as String?,
+      age: age,
+      gender: json['gender'] as String?,
+      diagnosis: json['diagnosis'] as String?,
+      daysAdmitted: days,
+      unitCd: json['unit_cd'] as String?,
+      facilityCd: json['facility_cd'] as String?,
+      scaiStageCurrent: json['scai_stage_current'] as String?,
+      clinicalVitals: vitals,
+      diagnoses: dx,
+      medications: meds,
+      recommendations: recs,
+      conditionOverride: json['condition'] as String?,
+    );
+  }
 
   PatientRecord copyWithRank(int newRank) => PatientRecord(
         rank: newRank,
@@ -319,13 +560,21 @@ class PatientRecord {
         roomNumber: roomNumber,
         predictions: predictions,
         features: features,
+        encounterId: encounterId,
         primaryDoctor: primaryDoctor,
         issue: issue,
-        vitals: vitals,
         age: age,
         gender: gender,
         diagnosis: diagnosis,
         daysAdmitted: daysAdmitted,
+        unitCd: unitCd,
+        facilityCd: facilityCd,
+        scaiStageCurrent: scaiStageCurrent,
+        clinicalVitals: clinicalVitals,
+        diagnoses: diagnoses,
+        medications: medications,
+        recommendations: recommendations,
+        conditionOverride: conditionOverride,
       );
 }
 
@@ -523,26 +772,35 @@ PatientPredictions generateMockPredictions(
   final inhospExpiry =
       (hospMort * 0.85 + rng.nextDouble() * 0.10).clamp(0.01, 0.90);
 
+  final scaiProb = (icuRisk * 0.5 + rng.nextDouble() * 0.3).clamp(0.05, 0.95);
+  final vasoProb = (icuRisk * 0.6 + rng.nextDouble() * 0.25).clamp(0.05, 0.95);
+
   return PatientPredictions(
-    readmissionRisk:
-        double.parse(readmission.toStringAsFixed(2)),
-    hospitalLosDays:
-        double.parse(hospitalLos.toStringAsFixed(1)),
+    readmissionRisk: double.parse(readmission.toStringAsFixed(2)),
+    hospitalLosDays: double.parse(hospitalLos.toStringAsFixed(1)),
     icuLosDays: double.parse(icuLos.toStringAsFixed(1)),
     homeCareSuggestions:
         generateMockHomeCareSuggestions(features, readmission),
-    hospitalMortality:
-        double.parse(hospMort.toStringAsFixed(2)),
+    hospitalMortality: double.parse(hospMort.toStringAsFixed(2)),
     icuMortality: double.parse(icuMort.toStringAsFixed(2)),
-    inHospitalExpiry:
-        double.parse(inhospExpiry.toStringAsFixed(2)),
+    inHospitalExpiry: double.parse(inhospExpiry.toStringAsFixed(2)),
     icuTransferRisk: double.parse(icuRisk.toStringAsFixed(2)),
-    shapTransfer:
-        generateMockShapValues(icuRisk, rng, 'transfer'),
-    shapReadmission:
-        generateMockShapValues(readmission, rng, 'readmission'),
-    shapMortality:
-        generateMockShapValues(hospMort, rng, 'mortality'),
+    shapTransfer: generateMockShapValues(icuRisk, rng, 'transfer'),
+    shapReadmission: generateMockShapValues(readmission, rng, 'readmission'),
+    shapMortality: generateMockShapValues(hospMort, rng, 'mortality'),
     lastUpdated: DateTime.now(),
+    scaiDeterioration6hProb: double.parse(scaiProb.toStringAsFixed(2)),
+    scaiDeterioration6hLabel:
+        scaiProb >= 0.5 ? 'Likely to worsen' : 'Unlikely to worsen',
+    currentScaiStage: ['A', 'B', 'C', 'D', 'E'][rng.nextInt(5)],
+    vasopressorProbability: double.parse(vasoProb.toStringAsFixed(2)),
+    predictedVasopressorCount: (vasoProb * 3).round().clamp(0, 4),
+    mortalityRisk: double.parse(hospMort.toStringAsFixed(2)),
+    mcs12hProbability:
+        double.parse((icuRisk * 0.55).clamp(0.02, 0.9).toStringAsFixed(2)),
+    mcs12hNeeded: icuRisk >= 0.55,
+    vaEcmo12hProbability:
+        double.parse((icuRisk * 0.45).clamp(0.02, 0.85).toStringAsFixed(2)),
+    vaEcmo12hNeeded: icuRisk >= 0.65,
   );
 }

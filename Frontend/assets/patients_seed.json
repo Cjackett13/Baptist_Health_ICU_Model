@@ -1,0 +1,4225 @@
+{
+  "patients": [
+    {
+      "rank": 1,
+      "name": "Ethan Williams",
+      "id": "101426",
+      "encounter_id": "9001426",
+      "room_number": "CICU 01",
+      "age": 69,
+      "gender": "F",
+      "diagnosis": "Acute myocarditis, unspecified",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 2",
+      "issue": "Acute myocarditis, unspecified",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 13.94,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 0.92,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 69.49,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 79.85,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 0.95,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 84.57,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 2040.82,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 17.48,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 114.72,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 99.39,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.15,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 14.73,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 91.91,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T03:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I40.9",
+          "text": "Acute myocarditis, unspecified",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "E78.5",
+          "text": "Hyperlipidemia, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0037 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T04:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.37,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.5,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.3,
+        "hospital_los_days": 3.2,
+        "icu_los_days": 3.1,
+        "mcs_12h_probability": 0.18,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.15,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.23,
+        "icu_transfer_risk": 0.33,
+        "last_updated": "2026-05-19T13:42:24.902404"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 2,
+      "name": "Jordan Kim",
+      "id": "106400",
+      "encounter_id": "9006400",
+      "room_number": "CICU 02",
+      "age": 66,
+      "gender": "M",
+      "diagnosis": "Cardiac arrest, cause unspecified",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Cardiac arrest, cause unspecified",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 22.76,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.05,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 68.44,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 90.01,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 2.81,
+          "units": "mmol/L",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 84.56,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 1348.61,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 20.51,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 116.8,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 92.98,
+          "units": "%",
+          "normalcy": "LOW",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.17,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 525.56,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 45.96,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T17:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I46.9",
+          "text": "Cardiac arrest, cause unspecified",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Heparin",
+          "code": "HEPARIN",
+          "dosage": "0.0029 units/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T23:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.004 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-31T03:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0159 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T23:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.53,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.37,
+        "hospital_los_days": 2.8,
+        "icu_los_days": 2.8,
+        "mcs_12h_probability": 0.24,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.19,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.3,
+        "icu_transfer_risk": 0.43,
+        "last_updated": "2026-05-19T13:42:25.015935"
+      },
+      "recommendations": [
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 3,
+      "name": "Lucas Williams",
+      "id": "100840",
+      "encounter_id": "9000840",
+      "room_number": "CICU 03",
+      "age": 73,
+      "gender": "F",
+      "diagnosis": "Nonrheumatic aortic (valve) stenosis",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Nonrheumatic aortic (valve) stenosis",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 23.93,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.55,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 78.23,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 95.57,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.04,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 90.05,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 888.42,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 18.21,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 113.69,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 94.75,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.7,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 46.15,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T23:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 81.11,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T14:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I35.0",
+          "text": "Nonrheumatic aortic (valve) stenosis",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "E11.9",
+          "text": "Type 2 diabetes mellitus without complications",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "F41.9",
+          "text": "Anxiety disorder, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 4,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Heparin",
+          "code": "HEPARIN",
+          "dosage": "0.0029 units/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T23:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0036 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T12:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0028 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-30T13:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.5,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.3,
+        "hospital_los_days": 3.6,
+        "icu_los_days": 3.4,
+        "mcs_12h_probability": 0.18,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.15,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.23,
+        "icu_transfer_risk": 0.33,
+        "last_updated": "2026-05-19T13:42:25.118559"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 4,
+      "name": "Rajiv Smith",
+      "id": "104176",
+      "encounter_id": "9004176",
+      "room_number": "CICU 04",
+      "age": 75,
+      "gender": "M",
+      "diagnosis": "Dissection of thoracic aorta",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 2",
+      "issue": "Dissection of thoracic aorta",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 11.03,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T22:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.18,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T22:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 73.16,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 59.06,
+          "units": "bpm",
+          "normalcy": "LOW",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.56,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T22:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 92.53,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 852.11,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T22:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 15.85,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 131.28,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 98.7,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.35,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 66.57,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T22:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 15.55,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T14:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I71.01",
+          "text": "Dissection of thoracic aorta",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "E78.5",
+          "text": "Hyperlipidemia, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 4,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0039 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T22:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0035 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-30T03:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.5,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.3,
+        "hospital_los_days": 5.7,
+        "icu_los_days": 4.6,
+        "mcs_12h_probability": 0.18,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.15,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.23,
+        "icu_transfer_risk": 0.33,
+        "last_updated": "2026-05-19T13:42:25.231593"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 5,
+      "name": "Jordan Kumar",
+      "id": "107814",
+      "encounter_id": "9007814",
+      "room_number": "CICU 05",
+      "age": 73,
+      "gender": "M",
+      "diagnosis": "Cardiac arrest, cause unspecified",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 5",
+      "issue": "Cardiac arrest, cause unspecified",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "C",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 18.09,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T10:00:00"
+        },
+        {
+          "code": "CI",
+          "title": "Cardiac Index",
+          "value": 2.12,
+          "units": "L/min/m2",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "CO",
+          "title": "Cardiac Output",
+          "value": 3.54,
+          "units": "L/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "CPO",
+          "title": "Cardiac Power Output",
+          "value": 0.54,
+          "units": "W",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 0.74,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T10:00:00"
+        },
+        {
+          "code": "CVP",
+          "title": "Central Venous Pressure",
+          "value": 13.51,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 50.51,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 127.5,
+          "units": "bpm",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 2.1,
+          "units": "mmol/L",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-02T10:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 69.28,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 1253.27,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T10:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 19.64,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 106.83,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 95.57,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "SVO2",
+          "title": "Mixed Venous Oxygen Saturation",
+          "value": 51.99,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "SVR",
+          "title": "Systemic Vascular Resistance",
+          "value": 1682.67,
+          "units": "dyn.s/cm5",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.53,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 1210.18,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T10:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 5.83,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I46.9",
+          "text": "Cardiac arrest, cause unspecified",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "0.0027 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T22:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0043 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T22:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "1.226 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2025-01-02T11:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "C",
+        "vasopressor_probability": 0.65,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.63,
+        "hospital_los_days": 3.7,
+        "icu_los_days": 3.4,
+        "mcs_12h_probability": 0.42,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.35,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.54,
+        "icu_transfer_risk": 0.77,
+        "last_updated": "2026-05-19T13:42:25.323201"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Rest and limit exertion",
+          "description": "Your heart rate has been elevated. Avoid strenuous activity and follow activity guidance from your nurse or physician.",
+          "impact": "Supports recovery and reduces strain on the heart"
+        },
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Critical"
+    },
+    {
+      "rank": 6,
+      "name": "Lucas Patel",
+      "id": "101582",
+      "encounter_id": "9001582",
+      "room_number": "CICU 06",
+      "age": 66,
+      "gender": "M",
+      "diagnosis": "Acute on chronic systolic heart failure",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 3",
+      "issue": "Acute on chronic systolic heart failure",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "E",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 65.76,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "CI",
+          "title": "Cardiac Index",
+          "value": 1.79,
+          "units": "L/min/m2",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "CO",
+          "title": "Cardiac Output",
+          "value": 2.24,
+          "units": "L/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "CPO",
+          "title": "Cardiac Power Output",
+          "value": 0.21,
+          "units": "W",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.91,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "CVP",
+          "title": "Central Venous Pressure",
+          "value": 19.61,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 38.26,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 107.8,
+          "units": "bpm",
+          "normalcy": "HIGH",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 8.41,
+          "units": "mmol/L",
+          "normalcy": "CRITICAL_HIGH",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 41.65,
+          "units": "mmHg",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 41914.58,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 41.35,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 48.44,
+          "units": "mmHg",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 98.17,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "SVO2",
+          "title": "Mixed Venous Oxygen Saturation",
+          "value": 28.25,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "SVR",
+          "title": "Systemic Vascular Resistance",
+          "value": 2140.85,
+          "units": "dyn.s/cm5",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.0,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 3857.92,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 1.79,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T01:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I50.23",
+          "text": "Acute on chronic systolic heart failure",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "E78.5",
+          "text": "Hyperlipidemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "F41.9",
+          "text": "Anxiety disorder, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.4949 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T22:00:00"
+        },
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "10.97 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T23:00:00"
+        },
+        {
+          "name": "Epinephrine",
+          "code": "EPINEPHRINE",
+          "dosage": "0.1649 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T09:00:00"
+        },
+        {
+          "name": "Vasopressin",
+          "code": "VASOPRESSIN",
+          "dosage": "0.0433 units/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T09:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.1244 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-30T19:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.37,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "E",
+        "vasopressor_probability": 0.95,
+        "predicted_vasopressor_count": 3,
+        "mortality_risk": 0.74,
+        "hospital_los_days": 1.1,
+        "icu_los_days": 1.1,
+        "mcs_12h_probability": 0.51,
+        "mcs_12h_needed": true,
+        "va_ecmo_12h_probability": 0.81,
+        "va_ecmo_12h_needed": true,
+        "readmission_risk": 0.64,
+        "icu_transfer_risk": 0.92,
+        "last_updated": "2026-05-19T13:42:25.428316"
+      },
+      "recommendations": [
+        {
+          "category": "monitoring",
+          "title": "Follow your care team's shock plan",
+          "description": "Your care team is monitoring advanced cardiogenic shock (SCAI stage E). Report new chest pain, confusion, or decreased urine output immediately.",
+          "impact": "Early reporting helps your team adjust treatment quickly"
+        },
+        {
+          "category": "lifestyle",
+          "title": "Rest and limit exertion",
+          "description": "Your heart rate has been elevated. Avoid strenuous activity and follow activity guidance from your nurse or physician.",
+          "impact": "Supports recovery and reduces strain on the heart"
+        },
+        {
+          "category": "monitoring",
+          "title": "Blood pressure monitoring",
+          "description": "Your blood pressure readings have been on the lower side. Rise slowly from bed and stay well hydrated unless fluid restriction was ordered.",
+          "impact": "Helps prevent dizziness and falls"
+        },
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        },
+        {
+          "category": "medication",
+          "title": "Take heart medications on schedule",
+          "description": "Do not skip prescribed heart medications. Use a daily pill organizer and ask your nurse if you have questions about any dose.",
+          "impact": "Improves stability after hospital discharge"
+        }
+      ],
+      "condition": "Critical"
+    },
+    {
+      "rank": 7,
+      "name": "Noah Kim",
+      "id": "104347",
+      "encounter_id": "9004347",
+      "room_number": "CICU 07",
+      "age": 64,
+      "gender": "M",
+      "diagnosis": "Presence of aortocoronary bypass graft (post-op)",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 3",
+      "issue": "Presence of aortocoronary bypass graft (post-op)",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "B",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 12.49,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.04,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 57.29,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 94.16,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 2.26,
+          "units": "mmol/L",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 69.3,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 1914.68,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 25.85,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 93.3,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 93.81,
+          "units": "%",
+          "normalcy": "LOW",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.33,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 201.82,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 79.76,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T18:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "Z95.1",
+          "text": "Presence of aortocoronary bypass graft (post-op)",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "N17.9",
+          "text": "Acute kidney failure, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I48.91",
+          "text": "Unspecified atrial fibrillation",
+          "priority": 3,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Heparin",
+          "code": "HEPARIN",
+          "dosage": "0.0029 units/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T21:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0028 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-31T13:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0337 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-31T07:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "B",
+        "vasopressor_probability": 0.57,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.46,
+        "hospital_los_days": 2.9,
+        "icu_los_days": 2.9,
+        "mcs_12h_probability": 0.3,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.25,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.39,
+        "icu_transfer_risk": 0.55,
+        "last_updated": "2026-05-19T13:42:25.527413"
+      },
+      "recommendations": [
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 8,
+      "name": "Lucas Torres",
+      "id": "105362",
+      "encounter_id": "9005362",
+      "room_number": "CICU 08",
+      "age": 66,
+      "gender": "F",
+      "diagnosis": "Ventricular fibrillation",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 3",
+      "issue": "Ventricular fibrillation",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "B",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 22.81,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.38,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 56.22,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 108.4,
+          "units": "bpm",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 3.75,
+          "units": "mmol/L",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 67.12,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 5384.16,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 24.96,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 88.92,
+          "units": "mmHg",
+          "normalcy": "LOW",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 95.81,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.09,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 419.69,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T09:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 59.27,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T11:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I49.01",
+          "text": "Ventricular fibrillation",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 2,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "0.0035 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T21:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0334 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T21:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "B",
+        "vasopressor_probability": 0.61,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.54,
+        "hospital_los_days": 2.6,
+        "icu_los_days": 2.6,
+        "mcs_12h_probability": 0.36,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.29,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.45,
+        "icu_transfer_risk": 0.65,
+        "last_updated": "2026-05-19T13:42:25.630264"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Rest and limit exertion",
+          "description": "Your heart rate has been elevated. Avoid strenuous activity and follow activity guidance from your nurse or physician.",
+          "impact": "Supports recovery and reduces strain on the heart"
+        },
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Critical"
+    },
+    {
+      "rank": 9,
+      "name": "Amelia Brooks",
+      "id": "101097",
+      "encounter_id": "9001097",
+      "room_number": "CICU 09",
+      "age": 70,
+      "gender": "M",
+      "diagnosis": "Acute on chronic systolic heart failure",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 3",
+      "issue": "Acute on chronic systolic heart failure",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "B",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 22.23,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T21:00:00"
+        },
+        {
+          "code": "CI",
+          "title": "Cardiac Index",
+          "value": 1.91,
+          "units": "L/min/m2",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "CO",
+          "title": "Cardiac Output",
+          "value": 4.65,
+          "units": "L/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "CPO",
+          "title": "Cardiac Power Output",
+          "value": 0.61,
+          "units": "W",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.57,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-08T21:00:00"
+        },
+        {
+          "code": "CVP",
+          "title": "Central Venous Pressure",
+          "value": 12.01,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 44.63,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 76.65,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.97,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T21:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 59.44,
+          "units": "mmHg",
+          "normalcy": "LOW",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 2766.97,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T21:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 19.54,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 89.07,
+          "units": "mmHg",
+          "normalcy": "LOW",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 97.31,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "SVO2",
+          "title": "Mixed Venous Oxygen Saturation",
+          "value": 67.2,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "SVR",
+          "title": "Systemic Vascular Resistance",
+          "value": 1160.78,
+          "units": "dyn.s/cm5",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 35.6,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 218.93,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T21:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 27.23,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-09T03:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I50.23",
+          "text": "Acute on chronic systolic heart failure",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "I48.91",
+          "text": "Unspecified atrial fibrillation",
+          "priority": 2,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0047 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2025-01-01T03:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0042 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T21:00:00"
+        },
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "0.0047 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2025-01-03T01:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "B",
+        "vasopressor_probability": 0.58,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.48,
+        "hospital_los_days": 10.2,
+        "icu_los_days": 7.3,
+        "mcs_12h_probability": 0.31,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.26,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.4,
+        "icu_transfer_risk": 0.57,
+        "last_updated": "2026-05-19T13:42:25.774190"
+      },
+      "recommendations": [
+        {
+          "category": "monitoring",
+          "title": "Blood pressure monitoring",
+          "description": "Your blood pressure readings have been on the lower side. Rise slowly from bed and stay well hydrated unless fluid restriction was ordered.",
+          "impact": "Helps prevent dizziness and falls"
+        },
+        {
+          "category": "medication",
+          "title": "Take heart medications on schedule",
+          "description": "Do not skip prescribed heart medications. Use a daily pill organizer and ask your nurse if you have questions about any dose.",
+          "impact": "Improves stability after hospital discharge"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 10,
+      "name": "Emma Diaz",
+      "id": "101205",
+      "encounter_id": "9001205",
+      "room_number": "CICU 10",
+      "age": 90,
+      "gender": "F",
+      "diagnosis": "Dilated cardiomyopathy",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Dilated cardiomyopathy",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "E",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 31.52,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T17:00:00"
+        },
+        {
+          "code": "CI",
+          "title": "Cardiac Index",
+          "value": 1.06,
+          "units": "L/min/m2",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "CO",
+          "title": "Cardiac Output",
+          "value": 2.67,
+          "units": "L/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "CPO",
+          "title": "Cardiac Power Output",
+          "value": 0.26,
+          "units": "W",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 3.54,
+          "units": "mg/dL",
+          "normalcy": "CRITICAL_HIGH",
+          "recorded_at": "2024-12-30T17:00:00"
+        },
+        {
+          "code": "CVP",
+          "title": "Central Venous Pressure",
+          "value": 24.4,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 16.96,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 102.92,
+          "units": "bpm",
+          "normalcy": "HIGH",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 12.94,
+          "units": "mmol/L",
+          "normalcy": "CRITICAL_HIGH",
+          "recorded_at": "2024-12-30T17:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 43.58,
+          "units": "mmHg",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 35919.86,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T17:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 28.23,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 96.82,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 92.2,
+          "units": "%",
+          "normalcy": "LOW",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "SVO2",
+          "title": "Mixed Venous Oxygen Saturation",
+          "value": 31.68,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "SVR",
+          "title": "Systemic Vascular Resistance",
+          "value": 2268.46,
+          "units": "dyn.s/cm5",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 33.78,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 5668.66,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T17:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 0.0,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I42.0",
+          "text": "Dilated cardiomyopathy",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "I48.91",
+          "text": "Unspecified atrial fibrillation",
+          "priority": 2,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Heparin",
+          "code": "HEPARIN",
+          "dosage": "0.0029 units/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T21:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0037 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-30T07:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.5054 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T21:00:00"
+        },
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "11.26 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T21:00:00"
+        },
+        {
+          "name": "Epinephrine",
+          "code": "EPINEPHRINE",
+          "dosage": "0.1674 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T04:00:00"
+        },
+        {
+          "name": "Vasopressin",
+          "code": "VASOPRESSIN",
+          "dosage": "0.0455 units/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T04:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "E",
+        "vasopressor_probability": 0.95,
+        "predicted_vasopressor_count": 3,
+        "mortality_risk": 0.74,
+        "hospital_los_days": 0.9,
+        "icu_los_days": 0.9,
+        "mcs_12h_probability": 0.51,
+        "mcs_12h_needed": true,
+        "va_ecmo_12h_probability": 0.81,
+        "va_ecmo_12h_needed": true,
+        "readmission_risk": 0.64,
+        "icu_transfer_risk": 0.92,
+        "last_updated": "2026-05-19T13:42:25.884665"
+      },
+      "recommendations": [
+        {
+          "category": "monitoring",
+          "title": "Follow your care team's shock plan",
+          "description": "Your care team is monitoring advanced cardiogenic shock (SCAI stage E). Report new chest pain, confusion, or decreased urine output immediately.",
+          "impact": "Early reporting helps your team adjust treatment quickly"
+        },
+        {
+          "category": "lifestyle",
+          "title": "Rest and limit exertion",
+          "description": "Your heart rate has been elevated. Avoid strenuous activity and follow activity guidance from your nurse or physician.",
+          "impact": "Supports recovery and reduces strain on the heart"
+        },
+        {
+          "category": "monitoring",
+          "title": "Blood pressure monitoring",
+          "description": "Your blood pressure readings have been on the lower side. Rise slowly from bed and stay well hydrated unless fluid restriction was ordered.",
+          "impact": "Helps prevent dizziness and falls"
+        },
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        },
+        {
+          "category": "medication",
+          "title": "Keep an updated medication list",
+          "description": "You are currently on 6 medications in the ICU. Ask your nurse to review each medication name and purpose with you.",
+          "impact": "Reduces confusion and missed doses"
+        }
+      ],
+      "condition": "Critical"
+    },
+    {
+      "rank": 11,
+      "name": "Mia Martinez",
+      "id": "107485",
+      "encounter_id": "9007485",
+      "room_number": "CICU 11",
+      "age": 78,
+      "gender": "M",
+      "diagnosis": "Acute on chronic systolic heart failure",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Acute on chronic systolic heart failure",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 24.84,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T20:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.08,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T20:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 75.39,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 94.33,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 0.95,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T20:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 94.82,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 1616.93,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T20:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 14.35,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 133.67,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 95.54,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.06,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 141.45,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T20:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 68.39,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-04T17:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I50.23",
+          "text": "Acute on chronic systolic heart failure",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "N17.9",
+          "text": "Acute kidney failure, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "F41.9",
+          "text": "Anxiety disorder, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "E11.9",
+          "text": "Type 2 diabetes mellitus without complications",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0041 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2025-01-01T00:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.5,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.3,
+        "hospital_los_days": 5.9,
+        "icu_los_days": 4.7,
+        "mcs_12h_probability": 0.18,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.15,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.23,
+        "icu_transfer_risk": 0.33,
+        "last_updated": "2026-05-19T13:42:25.987828"
+      },
+      "recommendations": [
+        {
+          "category": "medication",
+          "title": "Take heart medications on schedule",
+          "description": "Do not skip prescribed heart medications. Use a daily pill organizer and ask your nurse if you have questions about any dose.",
+          "impact": "Improves stability after hospital discharge"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 12,
+      "name": "Ethan Martinez",
+      "id": "104156",
+      "encounter_id": "9004156",
+      "room_number": "CICU 12",
+      "age": 79,
+      "gender": "M",
+      "diagnosis": "Ventricular fibrillation",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 2",
+      "issue": "Ventricular fibrillation",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "E",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 61.1,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T20:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 4.26,
+          "units": "mg/dL",
+          "normalcy": "CRITICAL_HIGH",
+          "recorded_at": "2024-12-30T20:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 51.25,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 151.75,
+          "units": "bpm",
+          "normalcy": "CRITICAL_HIGH",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 8.58,
+          "units": "mmol/L",
+          "normalcy": "CRITICAL_HIGH",
+          "recorded_at": "2024-12-30T20:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 52.89,
+          "units": "mmHg",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 14034.74,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T20:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 34.14,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 56.19,
+          "units": "mmHg",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 82.69,
+          "units": "%",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 35.13,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 1490.21,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T20:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 13.31,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T22:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I49.01",
+          "text": "Ventricular fibrillation",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I48.91",
+          "text": "Unspecified atrial fibrillation",
+          "priority": 3,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Bivalirudin",
+          "code": "BIVALIRUDIN",
+          "dosage": "0.0047 mg/kg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T20:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.5155 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T20:00:00"
+        },
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "11.2 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T20:00:00"
+        },
+        {
+          "name": "Epinephrine",
+          "code": "EPINEPHRINE",
+          "dosage": "0.1543 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T08:00:00"
+        },
+        {
+          "name": "Vasopressin",
+          "code": "VASOPRESSIN",
+          "dosage": "0.0436 units/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T08:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "E",
+        "vasopressor_probability": 0.95,
+        "predicted_vasopressor_count": 3,
+        "mortality_risk": 0.74,
+        "hospital_los_days": 1.1,
+        "icu_los_days": 1.1,
+        "mcs_12h_probability": 0.86,
+        "mcs_12h_needed": true,
+        "va_ecmo_12h_probability": 0.41,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.64,
+        "icu_transfer_risk": 0.92,
+        "last_updated": "2026-05-19T13:42:26.078261"
+      },
+      "recommendations": [
+        {
+          "category": "monitoring",
+          "title": "Follow your care team's shock plan",
+          "description": "Your care team is monitoring advanced cardiogenic shock (SCAI stage E). Report new chest pain, confusion, or decreased urine output immediately.",
+          "impact": "Early reporting helps your team adjust treatment quickly"
+        },
+        {
+          "category": "lifestyle",
+          "title": "Rest and limit exertion",
+          "description": "Your heart rate has been elevated. Avoid strenuous activity and follow activity guidance from your nurse or physician.",
+          "impact": "Supports recovery and reduces strain on the heart"
+        },
+        {
+          "category": "monitoring",
+          "title": "Blood pressure monitoring",
+          "description": "Your blood pressure readings have been on the lower side. Rise slowly from bed and stay well hydrated unless fluid restriction was ordered.",
+          "impact": "Helps prevent dizziness and falls"
+        },
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Critical"
+    },
+    {
+      "rank": 13,
+      "name": "Layla Chen",
+      "id": "103573",
+      "encounter_id": "9003573",
+      "room_number": "CICU 13",
+      "age": 76,
+      "gender": "M",
+      "diagnosis": "Dilated cardiomyopathy",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 4",
+      "issue": "Dilated cardiomyopathy",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 14.96,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T20:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 0.81,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T20:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 73.08,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 68.84,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 0.3,
+          "units": "mmol/L",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2025-01-01T20:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 89.96,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 388.77,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T20:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 14.32,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 123.72,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 99.61,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.3,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 67.6,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T20:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 81.54,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T15:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I42.0",
+          "text": "Dilated cardiomyopathy",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "N17.9",
+          "text": "Acute kidney failure, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.29,
+        "predicted_vasopressor_count": 1,
+        "mortality_risk": 0.24,
+        "hospital_los_days": 3.8,
+        "icu_los_days": 3.5,
+        "mcs_12h_probability": 0.14,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.11,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.17,
+        "icu_transfer_risk": 0.25,
+        "last_updated": "2026-05-19T13:42:26.182648"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 14,
+      "name": "Marcus Carter",
+      "id": "106572",
+      "encounter_id": "9006572",
+      "room_number": "CICU 14",
+      "age": 78,
+      "gender": "M",
+      "diagnosis": "Non-ST elevation myocardial infarction",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 3",
+      "issue": "Non-ST elevation myocardial infarction",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 19.79,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T20:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 0.96,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T20:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 74.47,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 79.34,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.57,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T20:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 90.04,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 694.57,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T20:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 17.46,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 121.17,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 97.91,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.35,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 33.16,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T20:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 22.97,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-01T10:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I21.4",
+          "text": "Non-ST elevation myocardial infarction",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "I48.91",
+          "text": "Unspecified atrial fibrillation",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "N17.9",
+          "text": "Acute kidney failure, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I10",
+          "text": "Essential (primary) hypertension",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "F41.9",
+          "text": "Anxiety disorder, unspecified",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Heparin",
+          "code": "HEPARIN",
+          "dosage": "0.0029 units/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T20:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.29,
+        "predicted_vasopressor_count": 1,
+        "mortality_risk": 0.24,
+        "hospital_los_days": 2.6,
+        "icu_los_days": 2.6,
+        "mcs_12h_probability": 0.14,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.11,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.17,
+        "icu_transfer_risk": 0.25,
+        "last_updated": "2026-05-19T13:42:26.272833"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 15,
+      "name": "Rajiv Reed",
+      "id": "100480",
+      "encounter_id": "9000480",
+      "room_number": "CICU 15",
+      "age": 52,
+      "gender": "M",
+      "diagnosis": "Acute myocarditis, unspecified",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Acute myocarditis, unspecified",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 11.99,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 0.93,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 79.54,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 73.92,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 2.51,
+          "units": "mmol/L",
+          "normalcy": "HIGH",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 98.44,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 1472.69,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 19.67,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 136.25,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 95.94,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.93,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 248.9,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-30T19:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 66.11,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T10:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I40.9",
+          "text": "Acute myocarditis, unspecified",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "F41.9",
+          "text": "Anxiety disorder, unspecified",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "N17.9",
+          "text": "Acute kidney failure, unspecified",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0043 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T19:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.53,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.37,
+        "hospital_los_days": 1.6,
+        "icu_los_days": 1.6,
+        "mcs_12h_probability": 0.24,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.19,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.3,
+        "icu_transfer_risk": 0.43,
+        "last_updated": "2026-05-19T13:42:26.377844"
+      },
+      "recommendations": [
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 16,
+      "name": "Lucas Nguyen",
+      "id": "102744",
+      "encounter_id": "9002744",
+      "room_number": "CICU 16",
+      "age": 62,
+      "gender": "F",
+      "diagnosis": "Non-ST elevation myocardial infarction",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 5",
+      "issue": "Non-ST elevation myocardial infarction",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 20.94,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T19:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 0.29,
+          "units": "mg/dL",
+          "normalcy": "CRITICAL_LOW",
+          "recorded_at": "2025-01-02T19:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 68.07,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 84.19,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 2.44,
+          "units": "mmol/L",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-02T19:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 85.03,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 1889.23,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T19:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 14.95,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 118.94,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 97.48,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.3,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 241.03,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-02T19:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 117.6,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T14:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I21.4",
+          "text": "Non-ST elevation myocardial infarction",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Bivalirudin",
+          "code": "BIVALIRUDIN",
+          "dosage": "0.0047 mg/kg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T19:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0045 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T20:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.53,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.37,
+        "hospital_los_days": 4.8,
+        "icu_los_days": 4.1,
+        "mcs_12h_probability": 0.24,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.19,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.3,
+        "icu_transfer_risk": 0.43,
+        "last_updated": "2026-05-19T13:42:26.479124"
+      },
+      "recommendations": [
+        {
+          "category": "diet",
+          "title": "Nutrition as directed",
+          "description": "Your lactate level suggests your body is under stress. Eat small, balanced meals as approved by your care team unless NPO.",
+          "impact": "Supports healing and energy during recovery"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 17,
+      "name": "Ethan Patel",
+      "id": "101776",
+      "encounter_id": "9001776",
+      "room_number": "CICU 17",
+      "age": 62,
+      "gender": "M",
+      "diagnosis": "Non-ST elevation myocardial infarction",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 2",
+      "issue": "Non-ST elevation myocardial infarction",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 34.12,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T18:00:00"
+        },
+        {
+          "code": "CI",
+          "title": "Cardiac Index",
+          "value": 2.15,
+          "units": "L/min/m2",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "CO",
+          "title": "Cardiac Output",
+          "value": 5.36,
+          "units": "L/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "CPO",
+          "title": "Cardiac Power Output",
+          "value": 1.03,
+          "units": "W",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 2.31,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-03T18:00:00"
+        },
+        {
+          "code": "CVP",
+          "title": "Central Venous Pressure",
+          "value": 4.92,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 71.38,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 95.29,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.0,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T18:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 86.42,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 15137.93,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T18:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 12.97,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 116.5,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 95.38,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "SVO2",
+          "title": "Mixed Venous Oxygen Saturation",
+          "value": 70.85,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "SVR",
+          "title": "Systemic Vascular Resistance",
+          "value": 685.58,
+          "units": "dyn.s/cm5",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.81,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 1115.16,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T18:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 71.75,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-03T19:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I21.4",
+          "text": "Non-ST elevation myocardial infarction",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "F41.9",
+          "text": "Anxiety disorder, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I48.91",
+          "text": "Unspecified atrial fibrillation",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "0.005 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-30T17:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0026 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2025-01-02T04:00:00"
+        },
+        {
+          "name": "Epinephrine",
+          "code": "EPINEPHRINE",
+          "dosage": "0.0048 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2025-01-01T18:00:00"
+        },
+        {
+          "name": "Vasopressin",
+          "code": "VASOPRESSIN",
+          "dosage": "0.0029 units/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2025-01-01T18:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0048 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-30T09:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.91,
+        "predicted_vasopressor_count": 3,
+        "mortality_risk": 0.42,
+        "hospital_los_days": 5.0,
+        "icu_los_days": 4.2,
+        "mcs_12h_probability": 0.27,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.62,
+        "va_ecmo_12h_needed": true,
+        "readmission_risk": 0.34,
+        "icu_transfer_risk": 0.49,
+        "last_updated": "2026-05-19T13:42:26.593502"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 18,
+      "name": "Emma Williams",
+      "id": "103095",
+      "encounter_id": "9003095",
+      "room_number": "CICU 18",
+      "age": 75,
+      "gender": "F",
+      "diagnosis": "Acute systolic (congestive) heart failure",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Acute systolic (congestive) heart failure",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 9.44,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T18:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.73,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2024-12-31T18:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 82.49,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 90.56,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.04,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T18:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 96.07,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 980.34,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T18:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 19.31,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 123.23,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 94.63,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 37.53,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 2.02,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T18:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 38.97,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2024-12-31T22:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I50.21",
+          "text": "Acute systolic (congestive) heart failure",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "E78.5",
+          "text": "Hyperlipidemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "E11.9",
+          "text": "Type 2 diabetes mellitus without complications",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Heparin",
+          "code": "HEPARIN",
+          "dosage": "0.0029 units/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-29T18:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.29,
+        "predicted_vasopressor_count": 1,
+        "mortality_risk": 0.24,
+        "hospital_los_days": 2.2,
+        "icu_los_days": 2.2,
+        "mcs_12h_probability": 0.14,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.11,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.17,
+        "icu_transfer_risk": 0.25,
+        "last_updated": "2026-05-19T13:42:26.683938"
+      },
+      "recommendations": [
+        {
+          "category": "medication",
+          "title": "Take heart medications on schedule",
+          "description": "Do not skip prescribed heart medications. Use a daily pill organizer and ask your nurse if you have questions about any dose.",
+          "impact": "Improves stability after hospital discharge"
+        }
+      ],
+      "condition": "Stable"
+    },
+    {
+      "rank": 19,
+      "name": "Sofia Torres",
+      "id": "107417",
+      "encounter_id": "9007417",
+      "room_number": "CICU 19",
+      "age": 70,
+      "gender": "M",
+      "diagnosis": "Acute systolic (congestive) heart failure",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 3",
+      "issue": "Acute systolic (congestive) heart failure",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 18.19,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.57,
+          "units": "mg/dL",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 63.2,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 103.26,
+          "units": "bpm",
+          "normalcy": "HIGH",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.82,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 82.44,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 2670.85,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 21.05,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 120.9,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 94.67,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.41,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 302.63,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 93.87,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T20:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I50.21",
+          "text": "Acute systolic (congestive) heart failure",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "E78.5",
+          "text": "Hyperlipidemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "D64.9",
+          "text": "Anemia, unspecified",
+          "priority": 4,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 5,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0041 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2024-12-30T14:00:00"
+        },
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0045 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-29T18:00:00"
+        },
+        {
+          "name": "Epinephrine",
+          "code": "EPINEPHRINE",
+          "dosage": "0.0039 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2025-01-02T20:00:00"
+        },
+        {
+          "name": "Vasopressin",
+          "code": "VASOPRESSIN",
+          "dosage": "0.0031 units/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2025-01-02T20:00:00"
+        },
+        {
+          "name": "Dobutamine",
+          "code": "DOBUTAMINE",
+          "dosage": "0.0029 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2025-01-02T15:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.95,
+        "predicted_vasopressor_count": 3,
+        "mortality_risk": 0.49,
+        "hospital_los_days": 9.1,
+        "icu_los_days": 6.7,
+        "mcs_12h_probability": 0.32,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.67,
+        "va_ecmo_12h_needed": true,
+        "readmission_risk": 0.41,
+        "icu_transfer_risk": 0.59,
+        "last_updated": "2026-05-19T13:42:26.776461"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Rest and limit exertion",
+          "description": "Your heart rate has been elevated. Avoid strenuous activity and follow activity guidance from your nurse or physician.",
+          "impact": "Supports recovery and reduces strain on the heart"
+        },
+        {
+          "category": "medication",
+          "title": "Take heart medications on schedule",
+          "description": "Do not skip prescribed heart medications. Use a daily pill organizer and ask your nurse if you have questions about any dose.",
+          "impact": "Improves stability after hospital discharge"
+        }
+      ],
+      "condition": "Moderate"
+    },
+    {
+      "rank": 20,
+      "name": "Jordan Reed",
+      "id": "105770",
+      "encounter_id": "9005770",
+      "room_number": "CICU 20",
+      "age": 63,
+      "gender": "M",
+      "diagnosis": "Non-ST elevation myocardial infarction",
+      "days_admitted": 505,
+      "primary_doctor": "Dr. Attending 1",
+      "issue": "Non-ST elevation myocardial infarction",
+      "unit_cd": "CICU",
+      "facility_cd": "BHSF_MAIN",
+      "scai_stage_current": "A",
+      "vitals": [
+        {
+          "code": "BUN",
+          "title": "Blood Urea Nitrogen",
+          "value": 9.73,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "CREATININE",
+          "title": "Creatinine, Serum",
+          "value": 1.04,
+          "units": "mg/dL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "DBP",
+          "title": "Diastolic Blood Pressure",
+          "value": 78.94,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "HR",
+          "title": "Heart Rate",
+          "value": 72.57,
+          "units": "bpm",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "LACTATE",
+          "title": "Lactate, Arterial",
+          "value": 1.41,
+          "units": "mmol/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "MAP",
+          "title": "Mean Arterial Pressure",
+          "value": 85.67,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "NT_PROBNP",
+          "title": "NT-proBNP",
+          "value": 2072.97,
+          "units": "pg/mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "RR",
+          "title": "Respiratory Rate",
+          "value": 19.69,
+          "units": "/min",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "SBP",
+          "title": "Systolic Blood Pressure",
+          "value": 99.13,
+          "units": "mmHg",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "SPO2",
+          "title": "Peripheral Oxygen Saturation",
+          "value": 100.0,
+          "units": "%",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "TEMP",
+          "title": "Temperature",
+          "value": 36.87,
+          "units": "degC",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        },
+        {
+          "code": "TROPONIN_I",
+          "title": "Troponin I, High-Sensitivity",
+          "value": 194.15,
+          "units": "ng/L",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-07T18:00:00"
+        },
+        {
+          "code": "URINE_OUT_HR",
+          "title": "Urine Output - Last Hour",
+          "value": 70.04,
+          "units": "mL",
+          "normalcy": "NORMAL",
+          "recorded_at": "2025-01-08T17:00:00"
+        }
+      ],
+      "diagnoses": [
+        {
+          "code": "I21.4",
+          "text": "Non-ST elevation myocardial infarction",
+          "priority": 1,
+          "classification": "PRINCIPAL"
+        },
+        {
+          "code": "E78.5",
+          "text": "Hyperlipidemia, unspecified",
+          "priority": 2,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "I25.10",
+          "text": "Atherosclerotic heart disease of native coronary artery",
+          "priority": 3,
+          "classification": "SECONDARY"
+        },
+        {
+          "code": "J96.01",
+          "text": "Acute respiratory failure with hypoxia",
+          "priority": 4,
+          "classification": "SECONDARY"
+        }
+      ],
+      "medications": [
+        {
+          "name": "Norepinephrine",
+          "code": "NOREPINEPHRINE",
+          "dosage": "0.0032 mcg/kg/min",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": true,
+          "start": "2024-12-31T09:00:00"
+        },
+        {
+          "name": "Furosemide",
+          "code": "FUROSEMIDE",
+          "dosage": "0.0027 mg/hr",
+          "route": "IV_CONTINUOUS",
+          "is_vasopressor": false,
+          "start": "2025-01-02T20:00:00"
+        }
+      ],
+      "predictions": {
+        "scai_deterioration_6h_prob": 0.15,
+        "scai_deterioration_6h_label": "Unlikely to worsen",
+        "current_scai_stage": "A",
+        "vasopressor_probability": 0.5,
+        "predicted_vasopressor_count": 2,
+        "mortality_risk": 0.3,
+        "hospital_los_days": 10.0,
+        "icu_los_days": 7.2,
+        "mcs_12h_probability": 0.18,
+        "mcs_12h_needed": false,
+        "va_ecmo_12h_probability": 0.15,
+        "va_ecmo_12h_needed": false,
+        "readmission_risk": 0.23,
+        "icu_transfer_risk": 0.33,
+        "last_updated": "2026-05-19T13:42:26.879294"
+      },
+      "recommendations": [
+        {
+          "category": "lifestyle",
+          "title": "Follow your ICU care plan",
+          "description": "Continue cooperating with nursing assessments, breathing exercises, and mobility plans as your team recommends.",
+          "impact": "Supports a smoother recovery"
+        }
+      ],
+      "condition": "Stable"
+    }
+  ]
+}

@@ -6,8 +6,9 @@
 
 import 'package:flutter/material.dart';
 import 'models/patient_prediction.dart';
+import 'screens/role_selection_screen.dart';
+import 'widgests/collapsible_section.dart';
 import 'widgests/prediction_cards.dart';
-import 'screens/home_care_screen.dart';
 
 export 'models/patient_prediction.dart';
 
@@ -18,11 +19,13 @@ class PatientListCard extends StatelessWidget {
   const PatientListCard({
     required this.patient,
     required this.onTap,
+    this.isClinician = true,
     super.key,
   });
 
   final PatientRecord patient;
   final VoidCallback onTap;
+  final bool isClinician;
 
   @override
   Widget build(BuildContext context) {
@@ -98,37 +101,54 @@ class PatientListCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  child: _RiskBar(
-                    label: 'ICU transfer',
-                    value: patient.predictions.icuTransferRisk,
+            if (isClinician) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: _RiskBar(
+                      label: 'Mortality',
+                      value: patient.predictions.mortalityRisk,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _RiskBar(
-                    label: 'Readmission',
-                    value: patient.predictions.readmissionRisk,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _RiskBar(
+                      label: 'SCAI worsen (6h)',
+                      value: patient.predictions.scaiDeterioration6hProb,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.calendar_today_outlined,
-                    size: 11, color: Colors.black38),
-                const SizedBox(width: 4),
-                Text(
-                  'Est. stay: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)}d hospital  ·  '
-                  '${patient.predictions.icuLosDays.toStringAsFixed(1)}d ICU',
-                  style: const TextStyle(
-                      fontSize: 11, color: Colors.black45),
-                ),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today_outlined,
+                      size: 11, color: Colors.black38),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Est. stay: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)}d hospital  ·  '
+                    'SCAI ${patient.predictions.currentScaiStage}',
+                    style: const TextStyle(
+                        fontSize: 11, color: Colors.black45),
+                  ),
+                ],
+              ),
+            ] else ...[
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today_outlined,
+                      size: 11, color: Colors.black38),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Predicted stay: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)} days',
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black54),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -204,7 +224,23 @@ class _RiskBadge extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // SHOW PATIENT DETAILS
 // ─────────────────────────────────────────────────────────────────────────────
-void showPatientDetails(BuildContext context, PatientRecord patient) {
+void showPatientDetails(
+  BuildContext context,
+  PatientRecord patient, {
+  required AppRole role,
+  String? sessionPatientId,
+}) {
+  if (role == AppRole.patient &&
+      sessionPatientId != null &&
+      patient.id != sessionPatientId) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('You can only view your own care record.'),
+      ),
+    );
+    return;
+  }
+
   showModalBottomSheet<void>(
     context: context,
     backgroundColor: const Color(0xFFF5F5F5),
@@ -212,13 +248,16 @@ void showPatientDetails(BuildContext context, PatientRecord patient) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder: (context) => _PatientDetailSheet(patient: patient),
+    builder: (context) => _PatientDetailSheet(patient: patient, role: role),
   );
 }
 
 class _PatientDetailSheet extends StatelessWidget {
-  const _PatientDetailSheet({required this.patient});
+  const _PatientDetailSheet({required this.patient, required this.role});
   final PatientRecord patient;
+  final AppRole role;
+
+  bool get _isClinician => role == AppRole.clinician;
 
   @override
   Widget build(BuildContext context) {
@@ -227,28 +266,15 @@ class _PatientDetailSheet extends StatelessWidget {
       height: screenHeight * 0.94,
       child: Column(
         children: [
-          _DetailHeader(patient: patient),
+          _DetailHeader(patient: patient, isClinician: _isClinician),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TransferAdmissionSection(
-                      predictions: patient.predictions),
-                  const SizedBox(height: 16),
-                  LengthOfStaySection(predictions: patient.predictions),
-                  const SizedBox(height: 16),
-                  MortalityRiskSection(predictions: patient.predictions),
-                  const SizedBox(height: 16),
-                  ShapPanel(predictions: patient.predictions),
-                  const SizedBox(height: 16),
-                  WhatIfSimulator(patient: patient),
-                  const SizedBox(height: 16),
-                  _HomeCareCta(patient: patient),
-                  const SizedBox(height: 16),
-                  _ClinicalDetailsCard(patient: patient),
-                ],
+                children: _isClinician
+                    ? _clinicianSections()
+                    : _patientSections(),
               ),
             ),
           ),
@@ -256,11 +282,83 @@ class _PatientDetailSheet extends StatelessWidget {
       ),
     );
   }
+
+  List<Widget> _clinicianSections() => [
+        CollapsibleProfileSection(
+          title: 'Vitals & labs',
+          subtitle: 'Latest values from clinical_event (monitor / lab)',
+          icon: Icons.monitor_heart_outlined,
+          child: VitalsSection(patient: patient),
+        ),
+        const SizedBox(height: 12),
+        CollapsibleProfileSection(
+          title: 'Predictions',
+          subtitle:
+              'SCAI, vasopressors, mortality, LOS, MCS, VA-ECMO',
+          icon: Icons.analytics_outlined,
+          initiallyExpanded: true,
+          child: ClinicalPredictionsSection(
+            predictions: patient.predictions,
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (patient.diagnoses.isNotEmpty) ...[
+          CollapsibleProfileSection(
+            title: 'Diagnoses',
+            subtitle: 'Principal and secondary (diagnosis table)',
+            icon: Icons.medical_information_outlined,
+            initiallyExpanded: false,
+            child: DiagnosesSection(diagnoses: patient.diagnoses),
+          ),
+          const SizedBox(height: 12),
+        ],
+        CollapsibleProfileSection(
+          title: 'Clinical details',
+          subtitle: 'Encounter, unit, attending, record metadata',
+          icon: Icons.description_outlined,
+          initiallyExpanded: false,
+          child: _ClinicalDetailsBody(patient: patient),
+        ),
+      ];
+
+  List<Widget> _patientSections() => [
+        CollapsibleProfileSection(
+          title: 'Length of stay',
+          subtitle: 'Predicted hospital and ICU duration',
+          icon: Icons.calendar_today_outlined,
+          child: PatientLengthOfStaySection(predictions: patient.predictions),
+        ),
+        const SizedBox(height: 12),
+        CollapsibleProfileSection(
+          title: 'Recommendations',
+          subtitle: 'Guidance based on your vitals and diagnoses',
+          icon: Icons.lightbulb_outline,
+          child: PatientRecommendationsSection(
+            recommendations: patient.recommendations,
+          ),
+        ),
+        const SizedBox(height: 12),
+        CollapsibleProfileSection(
+          title: 'Prescribed medications',
+          subtitle: 'Name, dosage, and route from your care team',
+          icon: Icons.medication_outlined,
+          child: PatientMedicationsSection(medications: patient.medications),
+        ),
+        const SizedBox(height: 12),
+        CollapsibleProfileSection(
+          title: 'Your record',
+          subtitle: 'Room, doctor, and last model update',
+          icon: Icons.badge_outlined,
+          initiallyExpanded: false,
+          child: _ClinicalDetailsBody(patient: patient, minimal: true),
+        ),
+      ];
 }
 
 class _DetailHeader extends StatelessWidget {
-  const _DetailHeader({required this.patient});
+  const _DetailHeader({required this.patient, required this.isClinician});
   final PatientRecord patient;
+  final bool isClinician;
 
   @override
   Widget build(BuildContext context) {
@@ -306,31 +404,33 @@ class _DetailHeader extends StatelessWidget {
                     Text(
                       'Room ${patient.roomNumber}'
                       '${patient.gender != null && patient.age != null ? '  ·  ${patient.gender}, ${patient.age}' : ''}'
-                      '${patient.diagnosis != null ? '  ·  ${patient.diagnosis}' : ''}',
+                      '${patient.diagnosis != null ? '  ·  ${patient.diagnosis}' : ''}'
+                      '${isClinician && patient.scaiStageCurrent != null ? '  ·  SCAI ${patient.scaiStageCurrent}' : ''}',
                       style: const TextStyle(
                           fontSize: 12, color: Colors.black45),
                     ),
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: conditionColor(patient.condition)
-                      .withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  patient.condition,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: conditionColor(patient.condition),
+              if (isClinician)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: conditionColor(patient.condition)
+                        .withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    patient.condition,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: conditionColor(patient.condition),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
+              if (isClinician) const SizedBox(width: 8),
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close),
@@ -345,103 +445,33 @@ class _DetailHeader extends StatelessWidget {
   }
 }
 
-class _HomeCareCta extends StatelessWidget {
-  const _HomeCareCta({required this.patient});
+class _ClinicalDetailsBody extends StatelessWidget {
+  const _ClinicalDetailsBody({required this.patient, this.minimal = false});
   final PatientRecord patient;
+  final bool minimal;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute<void>(
-            builder: (_) => HomeCareScreen(patient: patient),
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _row('Patient ID', patient.id),
+          if (!minimal && patient.encounterId != null)
+            _row('Encounter', patient.encounterId!),
+          _row('Room', patient.roomNumber),
+          if (!minimal && patient.unitCd != null) _row('Unit', patient.unitCd!),
+          if (patient.primaryDoctor != null)
+            _row('Doctor', patient.primaryDoctor!),
+          if (!minimal && patient.daysAdmitted != null)
+            _row('Days admitted', '${patient.daysAdmitted}'),
+          if (!minimal && patient.issue != null && patient.issue!.isNotEmpty)
+            _row('Principal diagnosis', patient.issue!),
+          _row(
+            'Last model update',
+            '${patient.predictions.lastUpdated.month}/'
+            '${patient.predictions.lastUpdated.day}/'
+            '${patient.predictions.lastUpdated.year}',
           ),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF222831),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF4A9E6A).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.home_outlined,
-                    color: Color(0xFF4A9E6A), size: 22),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'View home care plan',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      'AI-generated recovery instructions for family',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.6)),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.arrow_forward_ios_rounded,
-                  color: Color(0xFF4A9E6A), size: 16),
-            ],
-          ),
-        ),
-      );
-}
-
-class _ClinicalDetailsCard extends StatelessWidget {
-  const _ClinicalDetailsCard({required this.patient});
-  final PatientRecord patient;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black.withOpacity(0.07)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Clinical details',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87),
-            ),
-            const SizedBox(height: 12),
-            _row('Patient ID', patient.id),
-            _row('Room', patient.roomNumber),
-            if (patient.primaryDoctor != null)
-              _row('Doctor', patient.primaryDoctor!),
-            if (patient.daysAdmitted != null)
-              _row('Days admitted', '${patient.daysAdmitted}'),
-            if (patient.issue != null && patient.issue!.isNotEmpty)
-              _row('Issue', patient.issue!),
-            _row(
-              'Last AI update',
-              '${patient.predictions.lastUpdated.month}/'
-              '${patient.predictions.lastUpdated.day}/'
-              '${patient.predictions.lastUpdated.year}',
-            ),
-          ],
-        ),
+        ],
       );
 
   Widget _row(String label, String value) => Padding(
