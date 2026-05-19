@@ -5,7 +5,12 @@ All LOS scripts live under `Baptist_tester/los_*.py` and **do not modify**
 
 ## Data bundle
 
-Default parquet path: **`Baptist_tester/synth_cs_data/`** (8 core tables + `code_value`).
+| Path | Patients | Use |
+|------|----------|-----|
+| **`data/`** (default) | **5000** | Training, EDA, cleaning |
+| `Baptist_tester/synth_cs_data/` | 500 | Fast dev / smoke tests only |
+
+Simulator default: `python simulate_cardiogenic_shock_data.py --n-patients 5000 --out-dir ./data`
 
 ## Scripts
 
@@ -18,9 +23,12 @@ Default parquet path: **`Baptist_tester/synth_cs_data/`** (8 core tables + `code
 
 ```bash
 # From repo root
-python3 Baptist_tester/los_bundle_audit.py
-python3 Baptist_tester/los_data_prep.py --force
-python3 Baptist_tester/los_eda.py --no-open
+python3 Baptist_tester/los_bundle_audit.py --data-dir data
+python3 Baptist_tester/los_data_prep.py --data-dir data --force
+python3 Baptist_tester/los_eda.py --data-dir data --no-open
+
+# Quick dev (500 patients only):
+# python3 Baptist_tester/los_data_prep.py --data-dir Baptist_tester/synth_cs_data --force
 ```
 
 ## Branch

@@ -2,7 +2,7 @@
 """
 LOS parquet bundle audit — **does not modify mortality pipeline files.**
 
-Loads the 8 core synthetic tables + ``code_value`` from ``Baptist_tester/synth_cs_data``,
+Loads the 8 core synthetic tables + ``code_value`` from the parquet bundle (default: ``data/``, 5000 patients).
 runs LOS-only string cleaning, and writes:
 
   - ``los_bundle_audit_report.json``
@@ -447,8 +447,8 @@ def main() -> int:
     ap.add_argument(
         "--data-dir",
         type=Path,
-        default=Path("Baptist_tester/synth_cs_data"),
-        help="Parquet bundle (default: Baptist_tester/synth_cs_data)",
+        default=Path("data"),
+        help="Parquet bundle (default: data/ — 5000-patient cohort; synth_cs_data is 500-patient dev sample)",
     )
     ap.add_argument("--no-open", action="store_true")
     args = ap.parse_args()

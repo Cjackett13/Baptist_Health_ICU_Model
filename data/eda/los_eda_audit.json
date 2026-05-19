@@ -1,0 +1,12 @@
+{
+  "n_patients": 5000,
+  "los_hours_mean": 99.0908,
+  "los_hours_median": 85.0,
+  "los_truncated_n": 1502,
+  "top_corr_with_los": {},
+  "outputs": [
+    "eda/los_eda_report.html",
+    "eda/los_eda_binned_mean.html",
+    "eda/los_eda_missingness.html"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "inclusion_rules": {
+    "grain": "one_row_per_person_id",
+    "age_years_min": 18,
+    "encounter_type": "INPATIENT",
+    "unit_codes": [
+      "CICU",
+      "CVICU",
+      "MICU"
+    ],
+    "require_valid_admit_discharge": true,
+    "los_hours_min_exclusive": 0,
+    "los_hours_max": 336,
+    "exclude_dispositions": [
+      "AMA"
+    ],
+    "note": "Cardiogenic-shock ICU cohort. EXPIRED/HOSPICE kept but flagged as truncated; not dropped by default."
+  },
+  "target_policy": {
+    "labels": {
+      "los_hours_total": "Total ICU stay hours (reconciled); same on all checkpoints.",
+      "remaining_los_hours": "max(0, los_hours_total - prediction_hour)."
+    },
+    "transform_primary": "raw_hours",
+    "transform_eda_columns": [
+      "log1p_los_hours_total",
+      "log1p_remaining_los_hours"
+    ],
+    "rationale": "Train/predict both total and remaining LOS; neither label in feature matrix.",
+    "reconcile": "prefer_datetime_diff_hours_when_within_1h_else_los_hours"
+  },
+  "counts": {
+    "encounters_raw": 5000,
+    "patients_included": 5000,
+    "patients_excluded": 0,
+    "los_truncated_flagged": 1502
+  },
+  "outputs": {
+    "patient_frame": "los_patient_frame.parquet",
+    "checkpoint_frame": "los_checkpoint_frame.parquet",
+    "admit_features": "los_admit_features.parquet",
+    "feature_columns": "los_feature_columns.json",
+    "prediction_policy": "los_prediction_policy.json",
+    "early_window_doc": "los_early_window_per_table.json"
+  },
+  "prediction_schedule_v2": {
+    "cadence_hours": 24,
+    "grain": "one_row_per_person_per_prediction_hour",
+    "see": "los_prediction_policy.json"
+  }
+}

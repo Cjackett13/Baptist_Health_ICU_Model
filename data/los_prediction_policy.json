@@ -1,0 +1,151 @@
+{
+  "version": 2,
+  "prediction_schedule": {
+    "cadence_hours": 24,
+    "first_prediction_hour": 24,
+    "feature_window_rule": "For checkpoint T: use data with hours_from_admit <= T (per-table time columns below)."
+  },
+  "labels": {
+    "los_hours_total": "Total ICU length of stay in hours (same value on all checkpoints for an encounter).",
+    "remaining_los_hours": "max(0, los_hours_total - prediction_hour).",
+    "both_are_targets": true,
+    "neither_may_be_features": true
+  },
+  "forbidden_as_features": {
+    "label_derived": [
+      "DECEASED_DT_TM",
+      "DISCH_DISPOSITION_CD",
+      "DISCH_DT_TM",
+      "LOS_HOURS",
+      "log1p_los_hours",
+      "log1p_los_hours_total",
+      "log1p_remaining_los_hours",
+      "los_hours",
+      "los_hours_calc",
+      "los_hours_reconciled",
+      "los_hours_total",
+      "los_reconcile_delta_h",
+      "los_reconcile_ok",
+      "los_truncated",
+      "remaining_los_hours",
+      "truncated_ama",
+      "truncated_death",
+      "truncated_disposition_cd",
+      "truncated_hospice"
+    ],
+    "full_stay_aggregates": [
+      "clinical_event_n",
+      "current_scai",
+      "died",
+      "inf_mean_all",
+      "infusion_early_over_all_ratio",
+      "infusion_residual_within_scai",
+      "med_admin_rows",
+      "med_distinct",
+      "med_distinct_bucket",
+      "med_infusion_mean",
+      "med_per_clinical_event",
+      "med_residual_within_scai",
+      "proc_distinct_nom",
+      "proc_n",
+      "proc_n_bucket",
+      "proc_residual_within_scai",
+      "scai_prop_ge3",
+      "scai_std"
+    ],
+    "identifiers": [
+      "ENCOUNTER_ID",
+      "NAME_FIRST_TXT",
+      "NAME_LAST_TXT",
+      "PERSON_ID"
+    ],
+    "combined": [
+      "DECEASED_DT_TM",
+      "DISCH_DISPOSITION_CD",
+      "DISCH_DT_TM",
+      "ENCOUNTER_ID",
+      "LOS_HOURS",
+      "NAME_FIRST_TXT",
+      "NAME_LAST_TXT",
+      "PERSON_ID",
+      "clinical_event_n",
+      "current_scai",
+      "died",
+      "inf_mean_all",
+      "infusion_early_over_all_ratio",
+      "infusion_residual_within_scai",
+      "log1p_los_hours",
+      "log1p_los_hours_total",
+      "log1p_remaining_los_hours",
+      "los_hours",
+      "los_hours_calc",
+      "los_hours_reconciled",
+      "los_hours_total",
+      "los_reconcile_delta_h",
+      "los_reconcile_ok",
+      "los_truncated",
+      "med_admin_rows",
+      "med_distinct",
+      "med_distinct_bucket",
+      "med_infusion_mean",
+      "med_per_clinical_event",
+      "med_residual_within_scai",
+      "proc_distinct_nom",
+      "proc_n",
+      "proc_n_bucket",
+      "proc_residual_within_scai",
+      "remaining_los_hours",
+      "scai_prop_ge3",
+      "scai_std",
+      "truncated_ama",
+      "truncated_death",
+      "truncated_disposition_cd",
+      "truncated_hospice"
+    ]
+  },
+  "early_window_per_table": {
+    "encounter": {
+      "time_column": "REG_DT_TM (admit anchor)",
+      "window_rule": "Static at admit only: ADMIT_TYPE_CD, ADMIT_SRC_CD, UNIT_CD, FACILITY_CD. Never use DISCH_DT_TM or DISCH_DISPOSITION_CD as features.",
+      "allowed_features": "admit_type_cd, admit_src_cd, unit_cd (encoded at admit)"
+    },
+    "person": {
+      "time_column": "BIRTH_DT_TM",
+      "window_rule": "Demographics known at admit; age computed vs REG_DT_TM.",
+      "allowed_features": "age_years, sex_bin, race_cd, ethnicity_cd"
+    },
+    "diagnosis": {
+      "time_column": "DIAGNOSIS_DT_TM",
+      "window_rule": "Include rows where DIAGNOSIS_DT_TM <= REG_DT_TM + prediction_hour.",
+      "allowed_features": "icd_prefix, n_diagnoses_0_to_t, principal_icd_0_to_t"
+    },
+    "clinical_event": {
+      "time_column": "EVENT_END_DT_TM",
+      "window_rule": "EVENT_END_DT_TM <= REG_DT_TM + prediction_hour. Pivot vitals/labs to mean_*_0_to_t.",
+      "allowed_features": "mean_HR_0_to_t, mean_MAP_0_to_t, clinical_event_n_0_to_t, ..."
+    },
+    "medication_admin": {
+      "time_column": "ADMIN_START_DT_TM",
+      "window_rule": "ADMIN_START_DT_TM <= REG_DT_TM + prediction_hour.",
+      "allowed_features": "med_distinct_0_to_t, med_infusion_mean_0_to_t"
+    },
+    "procedure_event": {
+      "time_column": "PROC_START_DT_TM",
+      "window_rule": "PROC_START_DT_TM <= REG_DT_TM + prediction_hour.",
+      "allowed_features": "proc_n_0_to_t"
+    },
+    "scai_stage_hourly": {
+      "time_column": "HOUR_FROM_ADMIT / EVENT_DT_TM",
+      "window_rule": "HOUR_FROM_ADMIT <= prediction_hour.",
+      "allowed_features": "scai_first_0_to_t, scai_last_0_to_t, scai_mean_0_to_t, scai_std_0_to_t, scai_slope_0_to_t"
+    },
+    "duckdb_patient_features": {
+      "time_column": "N/A (pre-aggregated full stay)",
+      "window_rule": "BLOCK entire table for modeling unless rebuilt with censor at T. All columns in FULL_STAY_AGGREGATE_FORBIDDEN.",
+      "allowed_features": "none \u2014 use table-specific 0_to_t rebuilds instead"
+    }
+  },
+  "train_test_split": {
+    "rule": "Split by PERSON_ID; all checkpoints for a patient share the same fold."
+  }
+}

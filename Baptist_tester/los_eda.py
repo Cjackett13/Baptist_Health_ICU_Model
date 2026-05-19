@@ -3,7 +3,7 @@
 Plotly EDA for length-of-stay regression on ``los_patient_frame.parquet``.
 
   python3 Baptist_tester/los_eda.py
-  python3 Baptist_tester/los_eda.py --data-dir Baptist_tester/synth_cs_data --no-open
+  python3 Baptist_tester/los_eda.py --data-dir data --no-open
 
 Outputs under ``<data-dir>/eda/``:
   - ``los_eda_report.html`` — target distribution, correlation heatmap, truncation summary
@@ -236,7 +236,12 @@ def _open_files(paths: list[Path]) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", type=Path, default=Path("Baptist_tester/synth_cs_data"))
+    ap.add_argument(
+        "--data-dir",
+        type=Path,
+        default=Path("data"),
+        help="Parquet bundle (default data/ = 5000 patients)",
+    )
     ap.add_argument("--force-prep", action="store_true", help="Re-run los_data_prep first")
     ap.add_argument("--no-open", action="store_true")
     args = ap.parse_args()

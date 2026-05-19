@@ -9,7 +9,7 @@ features censored at ``prediction_hour``; target ``remaining_los_hours``. See
 ``Baptist_tester/los_prediction_policy.json``.
 
   python3 Baptist_tester/los_data_prep.py
-  python3 Baptist_tester/los_data_prep.py --data-dir Baptist_tester/synth_cs_data --force
+  python3 Baptist_tester/los_data_prep.py --data-dir data --force
 
 Writes under ``--data-dir``:
   - ``los_cohort_manifest.json`` — inclusion rules, target policy, row counts
@@ -718,7 +718,12 @@ def run_prep(data_dir: Path, *, force: bool = False) -> Path:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="LOS cohort cleaning and patient frame.")
-    ap.add_argument("--data-dir", type=Path, default=Path("Baptist_tester/synth_cs_data"))
+    ap.add_argument(
+        "--data-dir",
+        type=Path,
+        default=Path("data"),
+        help="Parquet bundle (default data/ = 5000 patients; synth_cs_data = 500 dev sample)",
+    )
     ap.add_argument("--force", action="store_true", help="Rebuild admit-features parquet")
     args = ap.parse_args()
     out = run_prep(args.data_dir, force=args.force)
