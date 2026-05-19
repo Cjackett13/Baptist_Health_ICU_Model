@@ -1,0 +1,46 @@
+{
+  "string_sentinels_normalized": [
+    "",
+    " ",
+    "-99",
+    "999",
+    "N/A",
+    "NA",
+    "NONE",
+    "NULL",
+    "UNK",
+    "UNKNOWN",
+    "n/a",
+    "null"
+  ],
+  "sentinel_replacements": {
+    "encounter": {},
+    "person": {
+      "RACE_CD": 23,
+      "ETHNICITY_CD": 16
+    },
+    "diagnosis": {}
+  },
+  "los_reconciliation": {
+    "n_total": 500,
+    "n_within_1h": 500,
+    "n_mismatch_gt_1h": 0,
+    "max_abs_delta_h": 0.0,
+    "median_abs_delta_h": 0.0
+  },
+  "truncation_flags": {
+    "truncated_death": 146,
+    "truncated_hospice": 1,
+    "los_truncated_any": 147
+  },
+  "los_hours_summary": {
+    "count": 500.0,
+    "mean": 96.068,
+    "std": 63.416928257202414,
+    "min": 6.0,
+    "25%": 51.0,
+    "50%": 84.0,
+    "75%": 119.25,
+    "max": 336.0
+  }
+}

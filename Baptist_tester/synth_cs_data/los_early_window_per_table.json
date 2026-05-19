@@ -1,0 +1,42 @@
+{
+  "encounter": {
+    "time_column": "REG_DT_TM (admit anchor)",
+    "window_rule": "Static at admit only: ADMIT_TYPE_CD, ADMIT_SRC_CD, UNIT_CD, FACILITY_CD. Never use DISCH_DT_TM or DISCH_DISPOSITION_CD as features.",
+    "allowed_features": "admit_type_cd, admit_src_cd, unit_cd (encoded at admit)"
+  },
+  "person": {
+    "time_column": "BIRTH_DT_TM",
+    "window_rule": "Demographics known at admit; age computed vs REG_DT_TM.",
+    "allowed_features": "age_years, sex_bin, race_cd, ethnicity_cd"
+  },
+  "diagnosis": {
+    "time_column": "DIAGNOSIS_DT_TM",
+    "window_rule": "Include rows where DIAGNOSIS_DT_TM <= REG_DT_TM + prediction_hour.",
+    "allowed_features": "icd_prefix, n_diagnoses_0_to_t, principal_icd_0_to_t"
+  },
+  "clinical_event": {
+    "time_column": "EVENT_END_DT_TM",
+    "window_rule": "EVENT_END_DT_TM <= REG_DT_TM + prediction_hour. Pivot vitals/labs to mean_*_0_to_t.",
+    "allowed_features": "mean_HR_0_to_t, mean_MAP_0_to_t, clinical_event_n_0_to_t, ..."
+  },
+  "medication_admin": {
+    "time_column": "ADMIN_START_DT_TM",
+    "window_rule": "ADMIN_START_DT_TM <= REG_DT_TM + prediction_hour.",
+    "allowed_features": "med_distinct_0_to_t, med_infusion_mean_0_to_t"
+  },
+  "procedure_event": {
+    "time_column": "PROC_START_DT_TM",
+    "window_rule": "PROC_START_DT_TM <= REG_DT_TM + prediction_hour.",
+    "allowed_features": "proc_n_0_to_t"
+  },
+  "scai_stage_hourly": {
+    "time_column": "HOUR_FROM_ADMIT / EVENT_DT_TM",
+    "window_rule": "HOUR_FROM_ADMIT <= prediction_hour.",
+    "allowed_features": "scai_first_0_to_t, scai_last_0_to_t, scai_mean_0_to_t, scai_std_0_to_t, scai_slope_0_to_t"
+  },
+  "duckdb_patient_features": {
+    "time_column": "N/A (pre-aggregated full stay)",
+    "window_rule": "BLOCK entire table for modeling unless rebuilt with censor at T. All columns in FULL_STAY_AGGREGATE_FORBIDDEN.",
+    "allowed_features": "none \u2014 use table-specific 0_to_t rebuilds instead"
+  }
+}

@@ -1,0 +1,805 @@
+{
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/Baptist_tester/synth_cs_data",
+  "bundle": "synth_cs_data (8 core tables + code_value)",
+  "tables": {
+    "person": {
+      "n_rows": 500,
+      "n_columns": 8,
+      "columns": [
+        "PERSON_ID",
+        "NAME_LAST_TXT",
+        "NAME_FIRST_TXT",
+        "BIRTH_DT_TM",
+        "SEX_CD",
+        "RACE_CD",
+        "ETHNICITY_CD",
+        "DECEASED_DT_TM"
+      ],
+      "dtypes": {
+        "PERSON_ID": "int64",
+        "NAME_LAST_TXT": "string",
+        "NAME_FIRST_TXT": "string",
+        "BIRTH_DT_TM": "datetime64[ns]",
+        "SEX_CD": "string",
+        "RACE_CD": "string",
+        "ETHNICITY_CD": "string",
+        "DECEASED_DT_TM": "datetime64[us]"
+      }
+    },
+    "encounter": {
+      "n_rows": 500,
+      "n_columns": 15,
+      "columns": [
+        "ENCOUNTER_ID",
+        "PERSON_ID",
+        "ENCNTR_TYPE_CD",
+        "ADMIT_TYPE_CD",
+        "ADMIT_SRC_CD",
+        "REG_DT_TM",
+        "DISCH_DT_TM",
+        "DISCH_DISPOSITION_CD",
+        "FACILITY_CD",
+        "UNIT_CD",
+        "LOS_HOURS",
+        "los_hours_calc",
+        "los_reconcile_delta_h",
+        "los_reconcile_ok",
+        "los_hours_reconciled"
+      ],
+      "dtypes": {
+        "ENCOUNTER_ID": "int64",
+        "PERSON_ID": "int64",
+        "ENCNTR_TYPE_CD": "string",
+        "ADMIT_TYPE_CD": "string",
+        "ADMIT_SRC_CD": "string",
+        "REG_DT_TM": "datetime64[ns]",
+        "DISCH_DT_TM": "datetime64[ns]",
+        "DISCH_DISPOSITION_CD": "string",
+        "FACILITY_CD": "string",
+        "UNIT_CD": "string",
+        "LOS_HOURS": "float64",
+        "los_hours_calc": "float64",
+        "los_reconcile_delta_h": "float64",
+        "los_reconcile_ok": "bool",
+        "los_hours_reconciled": "float64"
+      }
+    },
+    "diagnosis": {
+      "n_rows": 1503,
+      "n_columns": 8,
+      "columns": [
+        "DIAGNOSIS_ID",
+        "ENCOUNTER_ID",
+        "PERSON_ID",
+        "NOMENCLATURE_CD",
+        "DIAGNOSIS_TXT",
+        "DIAG_PRIORITY",
+        "CLASSIFICATION_CD",
+        "DIAGNOSIS_DT_TM"
+      ],
+      "dtypes": {
+        "DIAGNOSIS_ID": "int64",
+        "ENCOUNTER_ID": "int64",
+        "PERSON_ID": "int64",
+        "NOMENCLATURE_CD": "string",
+        "DIAGNOSIS_TXT": "string",
+        "DIAG_PRIORITY": "int64",
+        "CLASSIFICATION_CD": "string",
+        "DIAGNOSIS_DT_TM": "datetime64[ns]"
+      }
+    },
+    "clinical_event": {
+      "n_rows": 674227,
+      "n_columns": 11,
+      "columns": [
+        "EVENT_ID",
+        "ENCOUNTER_ID",
+        "PERSON_ID",
+        "EVENT_CD",
+        "EVENT_TITLE_TXT",
+        "EVENT_CLASS_CD",
+        "EVENT_END_DT_TM",
+        "RESULT_VAL",
+        "RESULT_UNITS_CD",
+        "NORMALCY_CD",
+        "CONTRIBUTOR_SYSTEM_CD"
+      ],
+      "dtypes": {
+        "EVENT_ID": "int64",
+        "ENCOUNTER_ID": "int64",
+        "PERSON_ID": "int64",
+        "EVENT_CD": "string",
+        "EVENT_TITLE_TXT": "string",
+        "EVENT_CLASS_CD": "string",
+        "EVENT_END_DT_TM": "datetime64[ns]",
+        "RESULT_VAL": "float64",
+        "RESULT_UNITS_CD": "string",
+        "NORMALCY_CD": "string",
+        "CONTRIBUTOR_SYSTEM_CD": "string"
+      }
+    },
+    "medication_admin": {
+      "n_rows": 2037,
+      "n_columns": 11,
+      "columns": [
+        "MED_ADMIN_ID",
+        "ENCOUNTER_ID",
+        "ORDER_ID",
+        "PERSON_ID",
+        "MEDICATION_CD",
+        "MEDICATION_TXT",
+        "ADMIN_START_DT_TM",
+        "ADMIN_END_DT_TM",
+        "INFUSION_RATE",
+        "RATE_UNIT_CD",
+        "ROUTE_CD"
+      ],
+      "dtypes": {
+        "MED_ADMIN_ID": "int64",
+        "ENCOUNTER_ID": "int64",
+        "ORDER_ID": "int64",
+        "PERSON_ID": "int64",
+        "MEDICATION_CD": "string",
+        "MEDICATION_TXT": "string",
+        "ADMIN_START_DT_TM": "datetime64[ns]",
+        "ADMIN_END_DT_TM": "datetime64[ns]",
+        "INFUSION_RATE": "float64",
+        "RATE_UNIT_CD": "string",
+        "ROUTE_CD": "string"
+      }
+    },
+    "procedure_event": {
+      "n_rows": 485,
+      "n_columns": 8,
+      "columns": [
+        "PROCEDURE_ID",
+        "ENCOUNTER_ID",
+        "PERSON_ID",
+        "NOMENCLATURE_CD",
+        "PROCEDURE_TXT",
+        "PROC_START_DT_TM",
+        "PROC_END_DT_TM",
+        "PROC_CATEGORY_CD"
+      ],
+      "dtypes": {
+        "PROCEDURE_ID": "int64",
+        "ENCOUNTER_ID": "int64",
+        "PERSON_ID": "int64",
+        "NOMENCLATURE_CD": "string",
+        "PROCEDURE_TXT": "string",
+        "PROC_START_DT_TM": "datetime64[ns]",
+        "PROC_END_DT_TM": "datetime64[ns]",
+        "PROC_CATEGORY_CD": "string"
+      }
+    },
+    "scai_stage_hourly": {
+      "n_rows": 48534,
+      "n_columns": 5,
+      "columns": [
+        "ENCOUNTER_ID",
+        "HOUR_FROM_ADMIT",
+        "EVENT_DT_TM",
+        "SCAI_STAGE_CD",
+        "SCAI_STAGE_NUM"
+      ],
+      "dtypes": {
+        "ENCOUNTER_ID": "int64",
+        "HOUR_FROM_ADMIT": "int64",
+        "EVENT_DT_TM": "datetime64[ns]",
+        "SCAI_STAGE_CD": "string",
+        "SCAI_STAGE_NUM": "int64"
+      }
+    },
+    "code_value": {
+      "n_rows": 35,
+      "n_columns": 4,
+      "columns": [
+        "EVENT_CD",
+        "EVENT_TITLE_TXT",
+        "RESULT_UNITS_CD",
+        "EVENT_CLASS_CD"
+      ],
+      "dtypes": {
+        "EVENT_CD": "string",
+        "EVENT_TITLE_TXT": "string",
+        "RESULT_UNITS_CD": "string",
+        "EVENT_CLASS_CD": "string"
+      }
+    }
+  },
+  "primary_key_audit_after_cleaning": {
+    "person": {
+      "ok": true,
+      "primary_key": [
+        "PERSON_ID"
+      ],
+      "n_rows": 500,
+      "n_unique_pk": 500,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "encounter": {
+      "ok": true,
+      "primary_key": [
+        "ENCOUNTER_ID"
+      ],
+      "n_rows": 500,
+      "n_unique_pk": 500,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "diagnosis": {
+      "ok": true,
+      "primary_key": [
+        "DIAGNOSIS_ID"
+      ],
+      "n_rows": 1503,
+      "n_unique_pk": 1503,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "clinical_event": {
+      "ok": true,
+      "primary_key": [
+        "EVENT_ID"
+      ],
+      "n_rows": 674227,
+      "n_unique_pk": 674227,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "medication_admin": {
+      "ok": true,
+      "primary_key": [
+        "MED_ADMIN_ID"
+      ],
+      "n_rows": 2037,
+      "n_unique_pk": 2037,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "procedure_event": {
+      "ok": true,
+      "primary_key": [
+        "PROCEDURE_ID"
+      ],
+      "n_rows": 485,
+      "n_unique_pk": 485,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "scai_stage_hourly": {
+      "ok": true,
+      "primary_key": [
+        "ENCOUNTER_ID",
+        "HOUR_FROM_ADMIT"
+      ],
+      "n_rows": 48534,
+      "n_unique_pk": 48534,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    },
+    "code_value": {
+      "ok": true,
+      "primary_key": [
+        "EVENT_CD"
+      ],
+      "n_rows": 35,
+      "n_unique_pk": 35,
+      "duplicate_pk_rows": 0,
+      "null_pk_rows": 0
+    }
+  },
+  "fk_join_coverage": {
+    "encounter.PERSON_ID -> person.PERSON_ID": {
+      "child_table": "encounter",
+      "parent_table": "person",
+      "child_columns": [
+        "PERSON_ID"
+      ],
+      "parent_columns": [
+        "PERSON_ID"
+      ],
+      "child_rows_with_fk": 500,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "diagnosis.ENCOUNTER_ID -> encounter.ENCOUNTER_ID": {
+      "child_table": "diagnosis",
+      "parent_table": "encounter",
+      "child_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "parent_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "child_rows_with_fk": 1503,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "diagnosis.PERSON_ID -> person.PERSON_ID": {
+      "child_table": "diagnosis",
+      "parent_table": "person",
+      "child_columns": [
+        "PERSON_ID"
+      ],
+      "parent_columns": [
+        "PERSON_ID"
+      ],
+      "child_rows_with_fk": 1503,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "clinical_event.ENCOUNTER_ID -> encounter.ENCOUNTER_ID": {
+      "child_table": "clinical_event",
+      "parent_table": "encounter",
+      "child_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "parent_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "child_rows_with_fk": 674227,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "clinical_event.PERSON_ID -> person.PERSON_ID": {
+      "child_table": "clinical_event",
+      "parent_table": "person",
+      "child_columns": [
+        "PERSON_ID"
+      ],
+      "parent_columns": [
+        "PERSON_ID"
+      ],
+      "child_rows_with_fk": 674227,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "medication_admin.ENCOUNTER_ID -> encounter.ENCOUNTER_ID": {
+      "child_table": "medication_admin",
+      "parent_table": "encounter",
+      "child_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "parent_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "child_rows_with_fk": 2037,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "medication_admin.PERSON_ID -> person.PERSON_ID": {
+      "child_table": "medication_admin",
+      "parent_table": "person",
+      "child_columns": [
+        "PERSON_ID"
+      ],
+      "parent_columns": [
+        "PERSON_ID"
+      ],
+      "child_rows_with_fk": 2037,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "procedure_event.ENCOUNTER_ID -> encounter.ENCOUNTER_ID": {
+      "child_table": "procedure_event",
+      "parent_table": "encounter",
+      "child_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "parent_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "child_rows_with_fk": 485,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "procedure_event.PERSON_ID -> person.PERSON_ID": {
+      "child_table": "procedure_event",
+      "parent_table": "person",
+      "child_columns": [
+        "PERSON_ID"
+      ],
+      "parent_columns": [
+        "PERSON_ID"
+      ],
+      "child_rows_with_fk": 485,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "scai_stage_hourly.ENCOUNTER_ID -> encounter.ENCOUNTER_ID": {
+      "child_table": "scai_stage_hourly",
+      "parent_table": "encounter",
+      "child_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "parent_columns": [
+        "ENCOUNTER_ID"
+      ],
+      "child_rows_with_fk": 48534,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    },
+    "clinical_event.EVENT_CD -> code_value.EVENT_CD": {
+      "child_table": "clinical_event",
+      "parent_table": "code_value",
+      "child_columns": [
+        "EVENT_CD"
+      ],
+      "parent_columns": [
+        "EVENT_CD"
+      ],
+      "child_rows_with_fk": 674227,
+      "orphan_n": 0,
+      "coverage_pct": 100.0,
+      "ok": true,
+      "orphan_sample": []
+    }
+  },
+  "orphan_rows": [],
+  "referential_summary": {
+    "all_fk_ok": true,
+    "orphan_table_count": 0
+  },
+  "los_hours_correlation": {
+    "n_patients": 500,
+    "n_numeric_features": 15,
+    "target_column": "encounter__LOS_HOURS",
+    "note": "Full-stay aggregates; exploratory only. Training uses censored 0_to_t features.",
+    "top_correlations_with_LOS_HOURS": [
+      {
+        "feature": "scai__n_hours",
+        "pearson_r": 1.0
+      },
+      {
+        "feature": "clinical_event__n",
+        "pearson_r": 0.8418170101208511
+      },
+      {
+        "feature": "medication_admin__n",
+        "pearson_r": 0.3529815543254935
+      },
+      {
+        "feature": "medication_admin__infusion_mean",
+        "pearson_r": -0.33966294956985627
+      },
+      {
+        "feature": "scai__stage_mean",
+        "pearson_r": -0.2716155098825928
+      },
+      {
+        "feature": "clinical_event__result_mean",
+        "pearson_r": -0.21413321585927123
+      },
+      {
+        "feature": "clinical_event__result_std",
+        "pearson_r": -0.17766320149701223
+      },
+      {
+        "feature": "scai__stage_std",
+        "pearson_r": 0.12711984768662338
+      },
+      {
+        "feature": "procedure_event__n",
+        "pearson_r": -0.11140268959186538
+      },
+      {
+        "feature": "procedure_event__proc_distinct",
+        "pearson_r": -0.11140268959186538
+      },
+      {
+        "feature": "PERSON_ID",
+        "pearson_r": -0.09185337998579021
+      },
+      {
+        "feature": "scai__stage_max",
+        "pearson_r": -0.04656975298546892
+      },
+      {
+        "feature": "medication_admin__med_distinct",
+        "pearson_r": -0.029609462182810187
+      },
+      {
+        "feature": "diagnosis__n",
+        "pearson_r": 0.019294771441371143
+      }
+    ],
+    "correlation_matrix": {
+      "columns": [
+        "PERSON_ID",
+        "encounter__LOS_HOURS",
+        "diagnosis__n",
+        "medication_admin__n",
+        "medication_admin__med_distinct",
+        "medication_admin__infusion_mean",
+        "procedure_event__n",
+        "procedure_event__proc_distinct",
+        "clinical_event__n",
+        "clinical_event__result_mean",
+        "clinical_event__result_std",
+        "scai__n_hours",
+        "scai__stage_mean",
+        "scai__stage_max",
+        "scai__stage_std"
+      ],
+      "values": [
+        [
+          1.0,
+          -0.09185337998579021,
+          0.0051940304383275475,
+          -0.014197989566970066,
+          0.018596176051325693,
+          0.07518169903292453,
+          0.08698870321682226,
+          0.08698870321682226,
+          -0.05366297406801508,
+          0.056182926776730674,
+          0.051756571334827674,
+          -0.09185337998579021,
+          0.07374865442946704,
+          0.04308536295258193,
+          0.007555462368136651
+        ],
+        [
+          -0.09185337998579021,
+          1.0,
+          0.019294771441371143,
+          0.3529815543254935,
+          -0.029609462182810187,
+          -0.33966294956985627,
+          -0.11140268959186538,
+          -0.11140268959186538,
+          0.8418170101208511,
+          -0.21413321585927123,
+          -0.17766320149701223,
+          1.0,
+          -0.2716155098825928,
+          -0.04656975298546892,
+          0.12711984768662338
+        ],
+        [
+          0.0051940304383275475,
+          0.019294771441371143,
+          1.0,
+          -0.07454750533457119,
+          -0.10062477262422412,
+          -0.020947121443748665,
+          -0.050624674715850616,
+          -0.050624674715850616,
+          -0.037039820827296684,
+          -0.051967448942283945,
+          -0.06108599825267261,
+          0.019294771441371136,
+          -0.09117400748599647,
+          -0.07921272039730354,
+          -0.04913460551699457
+        ],
+        [
+          -0.014197989566970066,
+          0.3529815543254935,
+          -0.07454750533457119,
+          1.0,
+          0.804295728583492,
+          0.29036830751364945,
+          0.2542134684283449,
+          0.2542134684283449,
+          0.5324700242460454,
+          0.4238708636693328,
+          0.48918439050950674,
+          0.35298155432549355,
+          0.49914896721178176,
+          0.6939261968123007,
+          0.6107098752394606
+        ],
+        [
+          0.018596176051325693,
+          -0.029609462182810187,
+          -0.10062477262422412,
+          0.804295728583492,
+          1.0,
+          0.5634886605673511,
+          0.5269921272768763,
+          0.5269921272768763,
+          0.21078970049120566,
+          0.6769159211630511,
+          0.7346989361328533,
+          -0.02960946218281019,
+          0.7598152065179129,
+          0.8987683871729691,
+          0.6828267259390906
+        ],
+        [
+          0.07518169903292453,
+          -0.33966294956985627,
+          -0.020947121443748665,
+          0.29036830751364945,
+          0.5634886605673511,
+          1.0,
+          0.4424694658905461,
+          0.4424694658905461,
+          -0.15484734580712026,
+          0.6919320675960632,
+          0.7073306638831005,
+          -0.33966294956985627,
+          0.7746587315990724,
+          0.7185533919588782,
+          0.3926839105272734
+        ],
+        [
+          0.08698870321682226,
+          -0.11140268959186538,
+          -0.050624674715850616,
+          0.2542134684283449,
+          0.5269921272768763,
+          0.4424694658905461,
+          1.0,
+          1.0,
+          0.10265360080762716,
+          0.47442289297477586,
+          0.5170931470012078,
+          -0.11140268959186539,
+          0.6237499153705433,
+          0.6685619018129115,
+          0.21729939615580127
+        ],
+        [
+          0.08698870321682226,
+          -0.11140268959186538,
+          -0.050624674715850616,
+          0.2542134684283449,
+          0.5269921272768763,
+          0.4424694658905461,
+          1.0,
+          1.0,
+          0.10265360080762716,
+          0.47442289297477586,
+          0.5170931470012078,
+          -0.11140268959186539,
+          0.6237499153705433,
+          0.6685619018129115,
+          0.21729939615580127
+        ],
+        [
+          -0.05366297406801508,
+          0.8418170101208511,
+          -0.037039820827296684,
+          0.5324700242460454,
+          0.21078970049120566,
+          -0.15484734580712026,
+          0.10265360080762716,
+          0.10265360080762716,
+          1.0,
+          0.004530306366385603,
+          0.047925250305769065,
+          0.8418170101208511,
+          0.003335187442938334,
+          0.21848035175696795,
+          0.31816344962971355
+        ],
+        [
+          0.056182926776730674,
+          -0.21413321585927123,
+          -0.051967448942283945,
+          0.4238708636693328,
+          0.6769159211630511,
+          0.6919320675960632,
+          0.47442289297477586,
+          0.47442289297477586,
+          0.004530306366385603,
+          1.0,
+          0.9833838712354822,
+          -0.21413321585927125,
+          0.9110651896847028,
+          0.7706068321164165,
+          0.4112941114982951
+        ],
+        [
+          0.051756571334827674,
+          -0.17766320149701223,
+          -0.06108599825267261,
+          0.48918439050950674,
+          0.7346989361328533,
+          0.7073306638831005,
+          0.5170931470012078,
+          0.5170931470012078,
+          0.047925250305769065,
+          0.9833838712354822,
+          1.0,
+          -0.17766320149701223,
+          0.91568742545396,
+          0.8259042868704803,
+          0.51511095389381
+        ],
+        [
+          -0.09185337998579021,
+          1.0,
+          0.019294771441371136,
+          0.35298155432549355,
+          -0.02960946218281019,
+          -0.33966294956985627,
+          -0.11140268959186539,
+          -0.11140268959186539,
+          0.8418170101208511,
+          -0.21413321585927125,
+          -0.17766320149701223,
+          1.0,
+          -0.2716155098825928,
+          -0.04656975298546892,
+          0.12711984768662338
+        ],
+        [
+          0.07374865442946704,
+          -0.2716155098825928,
+          -0.09117400748599647,
+          0.49914896721178176,
+          0.7598152065179129,
+          0.7746587315990724,
+          0.6237499153705433,
+          0.6237499153705433,
+          0.003335187442938334,
+          0.9110651896847028,
+          0.91568742545396,
+          -0.2716155098825928,
+          1.0,
+          0.8635556521120664,
+          0.4844638565774607
+        ],
+        [
+          0.04308536295258193,
+          -0.04656975298546892,
+          -0.07921272039730354,
+          0.6939261968123007,
+          0.8987683871729691,
+          0.7185533919588782,
+          0.6685619018129115,
+          0.6685619018129115,
+          0.21848035175696795,
+          0.7706068321164165,
+          0.8259042868704803,
+          -0.04656975298546892,
+          0.8635556521120664,
+          1.0,
+          0.7769895469486829
+        ],
+        [
+          0.007555462368136651,
+          0.12711984768662338,
+          -0.04913460551699457,
+          0.6107098752394606,
+          0.6828267259390906,
+          0.3926839105272734,
+          0.21729939615580127,
+          0.21729939615580127,
+          0.31816344962971355,
+          0.4112941114982951,
+          0.51511095389381,
+          0.12711984768662338,
+          0.4844638565774607,
+          0.7769895469486829,
+          1.0
+        ]
+      ]
+    }
+  }
+}
