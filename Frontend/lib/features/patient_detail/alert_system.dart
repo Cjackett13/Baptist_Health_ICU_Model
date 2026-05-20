@@ -1,16 +1,14 @@
-// lib/alert_system.dart
-//
 // Patient list card + full detail sheet.
-// All prediction data structures live in models/patient_prediction.dart.
-// All prediction display widgets live in widgests/prediction_cards.dart.
 
 import 'package:flutter/material.dart';
-import 'models/patient_prediction.dart';
-import 'screens/role_selection_screen.dart';
-import 'widgests/collapsible_section.dart';
-import 'widgests/prediction_cards.dart';
 
-export 'models/patient_prediction.dart';
+import '../../models/patient_prediction.dart';
+import '../../screens/role_selection_screen.dart';
+import '../../services/patient_summary_pdf.dart';
+import '../../widgets/collapsible_section.dart';
+import '../../widgets/prediction_cards.dart';
+
+export '../../models/patient_prediction.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PATIENT LIST CARD
@@ -294,11 +292,12 @@ class _PatientDetailSheet extends StatelessWidget {
         CollapsibleProfileSection(
           title: 'Predictions',
           subtitle:
-              'SCAI, vasopressors, mortality, LOS, MCS, VA-ECMO',
+              'SCAI, vasopressors, mortality, hospital LOS, MCS, VA-ECMO',
           icon: Icons.analytics_outlined,
           initiallyExpanded: true,
           child: ClinicalPredictionsSection(
             predictions: patient.predictions,
+            mechanicalSupport: patient.mechanicalSupport,
           ),
         ),
         const SizedBox(height: 12),
@@ -324,7 +323,7 @@ class _PatientDetailSheet extends StatelessWidget {
   List<Widget> _patientSections() => [
         CollapsibleProfileSection(
           title: 'Length of stay',
-          subtitle: 'Predicted hospital and ICU duration',
+          subtitle: 'Predicted hospital stay duration',
           icon: Icons.calendar_today_outlined,
           child: PatientLengthOfStaySection(predictions: patient.predictions),
         ),
@@ -405,7 +404,8 @@ class _DetailHeader extends StatelessWidget {
                       'Room ${patient.roomNumber}'
                       '${patient.gender != null && patient.age != null ? '  ·  ${patient.gender}, ${patient.age}' : ''}'
                       '${patient.diagnosis != null ? '  ·  ${patient.diagnosis}' : ''}'
-                      '${isClinician && patient.scaiStageCurrent != null ? '  ·  SCAI ${patient.scaiStageCurrent}' : ''}',
+                      '${isClinician && patient.scaiStageCurrent != null ? '  ·  SCAI ${patient.scaiStageCurrent}' : ''}'
+                      '${patient.mechanicalSupport.onMcs ? '  ·  ${patient.mechanicalSupport.summaryLabel}' : ''}',
                       style: const TextStyle(
                           fontSize: 12, color: Colors.black45),
                     ),
@@ -432,6 +432,14 @@ class _DetailHeader extends StatelessWidget {
                 ),
               if (isClinician) const SizedBox(width: 8),
               IconButton(
+                tooltip: 'Export PDF summary for family',
+                onPressed: () => _exportPdf(context),
+                icon: const Icon(Icons.picture_as_pdf_outlined, size: 22),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 4),
+              IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close),
                 padding: EdgeInsets.zero,
@@ -442,6 +450,21 @@ class _DetailHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _exportPdf(BuildContext context) async {
+    try {
+      await PatientSummaryPdf.share(
+        patient,
+        forFamily: !isClinician,
+      );
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not export PDF: $e')),
+        );
+      }
+    }
   }
 }
 
@@ -455,6 +478,21 @@ class _ClinicalDetailsBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _row('Patient ID', patient.id),
+          if (!minimal) ...[
+            _row(
+              'Mechanical support',
+              patient.mechanicalSupport.summaryLabel,
+            ),
+            if (patient.mechanicalSupport.onMcs)
+              for (final d in patient.mechanicalSupport.activeDevices)
+                _row(
+                  d.label,
+                  d.start != null
+                      ? '${d.start!.month}/${d.start!.day}'
+                          '${d.end != null ? ' – ${d.end!.month}/${d.end!.day}' : ' – ongoing'}'
+                      : 'Active at scoring hour',
+                ),
+          ],
           if (!minimal && patient.encounterId != null)
             _row('Encounter', patient.encounterId!),
           _row('Room', patient.roomNumber),

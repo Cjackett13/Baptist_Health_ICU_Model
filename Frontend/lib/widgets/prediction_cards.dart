@@ -248,33 +248,14 @@ class LengthOfStaySection extends StatelessWidget {
       children: [
         const PredictionSectionHeader(
           title: 'Length of Stay',
-          subtitle: 'Predicted hospital and ICU stay duration',
+          subtitle: 'Predicted hospital stay duration',
           icon: Icons.calendar_today_outlined,
         ),
         _PredictionCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: _LosTile(
-                  label: 'Hospital stay',
-                  days: predictions.hospitalLosDays,
-                  description: 'Total predicted\nhospital duration',
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 80,
-                color: const Color(0xFFF0F0F0),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              Expanded(
-                child: _LosTile(
-                  label: 'ICU stay',
-                  days: predictions.icuLosDays,
-                  description: 'Predicted time\nin ICU specifically',
-                ),
-              ),
-            ],
+          child: _LosTile(
+            label: 'Hospital stay',
+            days: predictions.hospitalLosDays,
+            description: 'Total predicted hospital duration',
           ),
         ),
       ],
@@ -289,29 +270,10 @@ class LengthOfStayBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _LosTile(
-            label: 'Hospital stay',
-            days: predictions.hospitalLosDays,
-            description: 'Total predicted\nhospital duration',
-          ),
-        ),
-        Container(
-          width: 1,
-          height: 80,
-          color: const Color(0xFFF0F0F0),
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-        ),
-        Expanded(
-          child: _LosTile(
-            label: 'ICU stay',
-            days: predictions.icuLosDays,
-            description: 'Predicted time\nin ICU specifically',
-          ),
-        ),
-      ],
+    return _LosTile(
+      label: 'Hospital stay',
+      days: predictions.hospitalLosDays,
+      description: 'Total predicted hospital duration',
     );
   }
 }
@@ -773,7 +735,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
   late double _simReadmission;
   late double _simMortality;
   late double _simHospLos;
-  late double _simIcuLos;
 
   @override
   void initState() {
@@ -787,7 +748,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
     _simReadmission = p.readmissionRisk;
     _simMortality = p.peakMortality;
     _simHospLos = p.hospitalLosDays;
-    _simIcuLos = p.icuLosDays;
   }
 
   // Heuristic simulation — replaced by real FastAPI /predict call later.
@@ -819,8 +779,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
     _simHospLos =
         (base.hospitalLosDays + hosDelta * 8 + medDelta * 3)
             .clamp(0.5, 21.0);
-    _simIcuLos =
-        (_simHospLos * 0.45 + inpDelta * 0.5).clamp(0.2, _simHospLos);
   }
 
   @override
@@ -914,7 +872,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
                 readmission: _simReadmission,
                 mortality: _simMortality,
                 hospLos: _simHospLos,
-                icuLos: _simIcuLos,
               ),
             ],
           ),
@@ -930,14 +887,12 @@ class _SimResultGrid extends StatelessWidget {
     required this.readmission,
     required this.mortality,
     required this.hospLos,
-    required this.icuLos,
   });
 
   final double transfer;
   final double readmission;
   final double mortality;
   final double hospLos;
-  final double icuLos;
 
   @override
   Widget build(BuildContext context) {
@@ -972,14 +927,6 @@ class _SimResultGrid extends StatelessWidget {
                     label: 'Hospital LOS',
                     value: '${hospLos.toStringAsFixed(1)}d',
                     color: losColor(hospLos))),
-            const SizedBox(width: 8),
-            Expanded(
-                child: _SimResultTile(
-                    label: 'ICU LOS',
-                    value: '${icuLos.toStringAsFixed(1)}d',
-                    color: losColor(icuLos))),
-            const SizedBox(width: 8),
-            const Expanded(child: SizedBox()),
           ],
         ),
       ],
@@ -1083,19 +1030,9 @@ class _VitalChip extends StatelessWidget {
   const _VitalChip({required this.vital});
   final PatientVital vital;
 
-  Color get _normalcyColor {
-    switch (vital.normalcy.toUpperCase()) {
-      case 'HIGH':
-      case 'LOW':
-      case 'CRITICAL':
-        return const Color(0xFFE05A5A);
-      default:
-        return const Color(0xFF4A9E6A);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final color = normalcyColor(vital.normalcy);
     final units = vital.units.isNotEmpty ? ' ${vital.units}' : '';
     return Container(
       width: 160,
@@ -1103,7 +1040,7 @@ class _VitalChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF8F8F8),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _normalcyColor.withOpacity(0.25)),
+        border: Border.all(color: color.withOpacity(0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1120,16 +1057,111 @@ class _VitalChip extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: _normalcyColor,
+              color: color,
             ),
           ),
           Text(
-            vital.normalcy,
-            style: TextStyle(fontSize: 9, color: _normalcyColor),
+            normalcyLabel(vital.normalcy),
+            style: TextStyle(fontSize: 9, color: color),
           ),
         ],
       ),
     );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MECHANICAL SUPPORT STATUS (procedure_event at scoring hour)
+// ─────────────────────────────────────────────────────────────────────────────
+class MechanicalSupportSection extends StatelessWidget {
+  const MechanicalSupportSection({
+    required this.support,
+    super.key,
+  });
+
+  final PatientMechanicalSupport support;
+
+  @override
+  Widget build(BuildContext context) {
+    final onDevice = support.onMcs;
+    final bg = onDevice
+        ? const Color(0xFF7B5EA7).withOpacity(0.1)
+        : const Color(0xFFF5F5F5);
+    final border = onDevice
+        ? const Color(0xFF7B5EA7).withOpacity(0.35)
+        : const Color(0xFFE0E0E0);
+    final iconColor =
+        onDevice ? const Color(0xFF7B5EA7) : const Color(0xFF4A9E6A);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                onDevice ? Icons.medical_services_outlined : Icons.check_circle_outline,
+                size: 18,
+                color: iconColor,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  support.summaryLabel,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: onDevice ? const Color(0xFF5C3D7A) : Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (onDevice) ...[
+            const SizedBox(height: 6),
+            Text(
+              'MCS/ECMO screening scores below reflect shock severity while on '
+              'support — not a new placement order.',
+              style: const TextStyle(fontSize: 10, color: Colors.black54),
+            ),
+            ...support.activeDevices.map((d) {
+              final range = _formatDeviceRange(d);
+              return Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  '• ${d.label}$range',
+                  style: const TextStyle(fontSize: 11, color: Colors.black87),
+                ),
+              );
+            }),
+          ] else
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                'No mechanical circulatory support recorded at this ICU hour.',
+                style: TextStyle(fontSize: 10, color: Colors.black45),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDeviceRange(ActiveSupportDevice d) {
+    if (d.start == null) return '';
+    final start =
+        '${d.start!.month}/${d.start!.day} ${d.start!.hour}:${d.start!.minute.toString().padLeft(2, '0')}';
+    if (d.end == null) return ' (since $start)';
+    final end =
+        '${d.end!.month}/${d.end!.day} ${d.end!.hour}:${d.end!.minute.toString().padLeft(2, '0')}';
+    return ' ($start – $end)';
   }
 }
 
@@ -1139,14 +1171,18 @@ class _VitalChip extends StatelessWidget {
 class ClinicalPredictionsSection extends StatelessWidget {
   const ClinicalPredictionsSection({
     required this.predictions,
+    required this.mechanicalSupport,
     super.key,
   });
   final PatientPredictions predictions;
+  final PatientMechanicalSupport mechanicalSupport;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        MechanicalSupportSection(support: mechanicalSupport),
+        const SizedBox(height: 14),
         _PredictionRow(
                 label: 'SCAI stage deterioration (6h)',
                 subtitle:
@@ -1173,22 +1209,21 @@ class ClinicalPredictionsSection extends StatelessWidget {
                 label: 'Length of stay (hospital)',
                 days: predictions.hospitalLosDays,
               ),
-              const SizedBox(height: 10),
-              _LosPredictionRow(
-                label: 'Length of stay (ICU)',
-                days: predictions.icuLosDays,
-              ),
               const SizedBox(height: 14),
-              _BinaryPredictionRow(
+              _EscalationPredictionRow(
                 label: 'MCS within 12 hours',
                 probability: predictions.mcs12hProbability,
                 needed: predictions.mcs12hNeeded,
+                reasons: predictions.shapMcs12h,
+                alreadyOnSupport: mechanicalSupport.onMcs,
               ),
               const SizedBox(height: 14),
-        _BinaryPredictionRow(
+        _EscalationPredictionRow(
           label: 'VA-ECMO within 12 hours',
           probability: predictions.vaEcmo12hProbability,
           needed: predictions.vaEcmo12hNeeded,
+          reasons: predictions.shapVaEcmo12h,
+          alreadyOnSupport: mechanicalSupport.onVaEcmo,
         ),
       ],
     );
@@ -1292,24 +1327,30 @@ class _LosPredictionRow extends StatelessWidget {
   }
 }
 
-class _BinaryPredictionRow extends StatelessWidget {
-  const _BinaryPredictionRow({
+class _EscalationPredictionRow extends StatelessWidget {
+  const _EscalationPredictionRow({
     required this.label,
     required this.probability,
     required this.needed,
+    required this.reasons,
+    this.alreadyOnSupport = false,
   });
 
   final String label;
   final double probability;
   final bool needed;
+  final List<ShapValue> reasons;
+  final bool alreadyOnSupport;
 
   @override
   Widget build(BuildContext context) {
     final color = riskColor(probability);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        title: Row(
           children: [
             Expanded(
               child: Text(
@@ -1349,17 +1390,52 @@ class _BinaryPredictionRow extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(3),
-          child: LinearProgressIndicator(
-            value: probability,
-            backgroundColor: const Color(0xFFEEEEEE),
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-            minHeight: 5,
-          ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (alreadyOnSupport) ...[
+              const SizedBox(height: 4),
+              const Text(
+                'Already on this support — score reflects severity, not placement.',
+                style: TextStyle(fontSize: 10, color: Color(0xFF7B5EA7)),
+              ),
+            ],
+            const SizedBox(height: 6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(3),
+              child: LinearProgressIndicator(
+                value: probability,
+                backgroundColor: const Color(0xFFEEEEEE),
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                minHeight: 5,
+              ),
+            ),
+            if (reasons.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  'Why this prediction (${reasons.length} factors)',
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: Colors.black45,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+          ],
         ),
-      ],
+        children: reasons.isEmpty
+            ? [
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'No factor breakdown available for this score.',
+                    style: TextStyle(fontSize: 11, color: Colors.black45),
+                  ),
+                ),
+              ]
+            : reasons.map((s) => _ShapRow(shap: s)).toList(),
+      ),
     );
   }
 }

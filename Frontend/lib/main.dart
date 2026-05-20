@@ -1,17 +1,10 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 
 import 'screens/role_selection_screen.dart';
+import 'theme/app_colors.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-abstract final class BhColors {
-  static const primary = Color(0xFF7BC74D);
-  static const ink = Color(0xFF222831);
-  static const slate = Color(0xFF393E46);
-  static const background = Color(0xFFEEEEEE);
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Baptist Health ICU',
+      title: 'Baptist Health Cardiogenic Shock Tracker',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
