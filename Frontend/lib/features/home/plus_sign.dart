@@ -1,7 +1,7 @@
 // lib/plus_sign.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'alert_system.dart';
+import '../patient_detail/alert_system.dart';
 
 class PlusSignButton extends StatelessWidget {
   const PlusSignButton({required this.onPatientCreated, super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../main.dart';
+import '../theme/app_colors.dart';
 import 'home_page.dart';
 import 'patient_sign_in_screen.dart';
 
@@ -27,7 +27,7 @@ class RoleSelectionScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Baptist Health ICU',
+                'Baptist Health Cardiogenic Shock Tracker',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: BhColors.ink,
@@ -48,7 +48,7 @@ class RoleSelectionScreen extends StatelessWidget {
                 title: 'Nurse / Physician',
                 subtitle:
                     'Full patient list, vitals from clinical data, and ML predictions '
-                    '(SCAI, vasopressors, mortality, LOS, MCS, VA-ECMO).',
+                    '(SCAI, vasopressors, mortality, hospital LOS, MCS, VA-ECMO).',
                 icon: Icons.local_hospital_outlined,
                 accent: BhColors.ink,
                 onTap: () => _open(context, AppRole.clinician),

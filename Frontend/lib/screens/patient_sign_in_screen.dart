@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../alert_system.dart';
-import '../main.dart';
+import '../features/patient_detail/alert_system.dart';
+import '../theme/app_colors.dart';
 import '../services/patient_repository.dart';
 import 'home_page.dart';
 import 'role_selection_screen.dart';

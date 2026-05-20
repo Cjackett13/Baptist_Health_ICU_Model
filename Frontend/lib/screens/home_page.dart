@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../alert_system.dart';
-import '../demo_hospitals.dart';
-import '../empty_rooms.dart';
-import '../main.dart';
-import '../patient_search_bar.dart';
-import '../plus_sign.dart';
-import '../select_hospital_button.dart';
+import '../features/home/demo_hospitals.dart';
+import '../features/home/empty_rooms.dart';
+import '../features/home/patient_search_bar.dart';
+import '../features/home/plus_sign.dart';
+import '../features/home/select_hospital_button.dart';
+import '../features/patient_detail/alert_system.dart';
 import '../services/patient_repository.dart';
+import '../theme/app_colors.dart';
 import 'role_selection_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -46,9 +46,15 @@ class _HomePageState extends State<HomePage> {
     _loadPatients();
   }
 
-  Future<void> _loadPatients() async {
+  Future<void> _loadPatients({bool forceRefresh = false}) async {
+    setState(() {
+      _loading = true;
+      _loadError = null;
+    });
     try {
-      final loaded = await PatientRepository.instance.loadPatients();
+      final loaded = await PatientRepository.instance.loadPatients(
+        forceRefresh: forceRefresh,
+      );
       if (!mounted) return;
       var patients = loaded;
       if (!_isClinician && widget.sessionPatientId != null) {
@@ -61,6 +67,15 @@ class _HomePageState extends State<HomePage> {
         _patients = patients;
         _loading = false;
       });
+      final apiWarning = PatientRepository.instance.lastShockApiWarning;
+      if (apiWarning != null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(apiWarning),
+            duration: const Duration(seconds: 6),
+          ),
+        );
+      }
       if (!_isClinician && patients.length == 1) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted || _openedPatientProfile) return;
@@ -445,17 +460,18 @@ class _PineAppHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Baptist Health',
+                  'Baptist Health Cardiogenic Shock Tracker',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Georgia',
                         letterSpacing: 0.2,
+                        fontSize: 16,
                       ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'ICU planning · $roleLabel',
+                  'Cardiogenic shock · $roleLabel',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.white.withValues(alpha: 0.78),
                         fontWeight: FontWeight.w500,
