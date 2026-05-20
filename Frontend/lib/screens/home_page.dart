@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../features/home/demo_hospitals.dart';
 import '../features/home/empty_rooms.dart';
 import '../features/home/patient_search_bar.dart';
-import '../features/home/plus_sign.dart';
 import '../features/home/select_hospital_button.dart';
 import '../features/patient_detail/alert_system.dart';
 import '../services/patient_repository.dart';
@@ -189,15 +188,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _addPatient(PatientRecord patient) {
-    setState(() {
-      _patients.insert(0, patient);
-      for (var i = 0; i < _patients.length; i++) {
-        _patients[i] = _patients[i].copyWithRank(i + 1);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final critical =
@@ -367,8 +357,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               if (_isClinician) ...[
-                const Spacer(),
-                PlusSignButton(onPatientCreated: _addPatient),
                 const Spacer(),
                 EmptyRoomsButton(emptyRooms: _emptyRooms),
               ],

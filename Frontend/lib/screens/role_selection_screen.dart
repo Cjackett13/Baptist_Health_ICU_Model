@@ -9,6 +9,8 @@ enum AppRole { clinician, patient }
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
 
+  static const double _boxGap = 32;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,27 +45,49 @@ class RoleSelectionScreen extends StatelessWidget {
                       color: BhColors.slate,
                     ),
               ),
-              const SizedBox(height: 40),
-              _RoleCard(
-                title: 'Nurse / Physician',
-                subtitle:
-                    'Full patient list, vitals from clinical data, and ML predictions '
-                    '(SCAI, vasopressors, mortality, hospital LOS, MCS, VA-ECMO).',
-                icon: Icons.local_hospital_outlined,
-                accent: BhColors.ink,
-                onTap: () => _open(context, AppRole.clinician),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final maxW = constraints.maxWidth;
+                    final maxH = constraints.maxHeight;
+                    final boxSize = _squareSize(maxW, maxH);
+
+                    return Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: boxSize,
+                            height: boxSize,
+                            child: _RoleCard(
+                              title: 'Nurse / Physician',
+                              subtitle:
+                                  'Patient list, vitals, and ML predictions.',
+                              icon: Icons.local_hospital_outlined,
+                              accent: BhColors.ink,
+                              onTap: () => _open(context, AppRole.clinician),
+                            ),
+                          ),
+                          const SizedBox(width: _boxGap),
+                          SizedBox(
+                            width: boxSize,
+                            height: boxSize,
+                            child: _RoleCard(
+                              title: 'Patient',
+                              subtitle:
+                                  'Length of stay, recommendations, and meds.',
+                              icon: Icons.person_outline,
+                              accent: BhColors.primary,
+                              onTap: () => _openPatientSignIn(context),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-              const SizedBox(height: 16),
-              _RoleCard(
-                title: 'Patient',
-                subtitle:
-                    'Your predicted length of stay, personalized recommendations, '
-                    'and prescribed medications with dosage details.',
-                icon: Icons.person_outline,
-                accent: BhColors.primary,
-                onTap: () => _openPatientSignIn(context),
-              ),
-              const Spacer(),
               Text(
                 'Demo data sourced from project parquet tables (person, encounter, '
                 'clinical_event, diagnosis, medication_admin, scai_stage_hourly).',
@@ -79,6 +103,16 @@ class RoleSelectionScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Equal square tiles, centered, with fixed gap between them.
+  double _squareSize(double maxWidth, double maxHeight) {
+    const maxBox = 286.0; // 220 × 1.3
+    const minBox = 182.0; // 140 × 1.3
+    final fromWidth = (maxWidth - _boxGap) / 2;
+    final fromHeight = maxHeight;
+    return (fromWidth < fromHeight ? fromWidth : fromHeight)
+        .clamp(minBox, maxBox);
   }
 
   void _open(BuildContext context, AppRole role) {
@@ -123,7 +157,7 @@ class _RoleCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
@@ -135,8 +169,9 @@ class _RoleCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
@@ -144,48 +179,45 @@ class _RoleCard extends StatelessWidget {
                   color: accent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: accent, size: 28),
+                child: Icon(icon, color: accent, size: 36),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: BhColors.ink,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black54,
-                        height: 1.4,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Text(
-                          'Continue',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: accent,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(Icons.arrow_forward_rounded,
-                            size: 16, color: accent),
-                      ],
-                    ),
-                  ],
+              const SizedBox(height: 14),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: BhColors.ink,
                 ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.black54,
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Continue',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: accent,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(Icons.arrow_forward_rounded, size: 14, color: accent),
+                ],
               ),
             ],
           ),
