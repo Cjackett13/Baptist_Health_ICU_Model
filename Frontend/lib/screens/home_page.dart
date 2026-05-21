@@ -138,6 +138,14 @@ class _HomePageState extends State<HomePage> {
       _selectedScaiStage != null ||
       _selectedEscalation != _EscalationFilter.all;
 
+  /// Watch chip label maps to [Moderate] in patient data.
+  void _toggleAcuityChip(String condition) {
+    setState(() {
+      _selectedCondition =
+          _selectedCondition == condition ? null : condition;
+    });
+  }
+
   Future<void> _openFilterSheet() async {
     final pool = _hospitalPatients;
     final conditions = pool.map((p) => p.condition).toSet().toList()..sort();
@@ -205,10 +213,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final atHospital = _hospitalPatients;
     final critical =
-        _patients.where((p) => p.condition == 'Critical').length;
-    final watch = _patients.where((p) => p.condition == 'Moderate').length;
-    final stable = _patients.where((p) => p.condition == 'Stable').length;
+        atHospital.where((p) => p.condition == 'Critical').length;
+    final watch =
+        atHospital.where((p) => p.condition == 'Moderate').length;
+    final stable = atHospital.where((p) => p.condition == 'Stable').length;
 
     return Scaffold(
       body: Column(
@@ -243,27 +253,45 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Row(
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: [
+                      _SummaryChip(
+                        label: 'All',
+                        count: atHospital.length,
+                        color: BhColors.ink,
+                        isSelected: _selectedCondition == null,
+                        onTap: () =>
+                            setState(() => _selectedCondition = null),
+                      ),
+                      const SizedBox(width: 8),
                       _SummaryChip(
                         label: 'Critical',
                         count: critical,
                         color: const Color(0xFFE05A5A),
+                        isSelected: _selectedCondition == 'Critical',
+                        onTap: () => _toggleAcuityChip('Critical'),
                       ),
                       const SizedBox(width: 8),
                       _SummaryChip(
                         label: 'Watch',
                         count: watch,
                         color: const Color(0xFFD4A030),
+                        isSelected: _selectedCondition == 'Moderate',
+                        onTap: () => _toggleAcuityChip('Moderate'),
                       ),
                       const SizedBox(width: 8),
                       _SummaryChip(
                         label: 'Stable',
                         count: stable,
                         color: const Color(0xFF4A9E6A),
+                        isSelected: _selectedCondition == 'Stable',
+                        onTap: () => _toggleAcuityChip('Stable'),
                       ),
                     ],
                   ),
+                ),
                 const SizedBox(height: 12),
                 PatientSearchBar(
                   controller: _searchController,
@@ -352,39 +380,59 @@ class _SummaryChip extends StatelessWidget {
     required this.label,
     required this.count,
     required this.color,
+    required this.onTap,
+    this.isSelected = false,
   });
+
   final String label;
   final int count;
   final Color color;
+  final VoidCallback onTap;
+  final bool isSelected;
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? color.withValues(alpha: 0.22)
+                : color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected ? color : color.withValues(alpha: 0.3),
+              width: isSelected ? 2 : 1,
             ),
-            const SizedBox(width: 6),
-            Text(
-              '$count $label',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: color,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: color),
               ),
-            ),
-          ],
+              const SizedBox(width: 6),
+              Text(
+                '$count $label',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 enum _EscalationFilter {

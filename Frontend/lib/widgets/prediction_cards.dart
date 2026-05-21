@@ -633,8 +633,9 @@ class _ShapPanelState extends State<ShapPanel> {
 }
 
 class _ShapRow extends StatelessWidget {
-  const _ShapRow({required this.shap});
+  const _ShapRow({required this.shap, this.showShapValue = false});
   final ShapValue shap;
+  final bool showShapValue;
 
   @override
   Widget build(BuildContext context) {
@@ -662,13 +663,28 @@ class _ShapRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  shap.feature,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        shap.feature,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    if (showShapValue)
+                      Text(
+                        'SHAP ${shap.value >= 0 ? '+' : ''}${shap.value.toStringAsFixed(3)}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: color,
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -1435,7 +1451,7 @@ class _EscalationPredictionRow extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.only(top: 6),
                 child: Text(
-                  'Top factors driving this estimate',
+                  'Top 5 SHAP factors (by |SHAP|)',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.black45,
@@ -1450,12 +1466,14 @@ class _EscalationPredictionRow extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'No factor breakdown available for this score.',
+                    'No SHAP factor breakdown available for this score.',
                     style: TextStyle(fontSize: 11, color: Colors.black45),
                   ),
                 ),
               ]
-            : reasons.take(5).map((s) => _ShapRow(shap: s)).toList(),
+            : ShapValue.topByShapMagnitude(reasons, k: 5)
+                .map((s) => _ShapRow(shap: s, showShapValue: true))
+                .toList(),
       ),
     );
   }
