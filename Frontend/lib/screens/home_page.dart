@@ -7,19 +7,11 @@ import '../features/home/select_hospital_button.dart';
 import '../features/patient_detail/alert_system.dart';
 import '../services/patient_repository.dart';
 import '../theme/app_colors.dart';
+import '../widgets/bh_branded_header.dart';
 import 'role_selection_screen.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    required this.role,
-    this.sessionPatientId,
-    super.key,
-  });
-
-  final AppRole role;
-
-  /// When [role] is patient, only this patient ID may be viewed.
-  final String? sessionPatientId;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,12 +24,12 @@ class _HomePageState extends State<HomePage> {
   List<PatientRecord> _patients = [];
   bool _loading = true;
   String? _loadError;
-  bool _openedPatientProfile = false;
-
   final TextEditingController _searchController = TextEditingController();
   String? _selectedCondition;
   String? _selectedDoctor;
   String? _selectedUnit;
+  String? _selectedScaiStage;
+  _EscalationFilter _selectedEscalation = _EscalationFilter.all;
 
   @override
   void initState() {
@@ -56,11 +48,6 @@ class _HomePageState extends State<HomePage> {
       );
       if (!mounted) return;
       var patients = loaded;
-      if (!_isClinician && widget.sessionPatientId != null) {
-        patients = patients
-            .where((p) => p.id == widget.sessionPatientId)
-            .toList();
-      }
       if (!mounted) return;
       setState(() {
         _patients = patients;
@@ -74,18 +61,6 @@ class _HomePageState extends State<HomePage> {
             duration: const Duration(seconds: 6),
           ),
         );
-      }
-      if (!_isClinician && patients.length == 1) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted || _openedPatientProfile) return;
-          _openedPatientProfile = true;
-          showPatientDetails(
-            context,
-            patients.first,
-            role: widget.role,
-            sessionPatientId: widget.sessionPatientId,
-          );
-        });
       }
     } catch (e) {
       if (!mounted) return;
@@ -104,12 +79,19 @@ class _HomePageState extends State<HomePage> {
       _selectedCondition = null;
       _selectedDoctor = null;
       _selectedUnit = null;
+      _selectedScaiStage = null;
+      _selectedEscalation = _EscalationFilter.all;
     });
   }
+
+  List<PatientRecord> get _hospitalPatients => _patients
+      .where((p) => p.demoHospitalId == _selectedHospital.id)
+      .toList();
 
   List<PatientRecord> get _filteredPatients {
     final query = _searchController.text.trim().toLowerCase();
     return _patients.where((p) {
+      final matchesHospital = p.demoHospitalId == _selectedHospital.id;
       final parts = p.name.toLowerCase().split(RegExp(r'\s+'));
       final matchesName =
           query.isEmpty || parts.any((part) => part.contains(query));
@@ -119,36 +101,53 @@ class _HomePageState extends State<HomePage> {
           _selectedDoctor == null || p.primaryDoctor == _selectedDoctor;
       final matchesUnit =
           _selectedUnit == null || p.roomNumber.contains(_selectedUnit!);
-      return matchesName && matchesCondition && matchesDoctor && matchesUnit;
+      final matchesScai = _selectedScaiStage == null ||
+          p.scaiStageCurrent == _selectedScaiStage;
+      final matchesEscalation = _matchesEscalationFilter(p);
+      return matchesHospital &&
+          matchesName &&
+          matchesCondition &&
+          matchesDoctor &&
+          matchesUnit &&
+          matchesScai &&
+          matchesEscalation;
     }).toList();
+  }
+
+  bool _matchesEscalationFilter(PatientRecord p) {
+    final mcsLikely =
+        p.predictions.mcs12hNeeded && !p.mechanicalSupport.onMcs;
+    final ecmoLikely =
+        p.predictions.vaEcmo12hNeeded && !p.mechanicalSupport.onVaEcmo;
+    switch (_selectedEscalation) {
+      case _EscalationFilter.all:
+        return true;
+      case _EscalationFilter.mcsLikely:
+        return mcsLikely;
+      case _EscalationFilter.ecmoLikely:
+        return ecmoLikely;
+      case _EscalationFilter.mcsOrEcmoLikely:
+        return mcsLikely || ecmoLikely;
+    }
   }
 
   bool get _hasActiveFilters =>
       _selectedCondition != null ||
       _selectedDoctor != null ||
-      _selectedUnit != null;
-
-  bool get _isClinician => widget.role == AppRole.clinician;
-
-  PatientRecord? get _sessionPatient {
-    if (widget.sessionPatientId == null || _patients.isEmpty) return null;
-    try {
-      return _patients.firstWhere((p) => p.id == widget.sessionPatientId);
-    } catch (_) {
-      return null;
-    }
-  }
+      _selectedUnit != null ||
+      _selectedScaiStage != null ||
+      _selectedEscalation != _EscalationFilter.all;
 
   Future<void> _openFilterSheet() async {
-    final conditions =
-        _patients.map((p) => p.condition).toSet().toList()..sort();
-    final doctors = _patients
+    final pool = _hospitalPatients;
+    final conditions = pool.map((p) => p.condition).toSet().toList()..sort();
+    final doctors = pool
         .map((p) => p.primaryDoctor)
         .whereType<String>()
         .toSet()
         .toList()
       ..sort();
-    final units = _patients
+    final units = pool
         .map((p) {
           final parts = p.roomNumber.split(' ');
           return parts.isNotEmpty ? parts.last : p.roomNumber;
@@ -156,6 +155,17 @@ class _HomePageState extends State<HomePage> {
         .toSet()
         .toList()
       ..sort();
+    const scaiOrder = ['A', 'B', 'C', 'D', 'E'];
+    final scaiStages = pool
+        .map((p) => p.scaiStageCurrent)
+        .whereType<String>()
+        .toSet()
+        .toList()
+      ..sort((a, b) {
+        final ia = scaiOrder.indexOf(a);
+        final ib = scaiOrder.indexOf(b);
+        return (ia < 0 ? 99 : ia).compareTo(ib < 0 ? 99 : ib);
+      });
 
     final result = await showModalBottomSheet<_FilterState>(
       context: context,
@@ -167,9 +177,12 @@ class _HomePageState extends State<HomePage> {
         conditions: conditions,
         doctors: doctors,
         units: units,
+        scaiStages: scaiStages,
         initialCondition: _selectedCondition,
         initialDoctor: _selectedDoctor,
         initialUnit: _selectedUnit,
+        initialScaiStage: _selectedScaiStage,
+        initialEscalation: _selectedEscalation,
       ),
     );
 
@@ -178,6 +191,8 @@ class _HomePageState extends State<HomePage> {
         _selectedCondition = result.condition;
         _selectedDoctor = result.doctor;
         _selectedUnit = result.unit;
+        _selectedScaiStage = result.scaiStage;
+        _selectedEscalation = result.escalation;
       });
     }
   }
@@ -199,17 +214,19 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _PineAppHeader(
-            roleLabel: _isClinician
-                ? 'Clinician view'
-                : _sessionPatient?.name ?? 'Patient view',
-            onSwitchRole: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (_) => const RoleSelectionScreen(),
-                ),
-              );
-            },
+          BhBrandedHeader(
+            subtitle: 'Cardiogenic shock · Clinician view',
+            trailing: TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const RoleSelectionScreen(),
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.white70),
+              child: const Text('Switch View'),
+            ),
           ),
           Container(
             color: const Color(0xFFF2F2F2),
@@ -217,29 +234,16 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _isClinician
-                      ? 'Patient priority list'
-                      : 'My care dashboard',
-                  style: const TextStyle(
+                const Text(
+                  'Patient priority list',
+                  style: TextStyle(
                     color: Colors.black,
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                if (!_isClinician && _sessionPatient != null) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    'Signed in as ${_sessionPatient!.name} · Room ${_sessionPatient!.roomNumber}',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ],
                 const SizedBox(height: 10),
-                if (_isClinician)
-                  Row(
+                Row(
                     children: [
                       _SummaryChip(
                         label: 'Critical',
@@ -260,15 +264,13 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                if (_isClinician) ...[
-                  const SizedBox(height: 12),
-                  PatientSearchBar(
-                    controller: _searchController,
-                    onChanged: (_) => setState(() {}),
-                    onFilterTap: _openFilterSheet,
-                    isFilterActive: _hasActiveFilters,
-                  ),
-                ],
+                const SizedBox(height: 12),
+                PatientSearchBar(
+                  controller: _searchController,
+                  onChanged: (_) => setState(() {}),
+                  onFilterTap: _openFilterSheet,
+                  isFilterActive: _hasActiveFilters,
+                ),
                 const SizedBox(height: 16),
               ],
             ),
@@ -289,14 +291,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         )
                       : _filteredPatients.isEmpty
-                          ? Center(
+                          ? const Center(
                               child: Padding(
-                                padding: const EdgeInsets.all(24),
+                                padding: EdgeInsets.all(24),
                                 child: Text(
-                                  _isClinician
-                                      ? 'No patients match your filters.'
-                                      : 'Your profile could not be loaded. '
-                                          'Go back and select your name again.',
+                                  'No patients match your filters.',
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -309,20 +308,13 @@ class _HomePageState extends State<HomePage> {
                                   const SizedBox(height: 12),
                               itemBuilder: (context, index) {
                                 final patient = _filteredPatients[index];
-                                if (!_isClinician &&
-                                    widget.sessionPatientId != null &&
-                                    patient.id != widget.sessionPatientId) {
-                                  return const SizedBox.shrink();
-                                }
                                 return PatientListCard(
                                   patient: patient,
-                                  isClinician: _isClinician,
+                                  isClinician: true,
                                   onTap: () => showPatientDetails(
                                     context,
                                     patient,
-                                    role: widget.role,
-                                    sessionPatientId:
-                                        widget.sessionPatientId,
+                                    role: AppRole.clinician,
                                   ),
                                 );
                               },
@@ -341,25 +333,12 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: Row(
             children: [
-              if (_isClinician)
-                SelectHospitalButton(
-                  selectedHospital: _selectedHospital,
-                  onHospitalSelected: _setHospital,
-                )
-              else
-                Expanded(
-                  child: Text(
-                    'Viewing your record only',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black.withValues(alpha: 0.5),
-                    ),
-                  ),
-                ),
-              if (_isClinician) ...[
-                const Spacer(),
-                EmptyRoomsButton(emptyRooms: _emptyRooms),
-              ],
+              SelectHospitalButton(
+                selectedHospital: _selectedHospital,
+                onHospitalSelected: _setHospital,
+              ),
+              const Spacer(),
+              EmptyRoomsButton(emptyRooms: _emptyRooms),
             ],
           ),
         ),
@@ -408,82 +387,26 @@ class _SummaryChip extends StatelessWidget {
       );
 }
 
-class _PineAppHeader extends StatelessWidget {
-  const _PineAppHeader({
-    required this.roleLabel,
-    required this.onSwitchRole,
-  });
-
-  final String roleLabel;
-  final VoidCallback onSwitchRole;
-
-  @override
-  Widget build(BuildContext context) {
-    final top = MediaQuery.paddingOf(context).top;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(16, top + 12, 16, 16),
-      decoration: const BoxDecoration(
-        color: BhColors.ink,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x33000000),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/baptist_logo.png',
-            height: 44,
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.high,
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Baptist Health Cardiogenic Shock Tracker',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Georgia',
-                        letterSpacing: 0.2,
-                        fontSize: 16,
-                      ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Cardiogenic shock · $roleLabel',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.78),
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: onSwitchRole,
-            style: TextButton.styleFrom(foregroundColor: Colors.white70),
-            child: const Text('Switch'),
-          ),
-        ],
-      ),
-    );
-  }
+enum _EscalationFilter {
+  all,
+  mcsLikely,
+  ecmoLikely,
+  mcsOrEcmoLikely,
 }
 
 class _FilterState {
-  const _FilterState({this.condition, this.doctor, this.unit});
+  const _FilterState({
+    this.condition,
+    this.doctor,
+    this.unit,
+    this.scaiStage,
+    this.escalation = _EscalationFilter.all,
+  });
   final String? condition;
   final String? doctor;
   final String? unit;
+  final String? scaiStage;
+  final _EscalationFilter escalation;
 }
 
 class _PatientFilterSheet extends StatefulWidget {
@@ -491,16 +414,22 @@ class _PatientFilterSheet extends StatefulWidget {
     required this.conditions,
     required this.doctors,
     required this.units,
+    required this.scaiStages,
     required this.initialCondition,
     required this.initialDoctor,
     required this.initialUnit,
+    required this.initialScaiStage,
+    required this.initialEscalation,
   });
   final List<String> conditions;
   final List<String> doctors;
   final List<String> units;
+  final List<String> scaiStages;
   final String? initialCondition;
   final String? initialDoctor;
   final String? initialUnit;
+  final String? initialScaiStage;
+  final _EscalationFilter initialEscalation;
 
   @override
   State<_PatientFilterSheet> createState() => _PatientFilterSheetState();
@@ -510,6 +439,8 @@ class _PatientFilterSheetState extends State<_PatientFilterSheet> {
   late String? _condition = widget.initialCondition;
   late String? _doctor = widget.initialDoctor;
   late String? _unit = widget.initialUnit;
+  late String? _scaiStage = widget.initialScaiStage;
+  late _EscalationFilter _escalation = widget.initialEscalation;
 
   @override
   Widget build(BuildContext context) {
@@ -520,77 +451,150 @@ class _PatientFilterSheetState extends State<_PatientFilterSheet> {
         16,
         MediaQuery.of(context).viewInsets.bottom + 20,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Filter patients',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String?>(
-            initialValue: _condition,
-            decoration: const InputDecoration(
-                labelText: 'Risk tier', border: OutlineInputBorder()),
-            items: [
-              const DropdownMenuItem<String?>(
-                  value: null, child: Text('All tiers')),
-              ...widget.conditions.map((c) =>
-                  DropdownMenuItem<String?>(value: c, child: Text(c))),
-            ],
-            onChanged: (v) => setState(() => _condition = v),
-          ),
-          const SizedBox(height: 12),
-          DropdownButtonFormField<String?>(
-            initialValue: _doctor,
-            decoration: const InputDecoration(
-                labelText: 'Doctor', border: OutlineInputBorder()),
-            items: [
-              const DropdownMenuItem<String?>(
-                  value: null, child: Text('All doctors')),
-              ...widget.doctors.map((d) =>
-                  DropdownMenuItem<String?>(value: d, child: Text(d))),
-            ],
-            onChanged: (v) => setState(() => _doctor = v),
-          ),
-          const SizedBox(height: 12),
-          DropdownButtonFormField<String?>(
-            initialValue: _unit,
-            decoration: const InputDecoration(
-                labelText: 'ICU unit', border: OutlineInputBorder()),
-            items: [
-              const DropdownMenuItem<String?>(
-                  value: null, child: Text('All ICU units')),
-              ...widget.units.map((u) =>
-                  DropdownMenuItem<String?>(value: u, child: Text(u))),
-            ],
-            onChanged: (v) => setState(() => _unit = v),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () => setState(() {
-                  _condition = null;
-                  _doctor = null;
-                  _unit = null;
-                }),
-                child: const Text('Clear'),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Filter patients',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String?>(
+              initialValue: _scaiStage,
+              decoration: const InputDecoration(
+                labelText: 'SCAI stage',
+                border: OutlineInputBorder(),
               ),
-              const Spacer(),
-              FilledButton(
-                onPressed: () => Navigator.pop(
-                  context,
-                  _FilterState(
-                    condition: _condition,
-                    doctor: _doctor,
-                    unit: _unit,
+              items: [
+                const DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text('All SCAI stages'),
+                ),
+                ...widget.scaiStages.map(
+                  (s) => DropdownMenuItem<String?>(
+                    value: s,
+                    child: Text('SCAI $s'),
                   ),
                 ),
-                child: const Text('Apply filters'),
+              ],
+              onChanged: (v) => setState(() => _scaiStage = v),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<_EscalationFilter>(
+              initialValue: _escalation,
+              decoration: const InputDecoration(
+                labelText: 'MCS / VA-ECMO (12h)',
+                border: OutlineInputBorder(),
               ),
-            ],
-          ),
-        ],
+              items: const [
+                DropdownMenuItem(
+                  value: _EscalationFilter.all,
+                  child: Text('All — any escalation risk'),
+                ),
+                DropdownMenuItem(
+                  value: _EscalationFilter.mcsLikely,
+                  child: Text('MCS likely within 12 hours'),
+                ),
+                DropdownMenuItem(
+                  value: _EscalationFilter.ecmoLikely,
+                  child: Text('VA-ECMO likely within 12 hours'),
+                ),
+                DropdownMenuItem(
+                  value: _EscalationFilter.mcsOrEcmoLikely,
+                  child: Text('MCS or VA-ECMO likely within 12 hours'),
+                ),
+              ],
+              onChanged: (v) => setState(
+                () => _escalation = v ?? _EscalationFilter.all,
+              ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String?>(
+              initialValue: _condition,
+              decoration: const InputDecoration(
+                labelText: 'Risk tier',
+                border: OutlineInputBorder(),
+              ),
+              items: [
+                const DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text('All tiers'),
+                ),
+                ...widget.conditions.map(
+                  (c) => DropdownMenuItem<String?>(value: c, child: Text(c)),
+                ),
+              ],
+              onChanged: (v) => setState(() => _condition = v),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String?>(
+              initialValue: _doctor,
+              decoration: const InputDecoration(
+                labelText: 'Doctor',
+                border: OutlineInputBorder(),
+              ),
+              items: [
+                const DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text('All doctors'),
+                ),
+                ...widget.doctors.map(
+                  (d) => DropdownMenuItem<String?>(value: d, child: Text(d)),
+                ),
+              ],
+              onChanged: (v) => setState(() => _doctor = v),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String?>(
+              initialValue: _unit,
+              decoration: const InputDecoration(
+                labelText: 'ICU unit',
+                border: OutlineInputBorder(),
+              ),
+              items: [
+                const DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text('All ICU units'),
+                ),
+                ...widget.units.map(
+                  (u) => DropdownMenuItem<String?>(value: u, child: Text(u)),
+                ),
+              ],
+              onChanged: (v) => setState(() => _unit = v),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () => setState(() {
+                    _condition = null;
+                    _doctor = null;
+                    _unit = null;
+                    _scaiStage = null;
+                    _escalation = _EscalationFilter.all;
+                  }),
+                  child: const Text('Clear'),
+                ),
+                const Spacer(),
+                FilledButton(
+                  onPressed: () => Navigator.pop(
+                    context,
+                    _FilterState(
+                      condition: _condition,
+                      doctor: _doctor,
+                      unit: _unit,
+                      scaiStage: _scaiStage,
+                      escalation: _escalation,
+                    ),
+                  ),
+                  child: const Text('Apply filters'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

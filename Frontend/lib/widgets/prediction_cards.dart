@@ -641,47 +641,45 @@ class _ShapRow extends StatelessWidget {
     final color = shap.isPositive
         ? const Color(0xFFE05A5A)
         : const Color(0xFF4A9E6A);
-    final barWidth =
-        (shap.value.abs() / 0.5).clamp(0.05, 1.0);
-    final sign = shap.isPositive ? '+' : '−';
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              shap.feature,
-              style: const TextStyle(
-                  fontSize: 12, color: Colors.black87),
-              overflow: TextOverflow.ellipsis,
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Icon(
+              shap.isPositive
+                  ? Icons.arrow_circle_up_rounded
+                  : Icons.arrow_circle_down_rounded,
+              size: 18,
+              color: color,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(3),
-              child: LinearProgressIndicator(
-                value: barWidth,
-                backgroundColor: const Color(0xFFEEEEEE),
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(color),
-                minHeight: 8,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 44,
-            child: Text(
-              '$sign${shap.value.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-              textAlign: TextAlign.right,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  shap.feature,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  shap.description,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Colors.black54,
+                    height: 1.35,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -1342,8 +1340,38 @@ class _EscalationPredictionRow extends StatelessWidget {
   final List<ShapValue> reasons;
   final bool alreadyOnSupport;
 
+  static const _onSupportLabel = 'Already on MCS or ECMO';
+
   @override
   Widget build(BuildContext context) {
+    if (alreadyOnSupport) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const Text(
+              _onSupportLabel,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF7B5EA7),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final color = riskColor(probability);
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -1393,13 +1421,6 @@ class _EscalationPredictionRow extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (alreadyOnSupport) ...[
-              const SizedBox(height: 4),
-              const Text(
-                'Already on this support — score reflects severity, not placement.',
-                style: TextStyle(fontSize: 10, color: Color(0xFF7B5EA7)),
-              ),
-            ],
             const SizedBox(height: 6),
             ClipRRect(
               borderRadius: BorderRadius.circular(3),
@@ -1411,11 +1432,11 @@ class _EscalationPredictionRow extends StatelessWidget {
               ),
             ),
             if (reasons.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 6),
+              const Padding(
+                padding: EdgeInsets.only(top: 6),
                 child: Text(
-                  'Why this prediction (${reasons.length} factors)',
-                  style: const TextStyle(
+                  'Top factors driving this estimate',
+                  style: TextStyle(
                     fontSize: 10,
                     color: Colors.black45,
                     fontWeight: FontWeight.w500,
@@ -1434,7 +1455,7 @@ class _EscalationPredictionRow extends StatelessWidget {
                   ),
                 ),
               ]
-            : reasons.map((s) => _ShapRow(shap: s)).toList(),
+            : reasons.take(5).map((s) => _ShapRow(shap: s)).toList(),
       ),
     );
   }
