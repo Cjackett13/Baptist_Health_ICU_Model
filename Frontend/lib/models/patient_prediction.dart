@@ -8,6 +8,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'shap_factor_descriptions.dart';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SHAP VALUE
 // One feature's contribution to a prediction.
@@ -18,11 +20,13 @@ class ShapValue {
     required this.feature,
     required this.value,
     required this.direction,
+    required this.description,
   });
 
   final String feature;
   final double value;
   final String direction; // 'positive' | 'negative'
+  final String description;
 
   bool get isPositive => direction == 'positive';
 
@@ -34,10 +38,14 @@ class ShapValue {
         (isPositive != null
             ? (isPositive ? 'positive' : 'negative')
             : (value >= 0 ? 'positive' : 'negative'));
+    final feature = json['feature'] as String? ?? 'Unknown factor';
+    final increasesRisk = direction == 'positive';
     return ShapValue(
-      feature: json['feature'] as String? ?? 'Unknown factor',
+      feature: feature,
       value: value,
       direction: direction,
+      description: json['description'] as String? ??
+          describeShapFactor(feature, increasesRisk: increasesRisk),
     );
   }
 
@@ -46,6 +54,7 @@ class ShapValue {
         'value': value,
         'is_positive': isPositive,
         'direction': direction,
+        'description': description,
       };
 }
 
@@ -364,6 +373,7 @@ class PatientPredictions {
   static List<ShapValue> _parseShapList(dynamic raw) {
     if (raw is! List<dynamic>) return const [];
     return raw
+        .take(5)
         .map((e) => ShapValue.fromJson(e as Map<String, dynamic>))
         .toList();
   }
@@ -596,6 +606,7 @@ class PatientRecord {
     this.daysAdmitted,
     this.unitCd,
     this.facilityCd,
+    this.demoHospitalId,
     this.scaiStageCurrent,
     this.hourFromAdmit,
     this.clinicalVitals = const [],
@@ -625,6 +636,8 @@ class PatientRecord {
   final int? daysAdmitted;
   final String? unitCd;
   final String? facilityCd;
+  /// Demo hospital picker id (`bh-jax`, `bh-mia`, …) from seed export.
+  final String? demoHospitalId;
   final String? scaiStageCurrent;
   /// ICU hour aligned to the MCS/ECMO model feature row in parquet cache.
   final int? hourFromAdmit;
@@ -686,6 +699,7 @@ class PatientRecord {
       daysAdmitted: days,
       unitCd: json['unit_cd'] as String?,
       facilityCd: json['facility_cd'] as String?,
+      demoHospitalId: json['demo_hospital_id'] as String?,
       scaiStageCurrent: json['scai_stage_current'] as String?,
       hourFromAdmit: hourFromAdmit,
       clinicalVitals: vitals,
@@ -716,6 +730,7 @@ class PatientRecord {
         daysAdmitted: daysAdmitted,
         unitCd: unitCd,
         facilityCd: facilityCd,
+        demoHospitalId: demoHospitalId,
         scaiStageCurrent: scaiStageCurrent,
         hourFromAdmit: hourFromAdmit,
         clinicalVitals: clinicalVitals,
@@ -742,6 +757,7 @@ class PatientRecord {
         daysAdmitted: daysAdmitted,
         unitCd: unitCd,
         facilityCd: facilityCd,
+        demoHospitalId: demoHospitalId,
         scaiStageCurrent: scaiStageCurrent,
         hourFromAdmit: hourFromAdmit,
         clinicalVitals: clinicalVitals,
@@ -887,10 +903,15 @@ List<ShapValue> generateMockShapValues(
     final magnitude =
         (risk * (0.5 - i * 0.07) * (0.85 + rng.nextDouble() * 0.3))
             .clamp(0.04, 0.55);
+    final increases = feat.$2;
     shapValues.add(ShapValue(
       feature: feat.$1,
       value: double.parse(magnitude.toStringAsFixed(2)),
-      direction: feat.$2 ? 'positive' : 'negative',
+      direction: increases ? 'positive' : 'negative',
+      description: describeShapFactor(
+        feat.$1,
+        increasesRisk: increases,
+      ),
     ));
   }
 
@@ -904,6 +925,10 @@ List<ShapValue> generateMockShapValues(
     value: double.parse(
         (0.04 + rng.nextDouble() * 0.14).toStringAsFixed(2)),
     direction: 'negative',
+    description: describeShapFactor(
+      protective.$1,
+      increasesRisk: false,
+    ),
   ));
 
   return shapValues;

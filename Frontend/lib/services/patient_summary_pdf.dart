@@ -10,6 +10,8 @@ class PatientSummaryPdf {
   static Future<void> share(
     PatientRecord patient, {
     bool forFamily = true,
+    String? hospitalName,
+    String? hospitalCity,
   }) async {
     final doc = pw.Document();
     final updated = patient.predictions.lastUpdated;
@@ -21,8 +23,18 @@ class PatientSummaryPdf {
         pageFormat: PdfPageFormat.letter,
         margin: const pw.EdgeInsets.all(40),
         build: (context) => forFamily
-            ? _familyContent(patient, dateStr)
-            : _clinicalContent(patient, dateStr),
+            ? _familyContent(
+                patient,
+                dateStr,
+                hospitalName: hospitalName,
+                hospitalCity: hospitalCity,
+              )
+            : _clinicalContent(
+                patient,
+                dateStr,
+                hospitalName: hospitalName,
+                hospitalCity: hospitalCity,
+              ),
       ),
     );
 
@@ -34,10 +46,17 @@ class PatientSummaryPdf {
     );
   }
 
-  static List<pw.Widget> _familyContent(PatientRecord patient, String dateStr) {
+  static List<pw.Widget> _familyContent(
+    PatientRecord patient,
+    String dateStr, {
+    String? hospitalName,
+    String? hospitalCity,
+  }) {
     final p = patient.predictions;
     return [
-      _header('Care summary to share with family'),
+      _header(
+        'Care summary for family, caregivers, or your workplace',
+      ),
       pw.SizedBox(height: 16),
       _sectionTitle('Patient'),
       pw.Text(
@@ -46,6 +65,12 @@ class PatientSummaryPdf {
       ),
       pw.SizedBox(height: 4),
       pw.Text('Room ${patient.roomNumber}'),
+      if (hospitalName != null && hospitalName.isNotEmpty)
+        pw.Text(
+          hospitalCity != null && hospitalCity.isNotEmpty
+              ? '$hospitalName · $hospitalCity'
+              : hospitalName,
+        ),
       if (patient.primaryDoctor != null)
         pw.Text('Attending: ${patient.primaryDoctor}'),
       pw.SizedBox(height: 16),
@@ -75,10 +100,17 @@ class PatientSummaryPdf {
 
   static List<pw.Widget> _clinicalContent(
     PatientRecord patient,
-    String dateStr,
-  ) {
+    String dateStr, {
+    String? hospitalName,
+    String? hospitalCity,
+  }) {
     // Clinician export uses the same family-safe layout when sharing externally.
-    return _familyContent(patient, dateStr);
+    return _familyContent(
+      patient,
+      dateStr,
+      hospitalName: hospitalName,
+      hospitalCity: hospitalCity,
+    );
   }
 
   static pw.Widget _header(String subtitle) => pw.Column(

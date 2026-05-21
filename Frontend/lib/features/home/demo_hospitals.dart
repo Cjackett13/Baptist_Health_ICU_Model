@@ -1,3 +1,7 @@
+/// Demo hospital sites. Seed export assigns [patientsPerHospital] real
+/// parquet encounters per [id] (see `scripts/export_patient_seed.py`).
+const int patientsPerHospital = 10;
+
 class DemoHospital {
   const DemoHospital({
     required this.id,

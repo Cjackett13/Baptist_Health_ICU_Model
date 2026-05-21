@@ -6,11 +6,12 @@ lib/
 ├── config/                   # API base URLs and environment
 ├── theme/                    # Brand colors (BhColors)
 ├── models/                   # Patient / prediction data types
-├── services/                 # Repository, API clients, PDF export
+├── services/                 # Repository, API clients, patient care assistant, PDF
 ├── screens/                  # Full-page routes (home, role select, sign-in)
 ├── features/
 │   ├── home/                 # ICU floor UI (search, rooms, hospital picker)
-│   └── patient_detail/       # Patient card + clinician/family detail sheet
+│   ├── patient_detail/       # Patient card + clinician detail sheet
+│   └── patient_portal/       # Patient dashboard + care assistant chat
 └── widgets/                  # Reusable UI (prediction cards, collapsible sections)
 ```
 
@@ -23,7 +24,7 @@ lib/
 
 ## Assets
 
-- `assets/patients_seed.json` — offline demo cohort (regenerate from repo-root `scripts/export_patient_seed.py`).
+- `assets/patients_seed.json` — 60 patients (10 per demo hospital, real encounters). Regenerate: `python scripts/export_patient_seed.py` from workspace root.
 
 ## API
 
