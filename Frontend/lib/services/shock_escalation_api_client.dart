@@ -99,9 +99,12 @@ class ShockEscalationApiClient {
       final model = (r['model'] as String).toLowerCase();
       final prob = (r['probability'] as num).toDouble();
       final alert = r['alert'] as bool;
-      final reasons = (r['reasons'] as List<dynamic>? ?? [])
-          .map((e) => ShapValue.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final reasons = ShapValue.topByShapMagnitude(
+        (r['reasons'] as List<dynamic>? ?? [])
+            .map((e) => ShapValue.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        k: 5,
+      );
 
       if (model.contains('mcs')) {
         mcsProb = prob;

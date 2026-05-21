@@ -56,6 +56,23 @@ class ShapValue {
         'direction': direction,
         'description': description,
       };
+
+  /// Top [k] unique features ranked by |SHAP| (for MCS/ECMO escalation).
+  static List<ShapValue> topByShapMagnitude(
+    List<ShapValue> raw, {
+    int k = 5,
+  }) {
+    final sorted = List<ShapValue>.from(raw)
+      ..sort((a, b) => b.value.abs().compareTo(a.value.abs()));
+    final seen = <String>{};
+    final out = <ShapValue>[];
+    for (final s in sorted) {
+      if (!seen.add(s.feature)) continue;
+      out.add(s);
+      if (out.length >= k) break;
+    }
+    return out;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -372,10 +389,10 @@ class PatientPredictions {
 
   static List<ShapValue> _parseShapList(dynamic raw) {
     if (raw is! List<dynamic>) return const [];
-    return raw
-        .take(5)
+    final parsed = raw
         .map((e) => ShapValue.fromJson(e as Map<String, dynamic>))
         .toList();
+    return ShapValue.topByShapMagnitude(parsed, k: 5);
   }
 
   factory PatientPredictions.fromJson(Map<String, dynamic> json) =>
@@ -934,6 +951,55 @@ List<ShapValue> generateMockShapValues(
   return shapValues;
 }
 
+/// Top 5 SHAP-style factors for MCS / VA-ECMO when the live API is unavailable.
+List<ShapValue> generateMockEscalationShapValues(
+  double risk,
+  Random rng, {
+  required bool forEcmo,
+}) {
+  final features = forEcmo
+      ? [
+          ('SCAI stage (current)', true),
+          ('Shock burden (now)', true),
+          ('Mean arterial pressure', true),
+          ('Lactate', true),
+          ('Vasoactive-inotrope score', true),
+          ('Oxygen saturation', false),
+          ('Hours on current SCAI stage', true),
+        ]
+      : [
+          ('SCAI stage (current)', true),
+          ('Shock burden (now)', true),
+          ('Vasoactive-inotrope score', true),
+          ('Mean arterial pressure', true),
+          ('Lactate', true),
+          ('Vasopressor use', true),
+          ('Oxygen saturation', false),
+        ];
+
+  final shapValues = <ShapValue>[];
+  for (var i = 0; i < 5; i++) {
+    final feat = features[i];
+    final base = risk * (0.55 - i * 0.08) * (0.9 + rng.nextDouble() * 0.25);
+    final signed = feat.$2 ? base : -base * 0.65;
+    final magnitude = signed.abs().clamp(0.05, 0.85);
+    shapValues.add(
+      ShapValue(
+        feature: feat.$1,
+        value: double.parse(
+          (feat.$2 ? magnitude : -magnitude).toStringAsFixed(4),
+        ),
+        direction: feat.$2 ? 'positive' : 'negative',
+        description: describeShapFactor(
+          feat.$1,
+          increasesRisk: feat.$2,
+        ),
+      ),
+    );
+  }
+  return ShapValue.topByShapMagnitude(shapValues, k: 5);
+}
+
 List<HomeCareSuggestion> generateMockHomeCareSuggestions(
     PatientFeatures features, double readmissionRisk) {
   // Mock suggestions — replaced by Claude API call in FastAPI later
@@ -1038,5 +1104,7 @@ PatientPredictions generateMockPredictions(
     vaEcmo12hProbability:
         double.parse((icuRisk * 0.45).clamp(0.02, 0.85).toStringAsFixed(2)),
     vaEcmo12hNeeded: icuRisk >= 0.65,
+    shapMcs12h: generateMockEscalationShapValues(icuRisk, rng, forEcmo: false),
+    shapVaEcmo12h: generateMockEscalationShapValues(icuRisk, rng, forEcmo: true),
   );
 }

@@ -49,6 +49,7 @@ class RoleSelectionScreen extends StatelessWidget {
                                   subtitle:
                                       'Patient list, vitals, and ML predictions.',
                                   icon: Icons.local_hospital_outlined,
+                                  iconColor: const Color(0xFFE05A5A),
                                   onTap: () => _openClinician(context),
                                 ),
                               ),
@@ -61,6 +62,7 @@ class RoleSelectionScreen extends StatelessWidget {
                                   subtitle:
                                       'Your care page, meds, and care assistant chat.',
                                   icon: Icons.person_outline,
+                                  iconColor: const Color(0xFF9BD67D),
                                   onTap: () => _openPatientSignIn(context),
                                 ),
                               ),
@@ -121,33 +123,39 @@ class _RoleCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
+    required this.iconColor,
     required this.onTap,
   });
 
   final String title;
   final String subtitle;
   final IconData icon;
+  final Color iconColor;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: BhColors.ink,
+      color: Colors.white,
       borderRadius: BorderRadius.circular(20),
-      elevation: 4,
-      shadowColor: Colors.black.withValues(alpha: 0.25),
+      elevation: 0,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
-        splashColor: Colors.white.withValues(alpha: 0.12),
-        highlightColor: Colors.white.withValues(alpha: 0.08),
+        splashColor: BhColors.ink.withValues(alpha: 0.08),
+        highlightColor: BhColors.ink.withValues(alpha: 0.04),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.12),
-            ),
+            border: Border.all(color: BhColors.ink.withValues(alpha: 0.12)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -156,10 +164,10 @@ class _RoleCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: iconColor.withValues(alpha: 0.14),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: Colors.white, size: 36),
+                child: Icon(icon, color: iconColor, size: 36),
               ),
               const SizedBox(height: 14),
               Text(
@@ -168,7 +176,7 @@ class _RoleCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: BhColors.ink,
                 ),
               ),
               const SizedBox(height: 6),
@@ -179,12 +187,12 @@ class _RoleCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 11,
-                  color: Colors.white.withValues(alpha: 0.75),
+                  color: BhColors.ink.withValues(alpha: 0.65),
                   height: 1.35,
                 ),
               ),
               const SizedBox(height: 12),
-              Row(
+              const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
@@ -192,14 +200,14 @@ class _RoleCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: BhColors.primary,
+                      color: BhColors.ink,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  const Icon(
+                  SizedBox(width: 4),
+                  Icon(
                     Icons.arrow_forward_rounded,
                     size: 14,
-                    color: BhColors.primary,
+                    color: BhColors.ink,
                   ),
                 ],
               ),
