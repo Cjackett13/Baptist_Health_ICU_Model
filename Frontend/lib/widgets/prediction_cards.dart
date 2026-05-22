@@ -248,36 +248,32 @@ class LengthOfStaySection extends StatelessWidget {
       children: [
         const PredictionSectionHeader(
           title: 'Length of Stay',
-          subtitle: 'Predicted hospital and ICU stay duration',
+          subtitle: 'Predicted hospital stay duration',
           icon: Icons.calendar_today_outlined,
         ),
         _PredictionCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: _LosTile(
-                  label: 'Hospital stay',
-                  days: predictions.hospitalLosDays,
-                  description: 'Total predicted\nhospital duration',
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 80,
-                color: const Color(0xFFF0F0F0),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              Expanded(
-                child: _LosTile(
-                  label: 'ICU stay',
-                  days: predictions.icuLosDays,
-                  description: 'Predicted time\nin ICU specifically',
-                ),
-              ),
-            ],
+          child: _LosTile(
+            label: 'Hospital stay',
+            days: predictions.hospitalLosDays,
+            description: 'Total predicted hospital duration',
           ),
         ),
       ],
+    );
+  }
+}
+
+/// LOS tiles only — for collapsible profile sections.
+class LengthOfStayBody extends StatelessWidget {
+  const LengthOfStayBody({required this.predictions, super.key});
+  final PatientPredictions predictions;
+
+  @override
+  Widget build(BuildContext context) {
+    return _LosTile(
+      label: 'Hospital stay',
+      days: predictions.hospitalLosDays,
+      description: 'Total predicted hospital duration',
     );
   }
 }
@@ -637,55 +633,69 @@ class _ShapPanelState extends State<ShapPanel> {
 }
 
 class _ShapRow extends StatelessWidget {
-  const _ShapRow({required this.shap});
+  const _ShapRow({required this.shap, this.showShapValue = false});
   final ShapValue shap;
+  final bool showShapValue;
 
   @override
   Widget build(BuildContext context) {
     final color = shap.isPositive
         ? const Color(0xFFE05A5A)
         : const Color(0xFF4A9E6A);
-    final barWidth =
-        (shap.value.abs() / 0.5).clamp(0.05, 1.0);
-    final sign = shap.isPositive ? '+' : '−';
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              shap.feature,
-              style: const TextStyle(
-                  fontSize: 12, color: Colors.black87),
-              overflow: TextOverflow.ellipsis,
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Icon(
+              shap.isPositive
+                  ? Icons.arrow_circle_up_rounded
+                  : Icons.arrow_circle_down_rounded,
+              size: 18,
+              color: color,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(3),
-              child: LinearProgressIndicator(
-                value: barWidth,
-                backgroundColor: const Color(0xFFEEEEEE),
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(color),
-                minHeight: 8,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 44,
-            child: Text(
-              '$sign${shap.value.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-              textAlign: TextAlign.right,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        shap.feature,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    if (showShapValue)
+                      Text(
+                        'SHAP ${shap.value >= 0 ? '+' : ''}${shap.value.toStringAsFixed(3)}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: color,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  shap.description,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Colors.black54,
+                    height: 1.35,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -739,7 +749,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
   late double _simReadmission;
   late double _simMortality;
   late double _simHospLos;
-  late double _simIcuLos;
 
   @override
   void initState() {
@@ -753,7 +762,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
     _simReadmission = p.readmissionRisk;
     _simMortality = p.peakMortality;
     _simHospLos = p.hospitalLosDays;
-    _simIcuLos = p.icuLosDays;
   }
 
   // Heuristic simulation — replaced by real FastAPI /predict call later.
@@ -785,8 +793,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
     _simHospLos =
         (base.hospitalLosDays + hosDelta * 8 + medDelta * 3)
             .clamp(0.5, 21.0);
-    _simIcuLos =
-        (_simHospLos * 0.45 + inpDelta * 0.5).clamp(0.2, _simHospLos);
   }
 
   @override
@@ -880,7 +886,6 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
                 readmission: _simReadmission,
                 mortality: _simMortality,
                 hospLos: _simHospLos,
-                icuLos: _simIcuLos,
               ),
             ],
           ),
@@ -896,14 +901,12 @@ class _SimResultGrid extends StatelessWidget {
     required this.readmission,
     required this.mortality,
     required this.hospLos,
-    required this.icuLos,
   });
 
   final double transfer;
   final double readmission;
   final double mortality;
   final double hospLos;
-  final double icuLos;
 
   @override
   Widget build(BuildContext context) {
@@ -938,14 +941,6 @@ class _SimResultGrid extends StatelessWidget {
                     label: 'Hospital LOS',
                     value: '${hospLos.toStringAsFixed(1)}d',
                     color: losColor(hospLos))),
-            const SizedBox(width: 8),
-            Expanded(
-                child: _SimResultTile(
-                    label: 'ICU LOS',
-                    value: '${icuLos.toStringAsFixed(1)}d',
-                    color: losColor(icuLos))),
-            const SizedBox(width: 8),
-            const Expanded(child: SizedBox()),
           ],
         ),
       ],
@@ -992,6 +987,693 @@ class _SimResultTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VITALS (from clinical_event parquet columns)
+// ─────────────────────────────────────────────────────────────────────────────
+class VitalsSection extends StatelessWidget {
+  const VitalsSection({required this.patient, super.key});
+  final PatientRecord patient;
+
+  static const _vitalOrder = [
+    'HR',
+    'SBP',
+    'DBP',
+    'MAP',
+    'RR',
+    'SPO2',
+    'TEMP',
+    'URINE_OUT_HR',
+    'CVP',
+    'CO',
+    'CI',
+    'LACTATE',
+    'CREATININE',
+    'BUN',
+    'NT_PROBNP',
+    'TROPONIN_I',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final sorted = [...patient.clinicalVitals];
+    sorted.sort((a, b) {
+      final ai = _vitalOrder.indexOf(a.code);
+      final bi = _vitalOrder.indexOf(b.code);
+      return (ai == -1 ? 999 : ai).compareTo(bi == -1 ? 999 : bi);
+    });
+
+    if (sorted.isEmpty) {
+      return const Text(
+        'No vitals on file for this encounter.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: sorted.map((v) => _VitalChip(vital: v)).toList(),
+    );
+  }
+}
+
+class _VitalChip extends StatelessWidget {
+  const _VitalChip({required this.vital});
+  final PatientVital vital;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = normalcyColor(vital.normalcy);
+    final units = vital.units.isNotEmpty ? ' ${vital.units}' : '';
+    return Container(
+      width: 160,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F8F8),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            vital.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 10, color: Colors.black45),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${vital.value}$units',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+          Text(
+            normalcyLabel(vital.normalcy),
+            style: TextStyle(fontSize: 9, color: color),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MECHANICAL SUPPORT STATUS (procedure_event at scoring hour)
+// ─────────────────────────────────────────────────────────────────────────────
+class MechanicalSupportSection extends StatelessWidget {
+  const MechanicalSupportSection({
+    required this.support,
+    super.key,
+  });
+
+  final PatientMechanicalSupport support;
+
+  @override
+  Widget build(BuildContext context) {
+    final onDevice = support.onMcs;
+    final bg = onDevice
+        ? const Color(0xFF7B5EA7).withOpacity(0.1)
+        : const Color(0xFFF5F5F5);
+    final border = onDevice
+        ? const Color(0xFF7B5EA7).withOpacity(0.35)
+        : const Color(0xFFE0E0E0);
+    final iconColor =
+        onDevice ? const Color(0xFF7B5EA7) : const Color(0xFF4A9E6A);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                onDevice ? Icons.medical_services_outlined : Icons.check_circle_outline,
+                size: 18,
+                color: iconColor,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  support.summaryLabel,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: onDevice ? const Color(0xFF5C3D7A) : Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (onDevice) ...[
+            const SizedBox(height: 6),
+            Text(
+              'MCS/ECMO screening scores below reflect shock severity while on '
+              'support — not a new placement order.',
+              style: const TextStyle(fontSize: 10, color: Colors.black54),
+            ),
+            ...support.activeDevices.map((d) {
+              final range = _formatDeviceRange(d);
+              return Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  '• ${d.label}$range',
+                  style: const TextStyle(fontSize: 11, color: Colors.black87),
+                ),
+              );
+            }),
+          ] else
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                'No mechanical circulatory support recorded at this ICU hour.',
+                style: TextStyle(fontSize: 10, color: Colors.black45),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDeviceRange(ActiveSupportDevice d) {
+    if (d.start == null) return '';
+    final start =
+        '${d.start!.month}/${d.start!.day} ${d.start!.hour}:${d.start!.minute.toString().padLeft(2, '0')}';
+    if (d.end == null) return ' (since $start)';
+    final end =
+        '${d.end!.month}/${d.end!.day} ${d.end!.hour}:${d.end!.minute.toString().padLeft(2, '0')}';
+    return ' ($start – $end)';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CLINICIAN — ML PREDICTIONS (cardiogenic shock model outputs)
+// ─────────────────────────────────────────────────────────────────────────────
+class ClinicalPredictionsSection extends StatelessWidget {
+  const ClinicalPredictionsSection({
+    required this.predictions,
+    required this.mechanicalSupport,
+    super.key,
+  });
+  final PatientPredictions predictions;
+  final PatientMechanicalSupport mechanicalSupport;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        MechanicalSupportSection(support: mechanicalSupport),
+        const SizedBox(height: 14),
+        _PredictionRow(
+                label: 'SCAI stage deterioration (6h)',
+                subtitle:
+                    'Current stage ${predictions.currentScaiStage} · ${predictions.scaiDeterioration6hLabel}',
+                value: predictions.scaiDeterioration6hProb,
+                trailing: predictions.scaiDeterioration6hLabel,
+              ),
+              const SizedBox(height: 14),
+              _PredictionRow(
+                label: 'Vasopressor need',
+                subtitle:
+                    'Predicted count: ${predictions.predictedVasopressorCount}',
+                value: predictions.vasopressorProbability,
+                trailing: '${predictions.predictedVasopressorCount} agents',
+              ),
+              const SizedBox(height: 14),
+              _PredictionRow(
+                label: 'Mortality risk',
+                subtitle: 'In-hospital mortality probability',
+                value: predictions.mortalityRisk,
+              ),
+              const SizedBox(height: 14),
+              _LosPredictionRow(
+                label: 'Length of stay (hospital)',
+                days: predictions.hospitalLosDays,
+              ),
+              const SizedBox(height: 14),
+              _EscalationPredictionRow(
+                label: 'MCS within 12 hours',
+                probability: predictions.mcs12hProbability,
+                needed: predictions.mcs12hNeeded,
+                reasons: predictions.shapMcs12h,
+                alreadyOnSupport: mechanicalSupport.onMcs,
+              ),
+              const SizedBox(height: 14),
+        _EscalationPredictionRow(
+          label: 'VA-ECMO within 12 hours',
+          probability: predictions.vaEcmo12hProbability,
+          needed: predictions.vaEcmo12hNeeded,
+          reasons: predictions.shapVaEcmo12h,
+          alreadyOnSupport: mechanicalSupport.onVaEcmo,
+        ),
+      ],
+    );
+  }
+}
+
+class _PredictionRow extends StatelessWidget {
+  const _PredictionRow({
+    required this.label,
+    required this.subtitle,
+    required this.value,
+    this.trailing,
+  });
+
+  final String label;
+  final String subtitle;
+  final double value;
+  final String? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = riskColor(value);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Text(
+              '${(value * 100).round()}%',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(subtitle,
+            style: const TextStyle(fontSize: 10, color: Colors.black38)),
+        if (trailing != null) ...[
+          const SizedBox(height: 2),
+          Text(trailing!,
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: color)),
+        ],
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(3),
+          child: LinearProgressIndicator(
+            value: value,
+            backgroundColor: const Color(0xFFEEEEEE),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LosPredictionRow extends StatelessWidget {
+  const _LosPredictionRow({required this.label, required this.days});
+  final String label;
+  final double days;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = losColor(days);
+    return Row(
+      children: [
+        Expanded(
+          child: Text(label,
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87)),
+        ),
+        Text(
+          '${days.toStringAsFixed(1)} days',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _EscalationPredictionRow extends StatelessWidget {
+  const _EscalationPredictionRow({
+    required this.label,
+    required this.probability,
+    required this.needed,
+    required this.reasons,
+    this.alreadyOnSupport = false,
+  });
+
+  final String label;
+  final double probability;
+  final bool needed;
+  final List<ShapValue> reasons;
+  final bool alreadyOnSupport;
+
+  static const _onSupportLabel = 'Already on MCS or ECMO';
+
+  @override
+  Widget build(BuildContext context) {
+    if (alreadyOnSupport) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const Text(
+              _onSupportLabel,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF7B5EA7),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final color = riskColor(probability);
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: (needed ? color : const Color(0xFF4A9E6A))
+                    .withOpacity(0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                needed ? 'Likely needed' : 'Unlikely',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: needed ? color : const Color(0xFF4A9E6A),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${(probability * 100).round()}%',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(3),
+              child: LinearProgressIndicator(
+                value: probability,
+                backgroundColor: const Color(0xFFEEEEEE),
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                minHeight: 5,
+              ),
+            ),
+            if (reasons.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 6),
+                child: Text(
+                  'Top 5 SHAP factors (by |SHAP|)',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.black45,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        children: reasons.isEmpty
+            ? [
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'No SHAP factor breakdown available for this score.',
+                    style: TextStyle(fontSize: 11, color: Colors.black45),
+                  ),
+                ),
+              ]
+            : ShapValue.topByShapMagnitude(reasons, k: 5)
+                .map((s) => _ShapRow(shap: s, showShapValue: true))
+                .toList(),
+      ),
+    );
+  }
+}
+
+class DiagnosesSection extends StatelessWidget {
+  const DiagnosesSection({required this.diagnoses, super.key});
+  final List<PatientDiagnosis> diagnoses;
+
+  @override
+  Widget build(BuildContext context) {
+    if (diagnoses.isEmpty) {
+      return const Text(
+        'No diagnoses on file.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Column(
+      children: diagnoses.map((d) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF2F2F2),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  d.code,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  d.text,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PATIENT PORTAL SECTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+class PatientLengthOfStaySection extends StatelessWidget {
+  const PatientLengthOfStaySection({required this.predictions, super.key});
+  final PatientPredictions predictions;
+
+  @override
+  Widget build(BuildContext context) =>
+      LengthOfStayBody(predictions: predictions);
+}
+
+class PatientRecommendationsSection extends StatelessWidget {
+  const PatientRecommendationsSection({
+    required this.recommendations,
+    super.key,
+  });
+  final List<HomeCareSuggestion> recommendations;
+
+  @override
+  Widget build(BuildContext context) {
+    if (recommendations.isEmpty) {
+      return const Text(
+        'No recommendations at this time.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Column(
+      children: recommendations
+          .map(
+            (s) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _PredictionCard(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(categoryIcon(s.category),
+                        style: const TextStyle(fontSize: 24)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s.title,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            s.description,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                              height: 1.4,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            s.impact,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF4A9E6A),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class PatientMedicationsSection extends StatelessWidget {
+  const PatientMedicationsSection({required this.medications, super.key});
+  final List<PatientMedication> medications;
+
+  @override
+  Widget build(BuildContext context) {
+    if (medications.isEmpty) {
+      return const Text(
+        'No medications on file.',
+        style: TextStyle(fontSize: 13, color: Colors.black45),
+      );
+    }
+    return Column(
+      children: medications.map((m) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                m.isVasopressor
+                    ? Icons.bolt_outlined
+                    : Icons.medication_liquid_outlined,
+                size: 20,
+                color: m.isVasopressor
+                    ? const Color(0xFFE05A5A)
+                    : Colors.black38,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      m.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (m.dosage.isNotEmpty)
+                      Text(
+                        'Dosage: ${m.dosage}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    Text(
+                      'Route: ${m.route}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

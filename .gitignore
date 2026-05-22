@@ -1,4 +1,7 @@
 # Miscellaneous
+__pycache__/
+*.csv
+diabetic_data.csv
 *.class
 *.log
 *.pyc

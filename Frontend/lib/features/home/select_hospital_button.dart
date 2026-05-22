@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'demo_hospitals.dart';
 
-/// Matches [BhColors.slate] in `main.dart` (`0xFF393E46`).
+/// Matches [BhColors.slate] in `theme/app_colors.dart` (`0xFF393E46`).
 const _kSlate = Color(0xFF393E46);
 
 /// Primary nav action to choose a hospital.
