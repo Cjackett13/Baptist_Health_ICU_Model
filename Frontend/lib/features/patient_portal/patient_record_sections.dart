@@ -25,7 +25,7 @@ class PatientRecordSections extends StatelessWidget {
         const SizedBox(height: 12),
         CollapsibleProfileSection(
           title: 'Recommendations',
-          subtitle: 'Guidance based on your vitals and diagnoses',
+          subtitle: 'Guidance from your care team',
           icon: Icons.lightbulb_outline,
           initiallyExpanded: true,
           child: PatientRecommendationsSection(

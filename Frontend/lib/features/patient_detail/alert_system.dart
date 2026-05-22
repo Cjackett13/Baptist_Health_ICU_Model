@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../models/patient_prediction.dart';
 import '../../screens/role_selection_screen.dart';
+import '../../services/patient_repository.dart';
 import '../../services/patient_summary_pdf.dart';
+import 'editable_recommendations_section.dart';
 import '../../widgets/collapsible_section.dart';
 import '../../widgets/prediction_cards.dart';
 
@@ -246,7 +248,14 @@ void showPatientDetails(
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder: (context) => _PatientDetailSheet(patient: patient, role: role),
+    builder: (context) => ListenableBuilder(
+      listenable: PatientRepository.instance,
+      builder: (context, _) {
+        final current =
+            PatientRepository.instance.patientById(patient.id) ?? patient;
+        return _PatientDetailSheet(patient: current, role: role);
+      },
+    ),
   );
 }
 
@@ -311,6 +320,25 @@ class _PatientDetailSheet extends StatelessWidget {
           ),
           const SizedBox(height: 12),
         ],
+        CollapsibleProfileSection(
+          title: 'Recommendations',
+          subtitle: 'Edit guidance shown to the patient and family',
+          icon: Icons.lightbulb_outline,
+          initiallyExpanded: true,
+          child: EditableRecommendationsSection(
+            patientId: patient.id,
+            initialRecommendations: patient.recommendations,
+          ),
+        ),
+        const SizedBox(height: 12),
+        CollapsibleProfileSection(
+          title: 'Active medications',
+          subtitle: 'Meds at this ICU hour — dose, route, and purpose',
+          icon: Icons.medication_outlined,
+          initiallyExpanded: false,
+          child: PatientMedicationsSection(medications: patient.medications),
+        ),
+        const SizedBox(height: 12),
         CollapsibleProfileSection(
           title: 'Clinical details',
           subtitle: 'Encounter, unit, attending, record metadata',

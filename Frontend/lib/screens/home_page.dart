@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../features/home/demo_hospitals.dart';
 import '../features/home/empty_rooms.dart';
+import '../features/home/icu_room_board.dart';
 import '../features/home/patient_search_bar.dart';
 import '../features/home/select_hospital_button.dart';
 import '../features/patient_detail/alert_system.dart';
@@ -19,8 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late DemoHospital _selectedHospital = demoHospitals.first;
-  late List<String> _emptyRooms =
-      List<String>.from(_selectedHospital.emptyIcuRooms);
   List<PatientRecord> _patients = [];
   bool _loading = true;
   String? _loadError;
@@ -74,7 +73,6 @@ class _HomePageState extends State<HomePage> {
   void _setHospital(DemoHospital hospital) {
     setState(() {
       _selectedHospital = hospital;
-      _emptyRooms = List<String>.from(hospital.emptyIcuRooms);
       _searchController.clear();
       _selectedCondition = null;
       _selectedDoctor = null;
@@ -87,6 +85,9 @@ class _HomePageState extends State<HomePage> {
   List<PatientRecord> get _hospitalPatients => _patients
       .where((p) => p.demoHospitalId == _selectedHospital.id)
       .toList();
+
+  List<IcuRoomStatus> get _icuRoomBoard =>
+      IcuRoomBoard.forPatients(_hospitalPatients);
 
   List<PatientRecord> get _filteredPatients {
     final query = _searchController.text.trim().toLowerCase();
@@ -366,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                 onHospitalSelected: _setHospital,
               ),
               const Spacer(),
-              EmptyRoomsButton(emptyRooms: _emptyRooms),
+              IcuRoomTrackerButton(rooms: _icuRoomBoard),
             ],
           ),
         ),
