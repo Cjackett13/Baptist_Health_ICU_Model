@@ -9,7 +9,7 @@ import 'prediction_api_client.dart';
 import 'shock_escalation_api_client.dart';
 
 /// Loads patients from seed JSON and optionally enriches MCS/ECMO via shock API.
-class PatientRepository {
+class PatientRepository extends ChangeNotifier {
   PatientRepository._();
   static final PatientRepository instance = PatientRepository._();
 
@@ -49,8 +49,37 @@ class PatientRepository {
     }
 
     _cache = patients;
+    notifyListeners();
     return _cache!;
   }
 
-  void clearCache() => _cache = null;
+  /// Latest chart for one patient (includes clinician edits this session).
+  PatientRecord? patientById(String id) {
+    final list = _cache;
+    if (list == null) return null;
+    for (final p in list) {
+      if (p.id == id) return p;
+    }
+    return null;
+  }
+
+  /// Saves recommendations for patient and family views (in-memory for demo).
+  void updateRecommendations(
+    String patientId,
+    List<HomeCareSuggestion> recommendations,
+  ) {
+    final list = _cache;
+    if (list == null) return;
+    final index = list.indexWhere((p) => p.id == patientId);
+    if (index < 0) return;
+    list[index] = list[index].copyWithRecommendations(
+      List<HomeCareSuggestion>.from(recommendations),
+    );
+    notifyListeners();
+  }
+
+  void clearCache() {
+    _cache = null;
+    notifyListeners();
+  }
 }

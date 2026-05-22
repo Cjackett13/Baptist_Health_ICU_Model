@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/patient_prediction.dart';
+import '../../services/patient_repository.dart';
 import '../../services/patient_summary_pdf.dart';
 import '../home/demo_hospitals.dart';
 import 'patient_care_chat_sheet.dart';
@@ -12,9 +13,38 @@ import '../../theme/app_colors.dart';
 /// Patient dashboard — shows one patient's care details (no multi-patient list).
 class PatientHomeScreen extends StatelessWidget {
   const PatientHomeScreen({
-    required this.patient,
+    required this.patientId,
     required this.hospital,
     super.key,
+  });
+
+  final String patientId;
+  final DemoHospital hospital;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: PatientRepository.instance,
+      builder: (context, _) {
+        final patient = PatientRepository.instance.patientById(patientId);
+        if (patient == null) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('My care')),
+            body: const Center(
+              child: Text('Could not load your care record.'),
+            ),
+          );
+        }
+        return _PatientHomeBody(patient: patient, hospital: hospital);
+      },
+    );
+  }
+}
+
+class _PatientHomeBody extends StatelessWidget {
+  const _PatientHomeBody({
+    required this.patient,
+    required this.hospital,
   });
 
   final PatientRecord patient;

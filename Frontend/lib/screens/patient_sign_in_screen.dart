@@ -57,7 +57,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => PatientHomeScreen(
-          patient: patient,
+          patientId: patient.id,
           hospital: widget.hospital,
         ),
       ),

@@ -181,6 +181,19 @@ class HomeCareSuggestion {
         'description': description,
         'impact': impact,
       };
+
+  HomeCareSuggestion copyWith({
+    String? category,
+    String? title,
+    String? description,
+    String? impact,
+  }) =>
+      HomeCareSuggestion(
+        category: category ?? this.category,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        impact: impact ?? this.impact,
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -729,6 +742,34 @@ class PatientRecord {
       ),
     );
   }
+
+  PatientRecord copyWithRecommendations(List<HomeCareSuggestion> recs) =>
+      PatientRecord(
+        rank: rank,
+        name: name,
+        id: id,
+        roomNumber: roomNumber,
+        predictions: predictions.copyWithHomeCare(recs),
+        features: features,
+        encounterId: encounterId,
+        primaryDoctor: primaryDoctor,
+        issue: issue,
+        age: age,
+        gender: gender,
+        diagnosis: diagnosis,
+        daysAdmitted: daysAdmitted,
+        unitCd: unitCd,
+        facilityCd: facilityCd,
+        demoHospitalId: demoHospitalId,
+        scaiStageCurrent: scaiStageCurrent,
+        hourFromAdmit: hourFromAdmit,
+        clinicalVitals: clinicalVitals,
+        diagnoses: diagnoses,
+        medications: medications,
+        recommendations: recs,
+        mechanicalSupport: mechanicalSupport,
+        conditionOverride: conditionOverride,
+      );
 
   PatientRecord copyWithPredictions(PatientPredictions newPredictions) =>
       PatientRecord(
