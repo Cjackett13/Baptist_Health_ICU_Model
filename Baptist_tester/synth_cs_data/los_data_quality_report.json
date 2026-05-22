@@ -1,26 +1,5 @@
 {
-  "string_sentinels_normalized": [
-    "",
-    " ",
-    "-99",
-    "999",
-    "N/A",
-    "NA",
-    "NONE",
-    "NULL",
-    "UNK",
-    "UNKNOWN",
-    "n/a",
-    "null"
-  ],
-  "sentinel_replacements": {
-    "encounter": {},
-    "person": {
-      "RACE_CD": 23,
-      "ETHNICITY_CD": 16
-    },
-    "diagnosis": {}
-  },
+  "data_cleaning_audit_file": "los_data_cleaning_audit.json",
   "los_reconciliation": {
     "n_total": 500,
     "n_within_1h": 500,

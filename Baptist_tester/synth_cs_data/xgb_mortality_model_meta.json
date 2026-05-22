@@ -1,0 +1,385 @@
+{
+  "test_auroc": 0.9202037351443124,
+  "test_auprc": 0.8484318981880707,
+  "test_brier": 0.09683362981138263,
+  "test_brier_calibrated_pre_temperature": 0.0982851645542222,
+  "test_brier_raw_xgb": 0.1158444955945015,
+  "test_auroc_delta_temperature_monotone": 0.0,
+  "post_calibration_temperature": 0.8166761204352198,
+  "post_calibration_blend_alpha": 1.0,
+  "train_oof_brier_after_post_calibration": 0.09516019154192208,
+  "test_brier_if_always_pred_train_death_rate": 0.20646386050112228,
+  "test_brier_skill_vs_train_rate_baseline": 0.5309899292963367,
+  "n_train": 349,
+  "n_test": 107,
+  "death_rate_train": 0.2636103151862464,
+  "death_rate_test": 0.2897196261682243,
+  "feature_columns": [
+    "med_distinct",
+    "med_infusion_mean",
+    "proc_n",
+    "proc_distinct_nom",
+    "current_scai",
+    "scai_prop_ge3",
+    "scai_std",
+    "infusion_early_over_all_ratio",
+    "clinical_event_n",
+    "med_per_clinical_event",
+    "proc_n_bucket",
+    "med_distinct_bucket",
+    "med_residual_within_scai",
+    "proc_residual_within_scai",
+    "demo_profile_bucket"
+  ],
+  "log1p_columns": [
+    "clinical_event_n",
+    "med_per_clinical_event"
+  ],
+  "sqrt_columns": [
+    "med_infusion_mean",
+    "med_distinct",
+    "proc_n",
+    "clinical_event_n",
+    "scai_std"
+  ],
+  "best_n_estimators": 120,
+  "calibration": "sigmoid",
+  "calibration_cv_folds": 10,
+  "calibration_cv_brier_scores": {
+    "selected_calibration_composite": 0.5865738156685849,
+    "cv_composite_sigmoid_oof": 0.5865738156685849,
+    "cv_brier_sigmoid_oof": 0.09279222617575095,
+    "cv_ap_sigmoid_oof": 0.7953563245640245,
+    "cv_composite_isotonic_oof": 0.58220888952753,
+    "cv_brier_isotonic_oof": 0.09125188116112333,
+    "cv_ap_isotonic_oof": 0.7875256221400575,
+    "cv_composite_none_oof": 0.5749387032841793,
+    "cv_brier_none_oof": 0.10331046794508061,
+    "cv_ap_none_oof": 0.8073872561606107
+  },
+  "probability_stack_selected_by_oof_brier": "calibrated_dual_mean",
+  "calibration_dual_seed_xgb": [
+    42,
+    169
+  ],
+  "scale_pos_weight": 7.123369565217391,
+  "death_alert_threshold": 0.3800000000000001,
+  "death_alert_threshold_default": 0.5,
+  "mortality_alert_threshold_fn_weight": 7.0,
+  "mortality_alert_threshold_fp_weight": 1.5,
+  "mortality_alert_target_max_fn": 30,
+  "mortality_alert_target_max_fp": 60,
+  "mortality_alert_max_fp_test": 90,
+  "mortality_balance_scale_pos_weight_mult": 2.55,
+  "train_oof_confusion_at_alert_threshold": {
+    "tn": 231,
+    "fp": 26,
+    "fn": 21,
+    "tp": 71,
+    "threshold": 0.3800000000000001,
+    "accuracy": 0.8653295128939829,
+    "ppv": 0.7319587628865979,
+    "recall": 0.7717391304347826,
+    "f1": 0.7513227513227513,
+    "objective": 116.0,
+    "target_overage_penalty": 556.6812722043646,
+    "alert_threshold_selection": "max_recall_under_fp_cap",
+    "max_fp_test_cap": 90,
+    "oof_recall": 0.7717391304347826,
+    "target_max_fn_oof": 9,
+    "target_max_fp_oof": 18,
+    "target_max_fn_test": 30,
+    "target_max_fp_test": 60,
+    "test_aligned_fn_equiv": 67.79347826086956,
+    "test_aligned_fp_equiv": 85.78988326848248,
+    "meets_fp_cap_test_aligned": true,
+    "meets_fn_target_test_aligned": false,
+    "meets_fp_target_test_aligned": false
+  },
+  "test_confusion_at_default_threshold": {
+    "tn": 69,
+    "fp": 7,
+    "fn": 6,
+    "tp": 25,
+    "threshold": 0.5,
+    "accuracy": 0.8785046728971962,
+    "ppv": 0.78125,
+    "recall": 0.8064516129032258,
+    "f1": 0.7936507936507936
+  },
+  "test_confusion_at_alert_threshold": {
+    "tn": 67,
+    "fp": 9,
+    "fn": 6,
+    "tp": 25,
+    "threshold": 0.3800000000000001,
+    "accuracy": 0.8598130841121495,
+    "ppv": 0.7352941176470589,
+    "recall": 0.8064516129032258,
+    "f1": 0.7692307692307693
+  },
+  "test_recall_at_alert": 0.8064516129032258,
+  "test_sensitivity_at_alert": 0.8064516129032258,
+  "test_meets_fn_target_at_alert": true,
+  "test_meets_fp_target_at_alert": true,
+  "test_meets_fp_cap_90_at_alert": true,
+  "hyperparam_search": "randomized_cv_ap_then_composite_ap_minus_brier",
+  "tune_cv_average_precision": null,
+  "tune_cv_mean_brier": null,
+  "tune_cv_composite_ap_minus_brier": null,
+  "xgb_tuned_params": {
+    "subsample": 0.94,
+    "reg_lambda": 1.2,
+    "reg_alpha": 0.04,
+    "min_child_weight": 0.5,
+    "max_depth": 6,
+    "max_delta_step": 1.0,
+    "learning_rate": 0.032,
+    "gamma": 0.03,
+    "colsample_bytree": 0.72,
+    "colsample_bylevel": 0.86,
+    "base_score": null
+  },
+  "reliability_plot": "mortality_reliability_curve.png",
+  "mutual_information_train_only": {
+    "med_distinct": 0.2107855174149491,
+    "med_infusion_mean": 0.2399263171399506,
+    "proc_n": 0.22883096065444586,
+    "proc_distinct_nom": 0.20095452125439084,
+    "current_scai": 0.25762481861058806,
+    "scai_prop_ge3": 0.233600703618299,
+    "scai_std": 0.11703575082698392,
+    "infusion_early_over_all_ratio": 0.1125549561374879,
+    "clinical_event_n": 0.03904733440260122,
+    "med_per_clinical_event": 0.11114101404382448,
+    "proc_n_bucket": 0.14239421850363865,
+    "med_distinct_bucket": 0.17182025507577703,
+    "med_residual_within_scai": 0.3123329653837763,
+    "proc_residual_within_scai": 0.30916622282989503,
+    "demo_profile_bucket": 0.0
+  },
+  "feature_weight_oof_selection": {
+    "_oof_selected_objective": 0.8965649781981764,
+    "_oof_selected_ap": 0.8177194832090733,
+    "_oof_selected_brier": 0.1036781620670363
+  },
+  "xgb_feature_weights": {
+    "med_distinct": 11.02449942878032,
+    "med_infusion_mean": 12.442337632026994,
+    "proc_n": 11.901448620251593,
+    "proc_distinct_nom": 10.548259194949635,
+    "current_scai": 16.0,
+    "scai_prop_ge3": 12.133816471625535,
+    "scai_std": 6.5355214102226284,
+    "infusion_early_over_all_ratio": 6.324463158789474,
+    "clinical_event_n": 2.9344388654446547,
+    "med_per_clinical_event": 6.257944317926109,
+    "proc_n_bucket": 7.736860234858229,
+    "med_distinct_bucket": 9.143756088105553,
+    "med_residual_within_scai": 15.999999999950562,
+    "proc_residual_within_scai": 15.843481008525535,
+    "demo_profile_bucket": 0.001
+  },
+  "xgb_feature_weights_train_mi": [
+    11.02449942878032,
+    12.442337632026994,
+    11.901448620251593,
+    10.548259194949635,
+    16.0,
+    12.133816471625535,
+    6.5355214102226284,
+    6.324463158789474,
+    2.9344388654446547,
+    6.257944317926109,
+    7.736860234858229,
+    9.143756088105553,
+    15.999999999950562,
+    15.843481008525535,
+    0.001
+  ],
+  "clinical_feature_weight_range": [
+    1.0,
+    16.0
+  ],
+  "n_rows_raw": 500,
+  "split_random_state": 42,
+  "percentile_fences_fit_on": "train_only",
+  "percentile_fences": {
+    "med_distinct": [
+      0.0,
+      6.0
+    ],
+    "med_infusion_mean": [
+      0.0,
+      3.0133255714285707
+    ],
+    "proc_n": [
+      0.0,
+      4.0
+    ],
+    "proc_distinct_nom": [
+      0.0,
+      4.0
+    ],
+    "current_scai": [
+      0.0,
+      4.0
+    ],
+    "scai_prop_ge3": [
+      0.0,
+      1.0
+    ],
+    "scai_std": [
+      0.0,
+      1.5475048288188937
+    ],
+    "infusion_early_over_all_ratio": [
+      0.0020869068253488968,
+      2.691154476018417
+    ],
+    "clinical_event_n": [
+      275.82,
+      4891.179999999997
+    ],
+    "med_per_clinical_event": [
+      0.0,
+      0.017025131502045585
+    ],
+    "proc_n_bucket": [
+      0.0,
+      2.0
+    ],
+    "med_distinct_bucket": [
+      0.0,
+      2.0
+    ],
+    "med_residual_within_scai": [
+      -1.9575289575289576,
+      3.0424710424710426
+    ],
+    "proc_residual_within_scai": [
+      -1.467289719626168,
+      2.6756756756756754
+    ]
+  },
+  "n_train_before_fence": 375,
+  "n_test_before_fence": 125,
+  "n_train_after_fence": 349,
+  "n_test_after_fence": 107,
+  "patient_id_train_test_disjoint": true,
+  "n_patient_id_overlap_train_test": 0,
+  "class_counts_train": {
+    "0": 257,
+    "1": 92
+  },
+  "class_counts_test": {
+    "0": 76,
+    "1": 31
+  },
+  "imbalance_ratio_train_neg_over_pos": 2.7934782608695654,
+  "class_imbalance_mitigation": {
+    "stratified_train_test_split": true,
+    "scale_pos_weight_from_train_labels_only": true,
+    "note": "Mortality is usually label-imbalanced; this is not removed, it is mitigated. Stratified split keeps similar death prevalence in train vs test; XGBoost `scale_pos_weight` is n_neg/n_pos from **training** rows only (no test leakage)."
+  },
+  "split_and_scaling_order": [
+    "1) Stratified train/test index split (one row per PERSON_ID enforced in build_patient_frame).",
+    "2) Joint percentile fences fit on **training** rows only; same thresholds applied to test.",
+    "3) Model Pipeline: stateless log1p/sqrt only \u2014 no StandardScaler; no mean/variance fit on test."
+  ],
+  "xgb_scaling_note": "Pipeline uses stateless log1p/sqrt on fixed columns only; no StandardScaler or train-fitted linear scaling for XGBoost. Any future StandardScaler must live inside Pipeline.fit on training folds only (not fit on test). Logistic baselines that use StandardScaler belong in a separate estimator path (e.g. back_end), not this tree pipeline.",
+  "feature_skewness_train": {
+    "med_distinct": 0.13281336464273263,
+    "med_infusion_mean": 1.22271327943726,
+    "proc_n": 0.9521625295643505,
+    "proc_distinct_nom": 0.9521625295643505,
+    "current_scai": 0.9088465757526256,
+    "scai_prop_ge3": 1.7393448725797203,
+    "scai_std": 0.25214250163710294,
+    "infusion_early_over_all_ratio": 0.3630262508997248,
+    "clinical_event_n": 1.5084011409887523,
+    "med_per_clinical_event": 1.7944463222001588,
+    "proc_n_bucket": 0.4463447793117656,
+    "med_distinct_bucket": 0.5109836403810128,
+    "med_residual_within_scai": 0.4128190492763511,
+    "proc_residual_within_scai": 1.238071328265947,
+    "demo_profile_bucket": 0.14400785124414292
+  },
+  "feature_skew_abs_ge_1": [
+    "med_infusion_mean",
+    "scai_prop_ge3",
+    "clinical_event_n",
+    "med_per_clinical_event",
+    "proc_residual_within_scai"
+  ],
+  "univariate_f_classif_train_median_imputed": {
+    "med_distinct": {
+      "f": 219.62229175438023,
+      "pvalue": 7.692031560122593e-39
+    },
+    "med_infusion_mean": {
+      "f": 274.56180502711965,
+      "pvalue": 7.672911909022177e-46
+    },
+    "proc_n": {
+      "f": 245.38082195884414,
+      "pvalue": 3.3265369863447536e-42
+    },
+    "proc_distinct_nom": {
+      "f": 245.38082195884414,
+      "pvalue": 3.3265369863447536e-42
+    },
+    "current_scai": {
+      "f": 386.6108769613422,
+      "pvalue": 2.2819316019401327e-58
+    },
+    "scai_prop_ge3": {
+      "f": 242.157719630795,
+      "pvalue": 8.604978034219169e-42
+    },
+    "scai_std": {
+      "f": 96.01786457310851,
+      "pvalue": 3.566062208435376e-20
+    },
+    "infusion_early_over_all_ratio": {
+      "f": 11.796319813489546,
+      "pvalue": 0.0006653651041091751
+    },
+    "clinical_event_n": {
+      "f": 0.0008959726308463363,
+      "pvalue": 0.976137853604617
+    },
+    "med_per_clinical_event": {
+      "f": 87.42094448397431,
+      "pvalue": 1.1077730507507696e-18
+    },
+    "proc_n_bucket": {
+      "f": 144.93498709577403,
+      "pvalue": 3.936184621491082e-28
+    },
+    "med_distinct_bucket": {
+      "f": 160.3117817430459,
+      "pvalue": 1.8235776007460567e-30
+    },
+    "med_residual_within_scai": {
+      "f": 14.234866472606875,
+      "pvalue": 0.0001896833876408349
+    },
+    "proc_residual_within_scai": {
+      "f": 10.292506740498618,
+      "pvalue": 0.0014601431743245465
+    },
+    "demo_profile_bucket": {
+      "f": 3.4524640211223443,
+      "pvalue": 0.06400429011024127
+    }
+  },
+  "class_imbalance_handling": "Stratified train_test_split; XGBoost scale_pos_weight = n_neg/n_pos from **training** labels only (no test leakage). Not SMOTE.",
+  "outlier_pct_lo": 1.0,
+  "outlier_pct_hi": 99.0,
+  "split_seed": 42,
+  "duckdb_mortality_feature_audit_json": "duckdb_mortality_feature_audit.json",
+  "demo_profile_bucket_legend_json": "demo_profile_bucket_legend.json",
+  "demo_profile_feature_weight_cap": 0.001,
+  "mortality_feature_columns_json": "mortality_feature_columns.json"
+}

@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "dataset": "data (Dataset B, 5000 patients)",
+  "purpose": "Input validation and display hints for Flutter / web LOS UI. Hard limits used in cleaning; typical ranges for labels.",
+  "person": {
+    "age_years": {
+      "hard_min": 18,
+      "hard_max": 120,
+      "typical_min": 18,
+      "typical_max": 95,
+      "unit": "years",
+      "note": "Adult ICU cohort; ages outside hard limits set to missing in prep."
+    },
+    "sex_cd": {
+      "allowed": ["M", "F"]
+    }
+  },
+  "encounter": {
+    "los_hours": {
+      "hard_min": 0.5,
+      "hard_max": 336,
+      "typical_min": 24,
+      "typical_max": 168,
+      "unit": "hours"
+    },
+    "unit_cd": {
+      "allowed": ["CICU", "CVICU", "MICU"]
+    },
+    "admit_type_cd": {
+      "allowed": ["EMERGENCY", "URGENT", "ELECTIVE", "TRANSFER"]
+    },
+    "admit_src_cd": {
+      "allowed": ["ED", "OUTSIDE_HOSPITAL", "DIRECT", "OR"]
+    },
+    "disch_disposition_cd": {
+      "allowed": ["HOME", "SNF", "REHAB", "LTACH", "EXPIRED", "HOSPICE", "AMA"]
+    }
+  },
+  "clinical_event_by_code": {
+    "HR": { "unit": "bpm", "hard_min": 20, "hard_max": 250, "typical_min": 50, "typical_max": 120 },
+    "SBP": { "unit": "mmHg", "hard_min": 50, "hard_max": 250, "typical_min": 90, "typical_max": 140 },
+    "DBP": { "unit": "mmHg", "hard_min": 30, "hard_max": 150, "typical_min": 50, "typical_max": 90 },
+    "MAP": { "unit": "mmHg", "hard_min": 30, "hard_max": 150, "typical_min": 65, "typical_max": 100 },
+    "RR": { "unit": "/min", "hard_min": 4, "hard_max": 60, "typical_min": 10, "typical_max": 25 },
+    "SPO2": { "unit": "%", "hard_min": 50, "hard_max": 100, "typical_min": 88, "typical_max": 100 },
+    "TEMP": { "unit": "degC", "hard_min": 32, "hard_max": 42, "typical_min": 35.5, "typical_max": 38.5 },
+    "URINE_OUT_HR": { "unit": "mL", "hard_min": 0, "hard_max": 2000, "typical_min": 0, "typical_max": 150 },
+    "LACTATE": { "unit": "mmol/L", "hard_min": 0.1, "hard_max": 25, "typical_min": 0.5, "typical_max": 8 },
+    "CREATININE": { "unit": "mg/dL", "hard_min": 0.2, "hard_max": 20, "typical_min": 0.6, "typical_max": 3 },
+    "BUN": { "unit": "mg/dL", "hard_min": 2, "hard_max": 150, "typical_min": 7, "typical_max": 50 },
+    "PH": { "unit": "", "hard_min": 6.8, "hard_max": 7.8, "typical_min": 7.2, "typical_max": 7.5 },
+    "PCO2": { "unit": "mmHg", "hard_min": 15, "hard_max": 90, "typical_min": 30, "typical_max": 50 },
+    "HCO3": { "unit": "mEq/L", "hard_min": 5, "hard_max": 45, "typical_min": 18, "typical_max": 28 },
+    "VIS": { "unit": "", "hard_min": 0, "hard_max": 200, "typical_min": 0, "typical_max": 80 },
+    "CO": { "unit": "L/min", "hard_min": 1, "hard_max": 15, "typical_min": 3, "typical_max": 8 },
+    "CI": { "unit": "L/min/m2", "hard_min": 0.5, "hard_max": 10, "typical_min": 1.8, "typical_max": 4 },
+    "SCAI_STAGE": { "unit": "", "hard_min": 0, "hard_max": 4, "typical_min": 0, "typical_max": 4, "allowed_labels": ["A", "B", "C", "D", "E"] }
+  },
+  "scai_stage_hourly": {
+    "scai_stage_cd": {
+      "allowed": ["A", "B", "C", "D", "E"],
+      "ordinal_map": { "A": 0, "B": 1, "C": 2, "D": 3, "E": 4 }
+    },
+    "hour_from_admit": {
+      "hard_min": 0,
+      "hard_max": 336,
+      "note": "Clipped to [0, encounter LOS hours] during cleaning."
+    }
+  },
+  "medication_admin": {
+    "infusion_rate": {
+      "hard_min": 0,
+      "hard_max": 50,
+      "typical_min": 0,
+      "typical_max": 0.5,
+      "unit": "mcg/kg/min (typical vasopressor scale)"
+    }
+  },
+  "los_model": {
+    "prediction_hour": { "hard_min": 24, "hard_max": 336, "cadence": 24 },
+    "remaining_los_hours": { "hard_min": 0, "hard_max": 336 },
+    "los_hours_total": { "hard_min": 0.5, "hard_max": 336 }
+  }
+}

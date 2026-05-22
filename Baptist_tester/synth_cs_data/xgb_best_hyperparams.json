@@ -1,0 +1,13 @@
+{
+  "subsample": 0.94,
+  "reg_lambda": 1.2,
+  "reg_alpha": 0.04,
+  "min_child_weight": 10.0,
+  "max_depth": 6,
+  "max_delta_step": 1.0,
+  "learning_rate": 0.032,
+  "gamma": 0.03,
+  "colsample_bytree": 0.72,
+  "colsample_bylevel": 0.86,
+  "base_score": null
+}

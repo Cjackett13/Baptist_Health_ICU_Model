@@ -1,0 +1,56 @@
+{
+  "meta_path": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/los_model/xgb_los_model_meta.json",
+  "metrics_test": {
+    "mae_hours": 9.514508033752442,
+    "rmse_hours": 11.973207872848686,
+    "r2_hours": 0.7718380704005663,
+    "mae_days": 0.396,
+    "rmse_days": 0.499,
+    "mae_log1p": 0.11484389475242801,
+    "baseline_mae_hours_median_predictor": 20.199,
+    "mae_improvement_vs_baseline_pct": 52.9,
+    "pct_within_24h": 94.7,
+    "pct_within_36h": 99.6,
+    "pct_within_48h": 100.0
+  },
+  "targets_met_test": {
+    "mae_hours": true,
+    "rmse_hours": true,
+    "r2_hours": true
+  },
+  "manifest_alignment": {
+    "pass": true,
+    "n_raw_features": 14,
+    "expected_raw_features": 14,
+    "n_model_matrix_features": 21,
+    "expected_model_matrix_min": 14,
+    "manifest_match": true,
+    "forbidden_in_raw": [],
+    "use_scai_pca": false,
+    "demographic_policy": "race_cd and ethnicity_cd excluded; use subgroup MAE only"
+  },
+  "preprocessor_train_only": {
+    "pass": true,
+    "global_mean_after_fit": 0.8758013191269841,
+    "global_mean_after_transform_test": 0.8758013191269841,
+    "global_mean_if_refit_on_test": 0.9575278749999999,
+    "bin_means_unchanged_after_transform": true,
+    "residual_out_col_dropped_from_model": true
+  },
+  "feature_weights_sanity": {
+    "pass": true,
+    "n_weighted_features": 21,
+    "high_weight_features": [
+      "med_infusion_mean_12h",
+      "scai_prop_ge3_12h",
+      "current_scai_12h",
+      "proc_n_12h",
+      "med_distinct_12h",
+      "clinical_event_n_12h",
+      "med_per_clinical_event_12h",
+      "scai_slope_12h"
+    ],
+    "note": "XGB feature_weights scale splits; confirm top-weight cols match clinical drivers in SHAP audit."
+  },
+  "all_pass": true
+}

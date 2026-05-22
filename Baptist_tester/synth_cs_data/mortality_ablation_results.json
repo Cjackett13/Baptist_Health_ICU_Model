@@ -1,0 +1,513 @@
+{
+  "trials": [
+    {
+      "name": "drop_infusion_residual_within_scai+scai_slope_12h",
+      "dropped": [
+        "infusion_residual_within_scai",
+        "scai_slope_12h"
+      ],
+      "n_features": 15,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9289772727272727,
+      "test_auprc": 0.8724525655190382,
+      "test_brier": 0.08542270279309838,
+      "n_train": 348,
+      "n_test": 109
+    },
+    {
+      "name": "weak_bundle",
+      "dropped": [
+        "clinical_event_n",
+        "infusion_residual_within_scai",
+        "scai_slope_12h"
+      ],
+      "n_features": 14,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9283203125,
+      "test_auprc": 0.8835611141231212,
+      "test_brier": 0.08607760105737672,
+      "n_train": 352,
+      "n_test": 112
+    },
+    {
+      "name": "drop_infusion_residual_within_scai",
+      "dropped": [
+        "infusion_residual_within_scai"
+      ],
+      "n_features": 16,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9251217532467533,
+      "test_auprc": 0.8581018314576389,
+      "test_brier": 0.08622318153986969,
+      "n_train": 348,
+      "n_test": 109
+    },
+    {
+      "name": "drop_proc_distinct_nom+infusion_residual_within_scai",
+      "dropped": [
+        "infusion_residual_within_scai",
+        "proc_distinct_nom"
+      ],
+      "n_features": 15,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.926948051948052,
+      "test_auprc": 0.872247318979562,
+      "test_brier": 0.08629025682103962,
+      "n_train": 348,
+      "n_test": 109
+    },
+    {
+      "name": "drop_proc_distinct_nom+scai_slope_12h",
+      "dropped": [
+        "proc_distinct_nom",
+        "scai_slope_12h"
+      ],
+      "n_features": 15,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9261924342105263,
+      "test_auprc": 0.8562393822147221,
+      "test_brier": 0.08904772141882991,
+      "n_train": 342,
+      "n_test": 108
+    },
+    {
+      "name": "drop_scai_slope_12h",
+      "dropped": [
+        "scai_slope_12h"
+      ],
+      "n_features": 16,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9263980263157894,
+      "test_auprc": 0.8474763347605841,
+      "test_brier": 0.08938054319669139,
+      "n_train": 342,
+      "n_test": 108
+    },
+    {
+      "name": "drop_proc_distinct_nom",
+      "dropped": [
+        "proc_distinct_nom"
+      ],
+      "n_features": 16,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9290707236842104,
+      "test_auprc": 0.8621913168842925,
+      "test_brier": 0.08948985699800703,
+      "n_train": 342,
+      "n_test": 108
+    },
+    {
+      "name": "drop_proc_n_bucket",
+      "dropped": [
+        "proc_n_bucket"
+      ],
+      "n_features": 16,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9290707236842104,
+      "test_auprc": 0.8621913168842925,
+      "test_brier": 0.08950683127440105,
+      "n_train": 342,
+      "n_test": 108
+    },
+    {
+      "name": "drop_med_distinct_bucket",
+      "dropped": [
+        "med_distinct_bucket"
+      ],
+      "n_features": 16,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9290707236842104,
+      "test_auprc": 0.8621913168842925,
+      "test_brier": 0.08950683127440105,
+      "n_train": 342,
+      "n_test": 108
+    },
+    {
+      "name": "baseline_all_17",
+      "dropped": [],
+      "n_features": 17,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "clinical_event_n",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.927014802631579,
+      "test_auprc": 0.8653806575356373,
+      "test_brier": 0.08988064911942874,
+      "n_train": 342,
+      "n_test": 108
+    },
+    {
+      "name": "drop_clinical_event_n+infusion_residual_within_scai",
+      "dropped": [
+        "clinical_event_n",
+        "infusion_residual_within_scai"
+      ],
+      "n_features": 15,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9244140624999999,
+      "test_auprc": 0.8692598556795414,
+      "test_brier": 0.09240444697053064,
+      "n_train": 352,
+      "n_test": 112
+    },
+    {
+      "name": "all_candidates",
+      "dropped": [
+        "clinical_event_n",
+        "infusion_residual_within_scai",
+        "med_distinct_bucket",
+        "proc_distinct_nom",
+        "proc_n_bucket",
+        "scai_slope_12h"
+      ],
+      "n_features": 11,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "med_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9236328125,
+      "test_auprc": 0.8660795478054386,
+      "test_brier": 0.09243918380093587,
+      "n_train": 352,
+      "n_test": 112
+    },
+    {
+      "name": "drop_clinical_event_n+proc_distinct_nom",
+      "dropped": [
+        "clinical_event_n",
+        "proc_distinct_nom"
+      ],
+      "n_features": 15,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9260284810126582,
+      "test_auprc": 0.8631654513835534,
+      "test_brier": 0.10061827560676516,
+      "n_train": 346,
+      "n_test": 111
+    },
+    {
+      "name": "drop_clinical_event_n+scai_slope_12h",
+      "dropped": [
+        "clinical_event_n",
+        "scai_slope_12h"
+      ],
+      "n_features": 15,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9272151898734178,
+      "test_auprc": 0.8723844195512773,
+      "test_brier": 0.10071581989499119,
+      "n_train": 346,
+      "n_test": 111
+    },
+    {
+      "name": "drop_clinical_event_n",
+      "dropped": [
+        "clinical_event_n"
+      ],
+      "n_features": 16,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "proc_distinct_nom",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "proc_n_bucket",
+        "med_distinct_bucket",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.924248417721519,
+      "test_auprc": 0.8638546194077115,
+      "test_brier": 0.10113451100695986,
+      "n_train": 346,
+      "n_test": 111
+    },
+    {
+      "name": "redundant_bundle",
+      "dropped": [
+        "clinical_event_n",
+        "med_distinct_bucket",
+        "proc_distinct_nom",
+        "proc_n_bucket"
+      ],
+      "n_features": 13,
+      "features": [
+        "med_distinct",
+        "med_infusion_mean",
+        "proc_n",
+        "current_scai",
+        "scai_prop_ge3",
+        "scai_std",
+        "scai_slope_12h",
+        "infusion_early_over_all_ratio",
+        "med_per_clinical_event",
+        "med_residual_within_scai",
+        "infusion_residual_within_scai",
+        "proc_residual_within_scai",
+        "demo_profile_bucket"
+      ],
+      "test_auroc": 0.9222705696202532,
+      "test_auprc": 0.8454669979358439,
+      "test_brier": 0.10171899737280893,
+      "n_train": 346,
+      "n_test": 111
+    }
+  ],
+  "best": {
+    "name": "drop_infusion_residual_within_scai+scai_slope_12h",
+    "dropped": [
+      "infusion_residual_within_scai",
+      "scai_slope_12h"
+    ],
+    "n_features": 15,
+    "features": [
+      "med_distinct",
+      "med_infusion_mean",
+      "proc_n",
+      "proc_distinct_nom",
+      "current_scai",
+      "scai_prop_ge3",
+      "scai_std",
+      "infusion_early_over_all_ratio",
+      "clinical_event_n",
+      "med_per_clinical_event",
+      "proc_n_bucket",
+      "med_distinct_bucket",
+      "med_residual_within_scai",
+      "proc_residual_within_scai",
+      "demo_profile_bucket"
+    ],
+    "test_auroc": 0.9289772727272727,
+    "test_auprc": 0.8724525655190382,
+    "test_brier": 0.08542270279309838,
+    "n_train": 348,
+    "n_test": 109
+  }
+}

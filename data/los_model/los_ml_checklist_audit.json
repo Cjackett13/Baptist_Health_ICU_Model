@@ -1,0 +1,689 @@
+{
+  "model": "length_of_stay_regression",
+  "audited_at_utc": "2026-05-20T20:28:23.998633+00:00",
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "model_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/los_model",
+  "summary": {
+    "pass": 23,
+    "fail": 0,
+    "warn": 1,
+    "na": 7,
+    "total": 31
+  },
+  "metrics_test": {
+    "mae_hours": 9.514508033752442,
+    "rmse_hours": 11.973207872848686,
+    "r2_hours": 0.7718380704005663,
+    "mae_days": 0.396,
+    "rmse_days": 0.499,
+    "mae_log1p": 0.11484389475242801,
+    "baseline_mae_hours_median_predictor": 20.199,
+    "mae_improvement_vs_baseline_pct": 52.9,
+    "pct_within_24h": 94.7,
+    "pct_within_36h": 99.6,
+    "pct_within_48h": 100.0
+  },
+  "targets_met_test": {
+    "mae_hours": true,
+    "rmse_hours": true,
+    "r2_hours": true
+  },
+  "checks": [
+    {
+      "id": 1,
+      "category": "Data Quality",
+      "title": "Class distribution check",
+      "status": "N/A",
+      "finding": "LOS model is regression (continuous hours), not binary classification.",
+      "details": {
+        "train_mean_hours": 87.498,
+        "test_mean_hours": 88.037,
+        "train_median_hours": 86.0,
+        "test_median_hours": 85.0
+      },
+      "not_applicable_reason": "Use label distribution (mean/median/std) instead of positive rate."
+    },
+    {
+      "id": 2,
+      "category": "Data Quality",
+      "title": "Class imbalance assessment",
+      "status": "N/A",
+      "finding": "Not applicable to continuous LOS target.",
+      "details": {},
+      "not_applicable_reason": "Imbalance concepts apply to classification only."
+    },
+    {
+      "id": 3,
+      "category": "Data Quality",
+      "title": "Train/test split verification",
+      "status": "PASS",
+      "finding": "Split by PERSON_ID: GroupShuffleSplit on PERSON_ID (60% train / 20% val / 20% test). Train\u2229test person overlap=0.",
+      "details": {
+        "n_train_persons": 3000,
+        "n_test_persons": 1000,
+        "grain": "one encounter per person (1:1)"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 4,
+      "category": "Data Quality",
+      "title": "Label verification",
+      "status": "PASS",
+      "finding": "Label `los_hours_total`: 0.00% NaN. Training transform `log1p_los_hours_total` = log1p(hours). Constructed from encounter REG/DISCH and reconciled LOS_HOURS in prep.",
+      "details": {
+        "label_min": 36.0,
+        "label_max": 182.0,
+        "label_median": 85.0
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 5,
+      "category": "Feature Quality",
+      "title": "Feature manifest vs trained model",
+      "status": "PASS",
+      "finding": "Trained feature_columns_raw_included matches los_model_config.MODEL_FEATURE_COLUMNS (14).",
+      "details": {
+        "manifest": [
+          "med_infusion_mean_12h",
+          "scai_prop_ge3_12h",
+          "current_scai_12h",
+          "proc_n_12h",
+          "med_distinct_12h",
+          "clinical_event_n_12h",
+          "dx_cat_arrhythmia_arrest",
+          "med_per_clinical_event_12h",
+          "scai_slope_12h",
+          "age_years",
+          "sex_bin",
+          "admit_type_cd",
+          "admit_src_cd",
+          "unit_cd"
+        ],
+        "trained": [
+          "med_infusion_mean_12h",
+          "scai_prop_ge3_12h",
+          "current_scai_12h",
+          "proc_n_12h",
+          "med_distinct_12h",
+          "clinical_event_n_12h",
+          "dx_cat_arrhythmia_arrest",
+          "med_per_clinical_event_12h",
+          "scai_slope_12h",
+          "age_years",
+          "sex_bin",
+          "admit_type_cd",
+          "admit_src_cd",
+          "unit_cd"
+        ],
+        "mismatch": {}
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 6,
+      "category": "Feature Quality",
+      "title": "Feature relevance (prediction-time)",
+      "status": "PASS",
+      "finding": "Model uses 14 manifest features (\u226412h snapshot + admit-time categoricals). race_cd/ethnicity excluded from training (subgroup eval only).",
+      "details": {
+        "n_included_features": 14,
+        "included": [
+          "med_infusion_mean_12h",
+          "scai_prop_ge3_12h",
+          "current_scai_12h",
+          "proc_n_12h",
+          "med_distinct_12h",
+          "clinical_event_n_12h",
+          "dx_cat_arrhythmia_arrest",
+          "med_per_clinical_event_12h",
+          "scai_slope_12h",
+          "age_years",
+          "sex_bin",
+          "admit_type_cd",
+          "admit_src_cd",
+          "unit_cd"
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 7,
+      "category": "Feature Quality",
+      "title": "Data leakage audit",
+      "status": "PASS",
+      "finding": "Label columns in feature matrix: none. Preprocessor fit on train fold only (SCAI PCA disabled; residuals train-fold). Full-stay DuckDB sidecar blocked from training features.",
+      "details": {
+        "residual_policy": "infusion_residual_within_scai_12h fit on train fold only (dropped from final X)",
+        "use_scai_pca": false,
+        "demographic_policy": "race_cd and ethnicity_cd excluded; use subgroup MAE only"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 8,
+      "category": "Feature Quality",
+      "title": "Feature scaling check",
+      "status": "PASS",
+      "finding": "XGBoost regressor \u2014 no StandardScaler on full matrix. Train preprocessor uses train-fold median impute, winsorize, sqrt/log1p only.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 9,
+      "category": "Feature Quality",
+      "title": "Missing value handling",
+      "status": "PASS",
+      "finding": "Median/mode imputation at train time. Current null % (included features): max=0.0%.",
+      "details": {
+        "null_pct_by_feature": {
+          "med_infusion_mean_12h": 0.0,
+          "scai_prop_ge3_12h": 0.0,
+          "current_scai_12h": 0.0,
+          "proc_n_12h": 0.0,
+          "med_distinct_12h": 0.0,
+          "clinical_event_n_12h": 0.0,
+          "dx_cat_arrhythmia_arrest": 0.0,
+          "med_per_clinical_event_12h": 0.0,
+          "scai_slope_12h": 0.0,
+          "age_years": 0.0,
+          "sex_bin": 0.0,
+          "admit_type_cd": 0.0,
+          "admit_src_cd": 0.0,
+          "unit_cd": 0.0
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 10,
+      "category": "Feature Quality",
+      "title": "Feature importance sanity check",
+      "status": "PASS",
+      "finding": "SHAP/perm available (xgboost_pred_contribs). Test MAE 9.5h. Weights are intentional \u2014 see data/los_model/FEATURE_WEIGHTS_RATIONALE.md.",
+      "details": {
+        "top_feature_weights": [
+          [
+            "med_infusion_mean_12h",
+            10.0
+          ],
+          [
+            "scai_prop_ge3_12h",
+            10.0
+          ],
+          [
+            "current_scai_12h",
+            10.0
+          ],
+          [
+            "proc_n_12h",
+            10.0
+          ],
+          [
+            "med_distinct_12h",
+            10.0
+          ],
+          [
+            "clinical_event_n_12h",
+            10.0
+          ],
+          [
+            "med_per_clinical_event_12h",
+            10.0
+          ],
+          [
+            "scai_slope_12h",
+            10.0
+          ]
+        ],
+        "top_shap_or_perm": [
+          {
+            "feature": "clinical_event_n_12h",
+            "mean_abs_shap_log1p": 0.133592888712883,
+            "mean_shap_log1p": -0.004867579787969589
+          },
+          {
+            "feature": "med_infusion_mean_12h",
+            "mean_abs_shap_log1p": 0.06556429713964462,
+            "mean_shap_log1p": 0.010356596671044827
+          },
+          {
+            "feature": "scai_prop_ge3_12h",
+            "mean_abs_shap_log1p": 0.02837519533932209,
+            "mean_shap_log1p": -0.0027973493561148643
+          },
+          {
+            "feature": "med_per_clinical_event_12h",
+            "mean_abs_shap_log1p": 0.019299082458019257,
+            "mean_shap_log1p": 0.0014902929542586207
+          },
+          {
+            "feature": "scai_slope_12h",
+            "mean_abs_shap_log1p": 0.014848096296191216,
+            "mean_shap_log1p": 0.005389293190091848
+          }
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 11,
+      "category": "Model Evaluation",
+      "title": "Right metric for the problem",
+      "status": "PASS",
+      "finding": "Regression task uses MAE, RMSE, R\u00b2 (hours) \u2014 not accuracy/AUC. Targets: MAE\u226436.0h, RMSE\u226448.0h, R\u00b2\u22650.65.",
+      "details": {
+        "metrics_test": {
+          "mae_hours": 9.514508033752442,
+          "rmse_hours": 11.973207872848686,
+          "r2_hours": 0.7718380704005663,
+          "mae_days": 0.396,
+          "rmse_days": 0.499,
+          "mae_log1p": 0.11484389475242801,
+          "baseline_mae_hours_median_predictor": 20.199,
+          "mae_improvement_vs_baseline_pct": 52.9,
+          "pct_within_24h": 94.7,
+          "pct_within_36h": 99.6,
+          "pct_within_48h": 100.0
+        },
+        "targets_met": {
+          "mae_hours": true,
+          "rmse_hours": true,
+          "r2_hours": true
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 12,
+      "category": "Model Evaluation",
+      "title": "AUC-ROC interpretation",
+      "status": "N/A",
+      "finding": "Mortality/classification metrics \u2014 not used for LOS regression.",
+      "details": {},
+      "not_applicable_reason": "Binary classification only."
+    },
+    {
+      "id": 13,
+      "category": "Model Evaluation",
+      "title": "AUC-PR interpretation",
+      "status": "N/A",
+      "finding": "Mortality/classification metrics \u2014 not used for LOS regression.",
+      "details": {},
+      "not_applicable_reason": "Binary classification only."
+    },
+    {
+      "id": 14,
+      "category": "Model Evaluation",
+      "title": "Brier score interpretation",
+      "status": "N/A",
+      "finding": "Mortality/classification metrics \u2014 not used for LOS regression.",
+      "details": {},
+      "not_applicable_reason": "Binary classification only."
+    },
+    {
+      "id": 15,
+      "category": "Model Evaluation",
+      "title": "Cross-validation stability",
+      "status": "PASS",
+      "finding": "5-fold GroupKFold by PERSON_ID: MAE=9.7\u00b10.3h, R\u00b2=0.749\u00b10.007.",
+      "details": {
+        "cv_mae_folds": [
+          10.076647884368896,
+          9.718964462280274,
+          9.536651363372803,
+          9.90454995727539,
+          9.257011417388917
+        ],
+        "cv_r2_folds": [
+          0.7373902480032797,
+          0.747847146390623,
+          0.7506660080827495,
+          0.7521898229399823,
+          0.7584307746607182
+        ],
+        "cv_mae_mean_std": [
+          9.698765016937257,
+          0.2852991413048499
+        ],
+        "cv_r2_mean_std": [
+          0.7493048000154705,
+          0.006892618684423486
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 16,
+      "category": "Bias and Fairness",
+      "title": "Demographic subgroup performance",
+      "status": "PASS",
+      "finding": "Test MAE 9.5h; 0 groups with MAE >5h vs overall. Demographics from person.parquet (eval only). Sample race_cd: [{'n': 43, 'mae_hours': 8.806281333745913, 'rmse_hours': 11.375318959546071, 'r2_hours': 0.7994663626127954, 'group': 'UNKNOWN', 'mae_vs_overall_delta': -0.71}, {'n': 53, 'mae_hours': 8.86964315738318, 'rmse_hours': 10.837023093562358, 'r2_hours': 0.7898220392722501, 'group': 'ASIAN', 'mae_vs_overall_delta': -0.64}, {'n': 228, 'mae_hours': 8.923165254425584, 'rmse_hours': 11.29760155308376, 'r2_hours': 0.7870334852510489, 'group': 'BLACK', 'mae_vs_overall_delta': -0.59}, {'n': 544, 'mae_hours': 9.726328772657057, 'rmse_hours': 12.203516684069918, 'r2_hours': 0.7626436395004946, 'group': 'WHITE', 'mae_vs_overall_delta': 0.21}]",
+      "details": {
+        "subgroup_overall": {
+          "n": 1000,
+          "mae_hours": 9.514508033752442,
+          "rmse_hours": 11.973207872848686,
+          "r2_hours": 0.7718380704005663
+        },
+        "flagged": []
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 17,
+      "category": "Bias and Fairness",
+      "title": "Clinical subgroup performance",
+      "status": "PASS",
+      "finding": "Subgroup MAE by unit_cd, primary_dx, admit_type. unit_cd rows: [{'n': 354, 'mae_hours': 9.059140049131576, 'rmse_hours': 11.54867455682984, 'r2_hours': 0.7776213124834502, 'group': 'CVICU', 'mae_vs_overall_delta': -0.46}, {'n': 646, 'mae_hours': 9.764044050092668, 'rmse_hours': 12.199582532541623, 'r2_hours': 0.768881368621938, 'group': 'CICU', 'mae_vs_overall_delta': 0.25}]",
+      "details": {
+        "unit_cd": [
+          {
+            "n": 354,
+            "mae_hours": 9.059140049131576,
+            "rmse_hours": 11.54867455682984,
+            "r2_hours": 0.7776213124834502,
+            "group": "CVICU",
+            "mae_vs_overall_delta": -0.46
+          },
+          {
+            "n": 646,
+            "mae_hours": 9.764044050092668,
+            "rmse_hours": 12.199582532541623,
+            "r2_hours": 0.768881368621938,
+            "group": "CICU",
+            "mae_vs_overall_delta": 0.25
+          }
+        ],
+        "primary_dx": [
+          {
+            "n": 102,
+            "mae_hours": 7.441472595813227,
+            "rmse_hours": 9.848132067777986,
+            "r2_hours": 0.7429396428058314,
+            "group": "arrhythmia_arrest",
+            "mae_vs_overall_delta": -2.07
+          },
+          {
+            "n": 75,
+            "mae_hours": 8.02955103556315,
+            "rmse_hours": 10.586636916738769,
+            "r2_hours": 0.7171363065446704,
+            "group": "post_cardiotomy",
+            "mae_vs_overall_delta": -1.48
+          },
+          {
+            "n": 347,
+            "mae_hours": 9.62457641469642,
+            "rmse_hours": 12.120054047865342,
+            "r2_hours": 0.78568614928284,
+            "group": "acute_mi",
+            "mae_vs_overall_delta": 0.11
+          },
+          {
+            "n": 287,
+            "mae_hours": 9.982132915005035,
+            "rmse_hours": 12.46985142595671,
+            "r2_hours": 0.7136818173427482,
+            "group": "adhf",
+            "mae_vs_overall_delta": 0.47
+          },
+          {
+            "n": 105,
+            "mae_hours": 10.293502625964937,
+            "rmse_hours": 12.425746562178372,
+            "r2_hours": 0.6546644199475031,
+            "group": "myocarditis_cmp",
+            "mae_vs_overall_delta": 0.78
+          }
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 18,
+      "category": "Bias and Fairness",
+      "title": "Simpson's paradox check",
+      "status": "PASS",
+      "finding": "Review flagged subgroup deltas vs overall MAE before sign-off; no race/ethnicity in model X.",
+      "details": {
+        "flagged": []
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 19,
+      "category": "Sanity",
+      "title": "Direction test",
+      "status": "PASS",
+      "finding": "p5\u2192p95 sweeps on median patient (5 features). Pass count 5/5. Deltas: clinical_event_n_12h: 32.58h, med_infusion_mean_12h: 2.79h, scai_prop_ge3_12h: 2.34h, med_per_clinical_event_12h: 12.2h, current_scai_12h: 1.57h. PASS when all higher values predict \u2265 lower (synthetic deltas may be small).",
+      "details": {
+        "direction_tests": [
+          {
+            "feature": "clinical_event_n_12h",
+            "status": "PASS",
+            "clinical_expectation": "more events \u2192 longer stay",
+            "p05_value": 144.0,
+            "p95_value": 343.05,
+            "pred_at_p05_hours": 71.05,
+            "pred_at_p95_hours": 103.63,
+            "delta_hours_p95_minus_p05": 32.58,
+            "direction_correct": true,
+            "note": "Median patient template; only this feature moved to cohort p5/p95."
+          },
+          {
+            "feature": "med_infusion_mean_12h",
+            "status": "PASS",
+            "clinical_expectation": "more infusions \u2192 longer stay",
+            "p05_value": 0.0,
+            "p95_value": 4.5689,
+            "pred_at_p05_hours": 97.83,
+            "pred_at_p95_hours": 100.61,
+            "delta_hours_p95_minus_p05": 2.79,
+            "direction_correct": true,
+            "note": "Median patient template; only this feature moved to cohort p5/p95."
+          },
+          {
+            "feature": "scai_prop_ge3_12h",
+            "status": "PASS",
+            "clinical_expectation": "more time in high acuity \u2192 longer stay",
+            "p05_value": 0.0,
+            "p95_value": 1.0,
+            "pred_at_p05_hours": 84.06,
+            "pred_at_p95_hours": 86.4,
+            "delta_hours_p95_minus_p05": 2.34,
+            "direction_correct": true,
+            "note": "Median patient template; only this feature moved to cohort p5/p95."
+          },
+          {
+            "feature": "med_per_clinical_event_12h",
+            "status": "PASS",
+            "clinical_expectation": "higher med burden \u2192 longer stay",
+            "p05_value": 0.0,
+            "p95_value": 0.0231,
+            "pred_at_p05_hours": 77.83,
+            "pred_at_p95_hours": 90.03,
+            "delta_hours_p95_minus_p05": 12.2,
+            "direction_correct": true,
+            "note": "Median patient template; only this feature moved to cohort p5/p95."
+          },
+          {
+            "feature": "current_scai_12h",
+            "status": "PASS",
+            "clinical_expectation": "higher severity \u2192 longer stay",
+            "p05_value": 0.0,
+            "p95_value": 4.0,
+            "pred_at_p05_hours": 83.64,
+            "pred_at_p95_hours": 85.22,
+            "delta_hours_p95_minus_p05": 1.57,
+            "direction_correct": true,
+            "note": "Median patient template; only this feature moved to cohort p5/p95."
+          }
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 20,
+      "category": "Sanity",
+      "title": "Monotonicity test",
+      "status": "PASS",
+      "finding": "Same 5-feature direction battery as item 19; confirms model responds logically to acuity/load.",
+      "details": {
+        "direction_test_pass": true
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 21,
+      "category": "Sanity",
+      "title": "Edge case test",
+      "status": "PASS",
+      "finding": "Extreme numeric 999\u2192145.11h, 0\u219254.56h; no crash, finite output in (0, 10000)h. Winsorization in train preprocessor.",
+      "details": {
+        "numeric_columns_tested": [
+          "med_infusion_mean_12h",
+          "scai_prop_ge3_12h",
+          "current_scai_12h",
+          "proc_n_12h",
+          "med_distinct_12h",
+          "clinical_event_n_12h",
+          "dx_cat_arrhythmia_arrest",
+          "med_per_clinical_event_12h",
+          "scai_slope_12h",
+          "age_years",
+          "sex_bin"
+        ],
+        "extreme_high_all_numeric_999": {
+          "pred_hours": 145.11,
+          "crashed": false,
+          "finite_output": true,
+          "in_reasonable_range": true,
+          "pass": true
+        },
+        "extreme_low_all_numeric_0": {
+          "pred_hours": 54.56,
+          "crashed": false,
+          "finite_output": true,
+          "in_reasonable_range": true,
+          "pass": true
+        },
+        "median_template": {
+          "pred_hours": 84.06,
+          "crashed": false,
+          "finite_output": true,
+          "in_reasonable_range": true,
+          "pass": true
+        },
+        "prediction_consistency_20x": {
+          "unique_predictions": 1,
+          "deterministic": true
+        },
+        "all_edge_pass": true
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 22,
+      "category": "Sanity",
+      "title": "Prediction consistency test",
+      "status": "PASS",
+      "finding": "Same median template predicted 20\u00d7 \u2014 identical outputs.",
+      "details": {
+        "unique_predictions": 1,
+        "deterministic": true
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 23,
+      "category": "Sanity",
+      "title": "Threshold analysis",
+      "status": "N/A",
+      "finding": "Regression has no classification threshold; use MAE buckets or long-stay binary if needed.",
+      "details": {},
+      "not_applicable_reason": "Classification only."
+    },
+    {
+      "id": 24,
+      "category": "Clinical Utility",
+      "title": "Alert rate test",
+      "status": "N/A",
+      "finding": "LOS regression outputs hours, not binary alerts.",
+      "details": {},
+      "not_applicable_reason": "Define long-stay threshold for alert-rate metric."
+    },
+    {
+      "id": 25,
+      "category": "Clinical Utility",
+      "title": "Lead time test",
+      "status": "PASS",
+      "finding": "v1 checkpoint: prediction_hour=12, features censored at 12h. Rolling mode documented in los_feature_policy (not enabled).",
+      "details": {
+        "feature_window_hours": 12,
+        "rolling_feature_mode": "v1_static_12h"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 26,
+      "category": "Clinical Utility",
+      "title": "Baseline comparison",
+      "status": "PASS",
+      "finding": "Test MAE 9.5h vs median-predictor baseline 20.2h (52.9% improvement).",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 27,
+      "category": "Clinical Utility",
+      "title": "Human expert comparison",
+      "status": "WARN",
+      "finding": "Clinician review of high-error cases not automated.",
+      "details": {},
+      "not_applicable_reason": "Qualitative step."
+    },
+    {
+      "id": 28,
+      "category": "Deployment",
+      "title": "Reproducibility test",
+      "status": "PASS",
+      "finding": "random_state=42, split seed=42. Regenerate: simulate \u2192 los_data_prep \u2192 tune \u2192 train.",
+      "details": {
+        "artifact_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/los_model"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 29,
+      "category": "Deployment",
+      "title": "Train/serve consistency",
+      "status": "PASS",
+      "finding": "Single joblib pipeline (LosTrainPreprocessor + XGBRegressor). Serve must load same bundle; no separate scaler files.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 30,
+      "category": "Deployment",
+      "title": "Model card documentation",
+      "status": "PASS",
+      "finding": "See models/length_of_stay/README.md, xgb_los_model_meta.json, performance_targets.json.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 31,
+      "category": "Deployment",
+      "title": "Retraining plan",
+      "status": "PASS",
+      "finding": "Retrain/monitoring: RETRAINING_AND_MONITORING.md. Feature weights rationale: FEATURE_WEIGHTS_RATIONALE.md.",
+      "details": {
+        "retrain_doc": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/los_model/RETRAINING_AND_MONITORING.md",
+        "weights_doc": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/los_model/FEATURE_WEIGHTS_RATIONALE.md"
+      },
+      "not_applicable_reason": null
+    }
+  ]
+}

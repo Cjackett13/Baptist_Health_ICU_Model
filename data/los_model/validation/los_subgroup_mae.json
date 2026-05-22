@@ -1,0 +1,202 @@
+{
+  "overall_test": {
+    "n": 1000,
+    "mae_hours": 9.514508033752442,
+    "rmse_hours": 11.973207872848686,
+    "r2_hours": 0.7718380704005663
+  },
+  "subgroups": {
+    "race_cd": [
+      {
+        "n": 43,
+        "mae_hours": 8.806281333745913,
+        "rmse_hours": 11.375318959546071,
+        "r2_hours": 0.7994663626127954,
+        "group": "UNKNOWN",
+        "mae_vs_overall_delta": -0.71
+      },
+      {
+        "n": 53,
+        "mae_hours": 8.86964315738318,
+        "rmse_hours": 10.837023093562358,
+        "r2_hours": 0.7898220392722501,
+        "group": "ASIAN",
+        "mae_vs_overall_delta": -0.64
+      },
+      {
+        "n": 228,
+        "mae_hours": 8.923165254425584,
+        "rmse_hours": 11.29760155308376,
+        "r2_hours": 0.7870334852510489,
+        "group": "BLACK",
+        "mae_vs_overall_delta": -0.59
+      },
+      {
+        "n": 544,
+        "mae_hours": 9.726328772657057,
+        "rmse_hours": 12.203516684069918,
+        "r2_hours": 0.7626436395004946,
+        "group": "WHITE",
+        "mae_vs_overall_delta": 0.21
+      },
+      {
+        "n": 132,
+        "mae_hours": 10.152593323678682,
+        "rmse_hours": 12.748325142554558,
+        "r2_hours": 0.7599211119218053,
+        "group": "OTHER",
+        "mae_vs_overall_delta": 0.64
+      }
+    ],
+    "sex_cd": [
+      {
+        "n": 620,
+        "mae_hours": 9.287416882668772,
+        "rmse_hours": 11.752096043139016,
+        "r2_hours": 0.7827993928641077,
+        "group": "M",
+        "mae_vs_overall_delta": -0.23
+      },
+      {
+        "n": 380,
+        "mae_hours": 9.885025174994217,
+        "rmse_hours": 12.325456615221011,
+        "r2_hours": 0.7531885090282386,
+        "group": "F",
+        "mae_vs_overall_delta": 0.37
+      }
+    ],
+    "ethnicity_cd": [
+      {
+        "n": 671,
+        "mae_hours": 9.42912831995775,
+        "rmse_hours": 11.761991017279176,
+        "r2_hours": 0.7856861847358594,
+        "group": "NON_HISPANIC",
+        "mae_vs_overall_delta": -0.09
+      },
+      {
+        "n": 42,
+        "mae_hours": 9.574765886579241,
+        "rmse_hours": 12.859241857157333,
+        "r2_hours": 0.7119878805707713,
+        "group": "UNKNOWN",
+        "mae_vs_overall_delta": 0.06
+      },
+      {
+        "n": 287,
+        "mae_hours": 9.70530579729778,
+        "rmse_hours": 12.3230992107251,
+        "r2_hours": 0.7437220147975949,
+        "group": "HISPANIC",
+        "mae_vs_overall_delta": 0.19
+      }
+    ],
+    "unit_cd": [
+      {
+        "n": 354,
+        "mae_hours": 9.059140049131576,
+        "rmse_hours": 11.54867455682984,
+        "r2_hours": 0.7776213124834502,
+        "group": "CVICU",
+        "mae_vs_overall_delta": -0.46
+      },
+      {
+        "n": 646,
+        "mae_hours": 9.764044050092668,
+        "rmse_hours": 12.199582532541623,
+        "r2_hours": 0.768881368621938,
+        "group": "CICU",
+        "mae_vs_overall_delta": 0.25
+      }
+    ],
+    "primary_dx": [
+      {
+        "n": 102,
+        "mae_hours": 7.441472595813227,
+        "rmse_hours": 9.848132067777986,
+        "r2_hours": 0.7429396428058314,
+        "group": "arrhythmia_arrest",
+        "mae_vs_overall_delta": -2.07
+      },
+      {
+        "n": 75,
+        "mae_hours": 8.02955103556315,
+        "rmse_hours": 10.586636916738769,
+        "r2_hours": 0.7171363065446704,
+        "group": "post_cardiotomy",
+        "mae_vs_overall_delta": -1.48
+      },
+      {
+        "n": 347,
+        "mae_hours": 9.62457641469642,
+        "rmse_hours": 12.120054047865342,
+        "r2_hours": 0.78568614928284,
+        "group": "acute_mi",
+        "mae_vs_overall_delta": 0.11
+      },
+      {
+        "n": 287,
+        "mae_hours": 9.982132915005035,
+        "rmse_hours": 12.46985142595671,
+        "r2_hours": 0.7136818173427482,
+        "group": "adhf",
+        "mae_vs_overall_delta": 0.47
+      },
+      {
+        "n": 105,
+        "mae_hours": 10.293502625964937,
+        "rmse_hours": 12.425746562178372,
+        "r2_hours": 0.6546644199475031,
+        "group": "myocarditis_cmp",
+        "mae_vs_overall_delta": 0.78
+      },
+      {
+        "n": 84,
+        "mae_hours": 10.331470989045643,
+        "rmse_hours": 12.55795082682617,
+        "r2_hours": 0.5211826164688129,
+        "group": "aortic_valve",
+        "mae_vs_overall_delta": 0.82
+      }
+    ],
+    "admit_type_cd": [
+      {
+        "n": 212,
+        "mae_hours": 8.542359676001206,
+        "rmse_hours": 10.75491757660015,
+        "r2_hours": 0.7962585331404826,
+        "group": "URGENT",
+        "mae_vs_overall_delta": -0.97
+      },
+      {
+        "n": 604,
+        "mae_hours": 9.722748806934483,
+        "rmse_hours": 12.339590269339691,
+        "r2_hours": 0.7647560488012078,
+        "group": "EMERGENCY",
+        "mae_vs_overall_delta": 0.21
+      },
+      {
+        "n": 85,
+        "mae_hours": 9.879943757898667,
+        "rmse_hours": 12.062653260098404,
+        "r2_hours": 0.7931334619432007,
+        "group": "ELECTIVE",
+        "mae_vs_overall_delta": 0.37
+      },
+      {
+        "n": 99,
+        "mae_hours": 10.012043268993647,
+        "rmse_hours": 12.102064375277779,
+        "r2_hours": 0.744438335837613,
+        "group": "TRANSFER",
+        "mae_vs_overall_delta": 0.5
+      }
+    ]
+  },
+  "flagged_mae_worse_than_overall_by_5h": [],
+  "demographic_source": "person.parquet (eval-only join; not in model X)",
+  "model_features_excluded_from_fairness_join": [],
+  "interpretation": "Compare subgroup MAE to overall; deltas >5h warrant fairness review. Small groups (n<25) are unreliable. Race/ethnicity used only for reporting."
+}

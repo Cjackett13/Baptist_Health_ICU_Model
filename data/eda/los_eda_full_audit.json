@@ -1,0 +1,758 @@
+{
+  "n_encounters": 5000,
+  "target": "los_hours_total",
+  "target_skew_outliers": {
+    "classification_imbalance": "N/A \u2014 continuous regression target",
+    "skewness": 1.3569,
+    "kurtosis": 2.0426,
+    "mean": 99.091,
+    "median": 85.0,
+    "std": 63.947,
+    "p01": 11.0,
+    "p99": 336.0,
+    "note": "Right-skew common; consider log1p transform for modeling; inspect high-LOS outliers."
+  },
+  "duplicate_patient_check": {
+    "n_encounters": 5000,
+    "n_unique_person_id": 5000,
+    "n_person_id_with_multiple_encounters": 0,
+    "person_ids_with_multiple_encounters": {},
+    "duplicate_encounter_id_count": 0,
+    "note": "1:1 PERSON_ID:ENCOUNTER_ID expected for Dataset B ICU cohort."
+  },
+  "multicollinearity_pairs_abs_r_ge_0.85": [
+    {
+      "feature_a": "med_infusion_mean_12h",
+      "feature_b": "infusion_mean_12h",
+      "pearson_r": 1.0
+    },
+    {
+      "feature_a": "proc_n_12h",
+      "feature_b": "proc_distinct_nom_12h",
+      "pearson_r": 1.0
+    },
+    {
+      "feature_a": "med_distinct_12h",
+      "feature_b": "med_admin_rows_12h",
+      "pearson_r": 0.9961
+    },
+    {
+      "feature_a": "scai_std_12h",
+      "feature_b": "scai_slope_12h",
+      "pearson_r": 0.9658
+    },
+    {
+      "feature_a": "scai_last_12h",
+      "feature_b": "scai_mean_12h",
+      "pearson_r": 0.9516
+    },
+    {
+      "feature_a": "scai_mean_12h",
+      "feature_b": "current_scai_12h",
+      "pearson_r": 0.9417
+    },
+    {
+      "feature_a": "scai_first_12h",
+      "feature_b": "scai_mean_12h",
+      "pearson_r": 0.9395
+    },
+    {
+      "feature_a": "scai_last_12h",
+      "feature_b": "current_scai_12h",
+      "pearson_r": 0.9216
+    },
+    {
+      "feature_a": "med_distinct_12h",
+      "feature_b": "scai_last_12h",
+      "pearson_r": 0.9095
+    },
+    {
+      "feature_a": "scai_first_12h",
+      "feature_b": "current_scai_12h",
+      "pearson_r": 0.9081
+    },
+    {
+      "feature_a": "med_admin_rows_12h",
+      "feature_b": "scai_last_12h",
+      "pearson_r": 0.9063
+    },
+    {
+      "feature_a": "proc_n_12h",
+      "feature_b": "proc_n_bucket_12h",
+      "pearson_r": 0.8803
+    },
+    {
+      "feature_a": "proc_distinct_nom_12h",
+      "feature_b": "proc_n_bucket_12h",
+      "pearson_r": 0.8803
+    },
+    {
+      "feature_a": "med_distinct_12h",
+      "feature_b": "scai_mean_12h",
+      "pearson_r": 0.8713
+    },
+    {
+      "feature_a": "med_admin_rows_12h",
+      "feature_b": "scai_mean_12h",
+      "pearson_r": 0.8657
+    },
+    {
+      "feature_a": "med_distinct_12h",
+      "feature_b": "med_distinct_bucket_12h",
+      "pearson_r": 0.8598
+    },
+    {
+      "feature_a": "clinical_event_n_12h",
+      "feature_b": "proc_n_bucket_12h",
+      "pearson_r": 0.8589
+    },
+    {
+      "feature_a": "med_admin_rows_12h",
+      "feature_b": "med_distinct_bucket_12h",
+      "pearson_r": 0.8547
+    }
+  ],
+  "outlier_trim_report": [
+    {
+      "feature": "demo_profile_bucket",
+      "n": 5000,
+      "p01": 2.0,
+      "p99": 23.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -5.5,
+      "iqr_hi": 30.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "med_distinct_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 6.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -2.0,
+      "iqr_hi": 6.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "med_infusion_mean_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 5.704971500000001,
+      "n_below_p01": 0,
+      "n_above_p99": 50,
+      "iqr_lo": -0.0431125,
+      "iqr_hi": 0.0795875,
+      "n_below_iqr": 0,
+      "n_above_iqr": 1176,
+      "pct_trimmed_1_99": 1.0
+    },
+    {
+      "feature": "med_admin_rows_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 6.0,
+      "n_below_p01": 0,
+      "n_above_p99": 2,
+      "iqr_lo": -2.0,
+      "iqr_hi": 6.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 2,
+      "pct_trimmed_1_99": 0.04
+    },
+    {
+      "feature": "proc_n_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 3.0,
+      "n_below_p01": 0,
+      "n_above_p99": 12,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 172,
+      "pct_trimmed_1_99": 0.24
+    },
+    {
+      "feature": "proc_distinct_nom_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 3.0,
+      "n_below_p01": 0,
+      "n_above_p99": 12,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 172,
+      "pct_trimmed_1_99": 0.24
+    },
+    {
+      "feature": "scai_first_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 3.0,
+      "n_below_p01": 0,
+      "n_above_p99": 35,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 296,
+      "pct_trimmed_1_99": 0.7
+    },
+    {
+      "feature": "scai_last_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 4.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -3.0,
+      "iqr_hi": 5.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "scai_mean_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 3.923076923076923,
+      "n_below_p01": 0,
+      "n_above_p99": 35,
+      "iqr_lo": -2.8846153846153846,
+      "iqr_hi": 4.8076923076923075,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.7
+    },
+    {
+      "feature": "scai_std_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 0.9130103068434903,
+      "n_below_p01": 0,
+      "n_above_p99": 50,
+      "iqr_lo": -0.720576692122892,
+      "iqr_hi": 1.2009611535381532,
+      "n_below_iqr": 0,
+      "n_above_iqr": 3,
+      "pct_trimmed_1_99": 1.0
+    },
+    {
+      "feature": "scai_slope_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 2.0,
+      "n_below_p01": 0,
+      "n_above_p99": 18,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 18,
+      "pct_trimmed_1_99": 0.36
+    },
+    {
+      "feature": "scai_prop_ge3_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 758,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "current_scai_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 4.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -3.0,
+      "iqr_hi": 5.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "clinical_event_n_12h",
+      "n": 5000,
+      "p01": 144.0,
+      "p99": 357.0,
+      "n_below_p01": 24,
+      "n_above_p99": 42,
+      "iqr_lo": 102.0,
+      "iqr_hi": 214.0,
+      "n_below_iqr": 12,
+      "n_above_iqr": 918,
+      "pct_trimmed_1_99": 1.32
+    },
+    {
+      "feature": "med_per_clinical_event_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 0.030088901499030894,
+      "n_below_p01": 0,
+      "n_above_p99": 50,
+      "iqr_lo": -0.004966384732162219,
+      "iqr_hi": 0.02504879635653871,
+      "n_below_iqr": 0,
+      "n_above_iqr": 155,
+      "pct_trimmed_1_99": 1.0
+    },
+    {
+      "feature": "infusion_mean_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 5.704971500000001,
+      "n_below_p01": 0,
+      "n_above_p99": 50,
+      "iqr_lo": -0.0431125,
+      "iqr_hi": 0.0795875,
+      "n_below_iqr": 0,
+      "n_above_iqr": 1176,
+      "pct_trimmed_1_99": 1.0
+    },
+    {
+      "feature": "proc_n_bucket_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 12,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.24
+    },
+    {
+      "feature": "med_distinct_bucket_12h",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 2.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "med_residual_within_scai_12h",
+      "n": 5000,
+      "p01": -0.8223140495867769,
+      "p99": 2.2068201948627104,
+      "n_below_p01": 0,
+      "n_above_p99": 43,
+      "iqr_lo": -2.388687217761257,
+      "iqr_hi": 1.8659992159026562,
+      "n_below_iqr": 0,
+      "n_above_iqr": 122,
+      "pct_trimmed_1_99": 0.86
+    },
+    {
+      "feature": "infusion_residual_within_scai_12h",
+      "n": 5000,
+      "p01": -1.8004027614783245,
+      "p99": 3.922782475800152,
+      "n_below_p01": 50,
+      "n_above_p99": 50,
+      "iqr_lo": -0.16150285227364203,
+      "iqr_hi": 0.10018011467094635,
+      "n_below_iqr": 682,
+      "n_above_iqr": 864,
+      "pct_trimmed_1_99": 2.0
+    },
+    {
+      "feature": "proc_residual_within_scai_12h",
+      "n": 5000,
+      "p01": -1.4597014925373135,
+      "p99": 1.5402985074626865,
+      "n_below_p01": 21,
+      "n_above_p99": 32,
+      "iqr_lo": -0.30024010131104106,
+      "iqr_hi": 0.14117151871399397,
+      "n_below_iqr": 694,
+      "n_above_iqr": 910,
+      "pct_trimmed_1_99": 1.06
+    },
+    {
+      "feature": "admit_type_emergency",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "admit_type_elective",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 522,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "admit_src_ed",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "admit_src_outside_hospital",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 1018,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "unit_cicu",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "unit_cvicu",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "unit_micu",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 0.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_acute_mi",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_adhf",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_arrhythmia_arrest",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 512,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_myocarditis_cmp",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 501,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_aortic_valve",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 402,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_post_cardiotomy",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 323,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "dx_cat_other",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 0.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 0.0,
+      "iqr_hi": 0.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "n_diagnoses_12h",
+      "n": 5000,
+      "p01": 1.0,
+      "p99": 5.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -2.0,
+      "iqr_hi": 6.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "age_years",
+      "n": 5000,
+      "p01": 39.0,
+      "p99": 95.0,
+      "n_below_p01": 41,
+      "n_above_p99": 11,
+      "iqr_lo": 36.0,
+      "iqr_hi": 100.0,
+      "n_below_iqr": 19,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 1.04
+    },
+    {
+      "feature": "sex_bin",
+      "n": 5000,
+      "p01": 0.0,
+      "p99": 1.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": -1.5,
+      "iqr_hi": 2.5,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "prediction_hour",
+      "n": 5000,
+      "p01": 12.0,
+      "p99": 12.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 12.0,
+      "iqr_hi": 12.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    },
+    {
+      "feature": "feature_window_hours",
+      "n": 5000,
+      "p01": 12.0,
+      "p99": 12.0,
+      "n_below_p01": 0,
+      "n_above_p99": 0,
+      "iqr_lo": 12.0,
+      "iqr_hi": 12.0,
+      "n_below_iqr": 0,
+      "n_above_iqr": 0,
+      "pct_trimmed_1_99": 0.0
+    }
+  ],
+  "leakage_early_vs_full": [],
+  "top_spearman_with_los": [
+    {
+      "feature": "infusion_mean_12h",
+      "spearman_rho": -0.3351417766849906,
+      "p_value": 1.657395948052309e-131,
+      "n": 5000
+    },
+    {
+      "feature": "med_infusion_mean_12h",
+      "spearman_rho": -0.3350823768574796,
+      "p_value": 1.8542835854352563e-131,
+      "n": 5000
+    },
+    {
+      "feature": "scai_prop_ge3_12h",
+      "spearman_rho": -0.3228117822812973,
+      "p_value": 1.2859954247559125e-121,
+      "n": 5000
+    },
+    {
+      "feature": "current_scai_12h",
+      "spearman_rho": -0.2894427493683242,
+      "p_value": 4.274262905032139e-97,
+      "n": 5000
+    },
+    {
+      "feature": "scai_first_12h",
+      "spearman_rho": -0.27394384935190796,
+      "p_value": 8.890210643097989e-87,
+      "n": 5000
+    },
+    {
+      "feature": "scai_mean_12h",
+      "spearman_rho": -0.2691675395743647,
+      "p_value": 9.908712488560445e-84,
+      "n": 5000
+    },
+    {
+      "feature": "scai_last_12h",
+      "spearman_rho": -0.26820254215349687,
+      "p_value": 4.0193332895738816e-83,
+      "n": 5000
+    },
+    {
+      "feature": "med_distinct_bucket_12h",
+      "spearman_rho": -0.2570254223140492,
+      "p_value": 2.924447040394266e-76,
+      "n": 5000
+    },
+    {
+      "feature": "proc_n_12h",
+      "spearman_rho": -0.25382772473365345,
+      "p_value": 2.3339673824110545e-74,
+      "n": 5000
+    },
+    {
+      "feature": "proc_distinct_nom_12h",
+      "spearman_rho": -0.25382772473365345,
+      "p_value": 2.3339673824110545e-74,
+      "n": 5000
+    },
+    {
+      "feature": "infusion_residual_within_scai_12h",
+      "spearman_rho": -0.23969553328335494,
+      "p_value": 2.8417777566106623e-66,
+      "n": 5000
+    },
+    {
+      "feature": "med_distinct_12h",
+      "spearman_rho": -0.23935182802632726,
+      "p_value": 4.4033300930672496e-66,
+      "n": 5000
+    },
+    {
+      "feature": "med_admin_rows_12h",
+      "spearman_rho": -0.2372328862284223,
+      "p_value": 6.450548024999624e-65,
+      "n": 5000
+    },
+    {
+      "feature": "proc_n_bucket_12h",
+      "spearman_rho": -0.2371511048940321,
+      "p_value": 7.150896046143008e-65,
+      "n": 5000
+    },
+    {
+      "feature": "clinical_event_n_12h",
+      "spearman_rho": -0.21768673312171927,
+      "p_value": 1.0585643123699047e-54,
+      "n": 5000
+    }
+  ],
+  "top_pearson_with_los": {
+    "infusion_mean_12h": 0.3150581303806073,
+    "med_infusion_mean_12h": 0.31505813038060726,
+    "current_scai_12h": 0.28176380998886935,
+    "scai_mean_12h": 0.2690626165090359,
+    "scai_first_12h": 0.26373962691327296,
+    "scai_prop_ge3_12h": 0.2607689977857807,
+    "scai_last_12h": 0.259026301114697,
+    "med_distinct_12h": 0.23247860928785286,
+    "med_admin_rows_12h": 0.22989949466857582,
+    "proc_n_12h": 0.2278127872075653,
+    "proc_distinct_nom_12h": 0.2278127872075653,
+    "med_distinct_bucket_12h": 0.21523076009306974,
+    "proc_n_bucket_12h": 0.2024176723526682,
+    "infusion_residual_within_scai_12h": 0.19323265030362222,
+    "med_per_clinical_event_12h": 0.17688169809871762
+  },
+  "outputs": [
+    "eda/los_eda_index.html",
+    "eda/los_eda_target.html",
+    "eda/los_eda_target_cohort.html",
+    "eda/los_eda_missingness.html",
+    "eda/los_eda_numeric_scatter.html",
+    "eda/los_eda_categorical.html",
+    "eda/los_eda_feature_corr.html",
+    "eda/los_eda_count_transforms.html",
+    "eda/los_eda_leakage.html"
+  ]
+}

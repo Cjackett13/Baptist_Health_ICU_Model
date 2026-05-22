@@ -1,0 +1,162 @@
+{
+  "status": "APPROVED_FOR_TRAINING",
+  "dataset": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "n_encounters": 5000,
+  "leakage_checklist": {
+    "final_feature_count": 14,
+    "features": [
+      "med_infusion_mean_12h",
+      "scai_prop_ge3_12h",
+      "current_scai_12h",
+      "proc_n_12h",
+      "med_distinct_12h",
+      "clinical_event_n_12h",
+      "dx_cat_arrhythmia_arrest",
+      "med_per_clinical_event_12h",
+      "scai_slope_12h",
+      "age_years",
+      "sex_bin",
+      "admit_type_cd",
+      "admit_src_cd",
+      "unit_cd"
+    ],
+    "policy_validation": {
+      "passed": [
+        "validate_modeling_columns_passed"
+      ],
+      "failed": []
+    },
+    "forbidden_intersection": [],
+    "full_stay_name_intersection": [],
+    "label_in_features": [],
+    "post_window_violations": [],
+    "post_window_clean": true,
+    "residual_features_in_model": [],
+    "early_vs_full_stay_spearman": [
+      {
+        "early_12h": "med_distinct_12h",
+        "full_stay": "med_distinct",
+        "spearman_early": -0.2394,
+        "spearman_full": 0.0033,
+        "delta_abs_r": -0.236,
+        "in_final_model": true,
+        "status": "ok"
+      },
+      {
+        "early_12h": "med_infusion_mean_12h",
+        "full_stay": "med_infusion_mean",
+        "spearman_early": -0.3351,
+        "spearman_full": -0.2778,
+        "delta_abs_r": -0.0573,
+        "in_final_model": true,
+        "status": "ok"
+      },
+      {
+        "early_12h": "clinical_event_n_12h",
+        "full_stay": "clinical_event_n",
+        "spearman_early": -0.2177,
+        "spearman_full": 0.8823,
+        "delta_abs_r": 0.6646,
+        "in_final_model": true,
+        "status": "ok"
+      },
+      {
+        "early_12h": "proc_n_12h",
+        "full_stay": "proc_n",
+        "spearman_early": -0.2538,
+        "spearman_full": -0.0827,
+        "delta_abs_r": -0.1711,
+        "in_final_model": true,
+        "status": "ok"
+      },
+      {
+        "early_12h": "current_scai_12h",
+        "full_stay": "current_scai",
+        "spearman_early": -0.2894,
+        "spearman_full": -0.2823,
+        "delta_abs_r": -0.0071,
+        "in_final_model": true,
+        "status": "ok"
+      }
+    ],
+    "notes": [
+      "All model features use _12h suffix or admit-time columns (age, sex, admit_*, unit_*).",
+      "Dropped *_residual_within_scai_12h (cohort-level SCAI means).",
+      "duckdb_patient_features.parquet is blocked for training; early_vs_full is sanity only."
+    ]
+  },
+  "los_feature_columns_audit": {
+    "schema_version": 4,
+    "feature_window_hours": 12,
+    "model_feature_columns_count": 14,
+    "final_manifest_count": 14,
+    "manifests_match": true,
+    "post_window_in_model_features": [],
+    "model_features_zero_post_window": true,
+    "labels_not_in_model_features": true,
+    "label_for_training_not_in_model_features": true,
+    "dropped_post_window_in_model_list": [],
+    "legacy_v2_checkpoint_not_used_for_training": true,
+    "legacy_v2_has_0_to_t": false,
+    "legacy_primary_not_in_final_model": true,
+    "checkpoint_meta_in_dropped": true
+  },
+  "modeling_frame_audit": {
+    "frame_shape": [
+      5000,
+      19
+    ],
+    "features_match_manifest": true,
+    "extra_columns": [],
+    "missing_features": []
+  },
+  "target_quality": {
+    "los_hours_total": {
+      "present": true,
+      "n": 5000,
+      "n_missing": 0,
+      "pct_missing": 0.0,
+      "min": 1.0,
+      "max": 336.0,
+      "median": 85.0
+    },
+    "log1p_los_hours_total": {
+      "present": true,
+      "n": 5000,
+      "n_missing": 0,
+      "pct_missing": 0.0,
+      "min": 0.6931471805599453,
+      "max": 5.820082930352362,
+      "median": 4.454347296253507
+    },
+    "remaining_los_hours": {
+      "present": true,
+      "n": 5000,
+      "n_missing": 0,
+      "pct_missing": 0.0,
+      "min": 0.0,
+      "max": 324.0,
+      "median": 73.0
+    },
+    "acceptable": true,
+    "threshold": "pct_missing == 0 and los_hours_total > 0"
+  },
+  "training_handoff": {
+    "model_script": "Baptist_tester/los_model.py",
+    "modeling_frame": "los_modeling_frame.parquet",
+    "feature_manifest": "los_final_model_features.json",
+    "feature_spec": "los_feature_columns.json",
+    "split_manifest": "los_split_manifest.json",
+    "label_for_training": "log1p_los_hours_total",
+    "split_by": "PERSON_ID",
+    "command": "python3 Baptist_tester/los_model.py --data-dir data"
+  },
+  "required_artifacts": [
+    "los_modeling_frame.parquet",
+    "los_final_model_features.json",
+    "los_feature_columns.json",
+    "los_split_manifest.json",
+    "los_feature_audit.json",
+    "los_cleaning_log.json"
+  ]
+}

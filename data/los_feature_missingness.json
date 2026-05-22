@@ -1,0 +1,238 @@
+{
+  "n_encounters": 5000,
+  "feature_columns": [
+    "demo_profile_bucket",
+    "med_distinct_12h",
+    "med_infusion_mean_12h",
+    "med_admin_rows_12h",
+    "proc_n_12h",
+    "proc_distinct_nom_12h",
+    "scai_first_12h",
+    "scai_last_12h",
+    "scai_mean_12h",
+    "scai_std_12h",
+    "scai_slope_12h",
+    "scai_prop_ge3_12h",
+    "current_scai_12h",
+    "clinical_event_n_12h",
+    "med_per_clinical_event_12h",
+    "infusion_mean_12h",
+    "proc_n_bucket_12h",
+    "med_distinct_bucket_12h",
+    "med_residual_within_scai_12h",
+    "infusion_residual_within_scai_12h",
+    "proc_residual_within_scai_12h",
+    "admit_type_emergency",
+    "admit_type_elective",
+    "admit_src_ed",
+    "admit_src_outside_hospital",
+    "unit_cicu",
+    "unit_cvicu",
+    "unit_micu",
+    "dx_cat_acute_mi",
+    "dx_cat_adhf",
+    "dx_cat_arrhythmia_arrest",
+    "dx_cat_myocarditis_cmp",
+    "dx_cat_aortic_valve",
+    "dx_cat_post_cardiotomy",
+    "dx_cat_other",
+    "n_diagnoses_12h",
+    "age_years",
+    "sex_bin",
+    "race_cd",
+    "ethnicity_cd",
+    "icd_prefix",
+    "admit_type_cd",
+    "admit_src_cd",
+    "unit_cd",
+    "prediction_hour",
+    "feature_window_hours"
+  ],
+  "per_column": {
+    "demo_profile_bucket": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "med_distinct_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "med_infusion_mean_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "med_admin_rows_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "proc_n_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "proc_distinct_nom_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "scai_first_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "scai_last_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "scai_mean_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "scai_std_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "scai_slope_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "scai_prop_ge3_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "current_scai_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "clinical_event_n_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "med_per_clinical_event_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "infusion_mean_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "proc_n_bucket_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "med_distinct_bucket_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "med_residual_within_scai_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "infusion_residual_within_scai_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "proc_residual_within_scai_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "admit_type_emergency": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "admit_type_elective": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "admit_src_ed": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "admit_src_outside_hospital": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "unit_cicu": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "unit_cvicu": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "unit_micu": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_acute_mi": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_adhf": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_arrhythmia_arrest": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_myocarditis_cmp": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_aortic_valve": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_post_cardiotomy": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "dx_cat_other": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "n_diagnoses_12h": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "age_years": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "sex_bin": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "race_cd": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "ethnicity_cd": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "icd_prefix": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "admit_type_cd": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "admit_src_cd": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "unit_cd": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "prediction_hour": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    },
+    "feature_window_hours": {
+      "n_missing": 0,
+      "pct_missing": 0.0
+    }
+  },
+  "any_missing": {}
+}

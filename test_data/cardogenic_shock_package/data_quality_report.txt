@@ -1,0 +1,110 @@
+=== Cardiogenic shock package (SHOCK trial CSVs) — data quality ===
+
+
+--- trial_deident.csv ---
+Rows: 302  |  Columns: 795
+Columns with 0% missing: 131  |  Columns with ≥50% missing: 244
+
+Top 25 columns by missing % (field name = category/variable):
+column                                missing%  missing_n   non-miss   n_unique
+PREOPRV                                 100.00        302          0          0
+PVOC_ACT                                100.00        302          0          0
+v_tach                                  100.00        302          0          0
+tamphemo                                100.00        302          0          0
+LH3_T                                    99.67        301          1          1
+PTCA3_T                                  99.67        301          1          1
+VENTRSEP                                 99.67        301          1          1
+LVFWALL                                  99.67        301          1          1
+RVFWALL                                  99.67        301          1          1
+ANTERRPR                                 99.67        301          1          1
+POSTERIO                                 99.67        301          1          1
+TRICUSPD                                 99.67        301          1          1
+C_RBCS                                   99.67        301          1          1
+sh_pt3                                   99.67        301          1          1
+sh_lhc3                                  99.67        301          1          1
+sh_p3_hr                                 99.67        301          1          1
+sh_l3_hr                                 99.67        301          1          1
+lhc3yr                                   99.67        301          1          1
+ptca3yr                                  99.67        301          1          1
+PRESERVE                                 99.34        300          2          2
+QUALASST                                 99.34        300          2          2
+H24_42D                                  99.34        300          2          2
+H24_42E                                  99.34        300          2          2
+LEAFMUSC                                 99.01        299          3          2
+MITRAL_P                                 99.01        299          3          2
+  ... plus 770 more columns (see JSON)
+
+Mean missing % across all columns: 36.91%
+(Many fields are intentionally blank until that form/timepoint is collected.)
+
+--- echo_deident.csv ---
+Rows: 286  |  Columns: 252
+Columns with 0% missing: 51  |  Columns with ≥50% missing: 39
+
+Top 25 columns by missing % (field name = category/variable):
+column                                missing%  missing_n   non-miss   n_unique
+PTCA3_T                                 100.00        286          0          0
+DIA_VOL3                                 98.25        281          5          5
+SYS_VOL3                                 98.25        281          5          5
+DIA_VOL2                                 97.90        280          6          6
+SYS_VOL2                                 97.90        280          6          6
+endocrd                                  97.90        280          6          6
+abnwall                                  97.90        280          6          6
+pabnwal                                  97.90        280          6          6
+hypkwll                                  95.10        272         14          4
+phypkwl                                  95.10        272         14          4
+PTCA2_T                                  91.26        261         25         17
+effsize                                  77.97        223         63          3
+CABG_T                                   73.43        210         76         46
+sh_cb_hr                                 73.43        210         76         47
+ec_cb_hr                                 73.43        210         76         76
+ec_cb                                    73.08        209         77         23
+DIAB_TX                                  70.63        202         84          2
+rvsenlg                                  68.88        197         89          3
+PTCA2                                    65.73        188         98          2
+PTCA1_T                                  64.34        184        102         68
+sh_pt_hr                                 64.34        184        102         72
+ec_pt                                    64.34        184        102         30
+ec_pt_hr                                 64.34        184        102        101
+aortdis                                  56.99        163        123          2
+aduratn                                  56.29        161        125         64
+  ... plus 227 more columns (see JSON)
+
+Mean missing % across all columns: 20.68%
+(Many fields are intentionally blank until that form/timepoint is collected.)
+
+--- survival_deident.csv ---
+Rows: 301  |  Columns: 78
+Columns with 0% missing: 26  |  Columns with ≥50% missing: 41
+
+Top 25 columns by missing % (field name = category/variable):
+column                                missing%  missing_n   non-miss   n_unique
+txdate                                   98.67        297          4          4
+survtmR                                  85.71        258         43         41
+dthdte                                   77.74        234         67         11
+dthdate                                  77.41        233         68         11
+intdatR                                  72.76        219         82         58
+statusR                                  72.09        217         84          5
+survtm60                                 68.11        205         96         92
+survtm12                                 64.12        193        108         73
+intdat60                                 61.79        186        115         50
+survtm6                                  61.46        185        116         67
+intdat12                                 61.13        184        117        103
+status60                                 60.80        183        118          5
+status12                                 60.13        181        120          5
+survtm2                                  58.80        177        124         59
+intdat2                                  57.48        173        128        120
+intdat6                                  57.14        172        129        119
+status2                                  56.48        170        131          5
+status6                                  56.48        170        131          5
+HEARTTXD                                 51.83        156        145          4
+HDIS_D                                   51.50        155        146          8
+INFOPRVD                                 51.50        155        146          4
+version                                  51.50        155        146          1
+DUMFU                                    51.50        155        146          6
+FOL_NUM                                  51.50        155        146         11
+INDEXMID                                 51.50        155        146          7
+  ... plus 53 more columns (see JSON)
+
+Mean missing % across all columns: 34.24%
+(Many fields are intentionally blank until that form/timepoint is collected.)

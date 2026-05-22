@@ -9,7 +9,7 @@ runs LOS-only string cleaning, and writes:
   - ``eda/los_bundle_audit_report.html`` (includes LOS_HOURS correlation heatmap)
 
   python3 Baptist_tester/los_bundle_audit.py
-  python3 Baptist_tester/los_bundle_audit.py --data-dir Baptist_tester/synth_cs_data --no-open
+  python3 Baptist_tester/los_bundle_audit.py --data-dir data --no-open
 """
 
 from __future__ import annotations
@@ -137,8 +137,13 @@ def _resolve(p: Path) -> Path:
     return p.resolve() if p.is_absolute() else (_REPO / p).resolve()
 
 
-def _load_clean_bundle(data_dir: Path) -> dict[str, pd.DataFrame]:
-    """Load 8+1 tables; apply LOS-only sentinel cleaning from los_data_prep."""
+def _load_clean_bundle(data_dir: Path) -> tuple[dict[str, pd.DataFrame], dict]:
+    """Load 8+1 tables; apply ``los_data_cleaning.clean_bundle``."""
+    import sys
+
+    if str(_REPO / "Baptist_tester") not in sys.path:
+        sys.path.insert(0, str(_REPO / "Baptist_tester"))
+    from los_data_cleaning import clean_bundle
     import importlib.util
 
     prep_path = _REPO / "Baptist_tester" / "los_data_prep.py"
@@ -147,14 +152,10 @@ def _load_clean_bundle(data_dir: Path) -> dict[str, pd.DataFrame]:
     assert spec.loader is not None
     spec.loader.exec_module(prep)
 
-    tables: dict[str, pd.DataFrame] = {}
-    for name, fname in BUNDLE_TABLES.items():
-        raw = pd.read_parquet(data_dir / fname)
-        cleaned, _ = prep._clean_table_strings(raw)
-        if name == "encounter":
-            cleaned = prep.reconcile_los_hours(cleaned)
-        tables[name] = cleaned
-    return tables
+    raw = {name: pd.read_parquet(data_dir / fname) for name, fname in BUNDLE_TABLES.items()}
+    cleaned, audit = clean_bundle(raw)
+    cleaned["encounter"] = prep.reconcile_los_hours(cleaned["encounter"])
+    return cleaned, audit
 
 
 def _table_inventory(tables: dict[str, pd.DataFrame]) -> dict[str, Any]:
@@ -408,7 +409,7 @@ def _html_report(inventory: dict, pk: dict, fk: dict, orphans: list, corr: dict,
 
 def run_audit(data_dir: Path) -> dict[str, Any]:
     data_dir = _resolve(data_dir)
-    tables = _load_clean_bundle(data_dir)
+    tables, cleaning_audit = _load_clean_bundle(data_dir)
     inventory = _table_inventory(tables)
     pk = _pk_audit(tables)
     fk, orphans = _fk_coverage(tables)
@@ -418,7 +419,8 @@ def run_audit(data_dir: Path) -> dict[str, Any]:
 
     report: dict[str, Any] = {
         "data_dir": str(data_dir),
-        "bundle": "synth_cs_data (8 core tables + code_value)",
+        "bundle": "8 core tables + code_value (LOS cleaning applied)",
+        "data_cleaning_audit": cleaning_audit,
         "tables": inventory,
         "primary_key_audit_after_cleaning": pk,
         "fk_join_coverage": fk,
@@ -448,7 +450,7 @@ def main() -> int:
         "--data-dir",
         type=Path,
         default=Path("data"),
-        help="Parquet bundle (default: data/ — 5000-patient cohort; synth_cs_data is 500-patient dev sample)",
+        help="Dataset B parquet bundle (default: data/, 5000 patients)",
     )
     ap.add_argument("--no-open", action="store_true")
     args = ap.parse_args()

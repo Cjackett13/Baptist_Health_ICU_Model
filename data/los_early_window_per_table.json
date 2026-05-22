@@ -35,8 +35,13 @@
     "allowed_features": "scai_first_0_to_t, scai_last_0_to_t, scai_mean_0_to_t, scai_std_0_to_t, scai_slope_0_to_t"
   },
   "duckdb_patient_features": {
-    "time_column": "N/A (pre-aggregated full stay)",
-    "window_rule": "BLOCK entire table for modeling unless rebuilt with censor at T. All columns in FULL_STAY_AGGREGATE_FORBIDDEN.",
-    "allowed_features": "none \u2014 use table-specific 0_to_t rebuilds instead"
+    "time_column": "N/A (mortality full-stay sidecar)",
+    "window_rule": "BLOCK for LOS \u2014 mortality aggregates leak future stay.",
+    "allowed_features": "none"
+  },
+  "duckdb_los_features": {
+    "time_column": "\u226412h from REG_DT_TM (v1 snapshot)",
+    "window_rule": "All columns suffixed _12h or admit-time flags; built by los_duckdb_features.py.",
+    "allowed_features": "demo_profile_bucket, med_*_12h, scai_*_12h, proc_*_12h, dx_cat_*, residuals *_12h"
   }
 }

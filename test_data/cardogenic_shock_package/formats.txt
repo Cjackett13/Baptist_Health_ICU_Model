@@ -1,0 +1,88 @@
+proc format;
+  value ny 1='NO' 2='YES';
+  value sex 1='MALE' 2='FEMALE';
+  value race 1='WHITE' 2='BLACK' 3='ASIAN' 4='OTHER';
+  value admtype 1='ER' 2='ELECTIVE' 3='TRANSFER';
+  value g -1='REGISTRY' 1='IMS' 2='EARLY RV';
+  value grp 0='ERV' 1='IMS';
+  value swan 1='ER' 2='CCU BED' 3='PROC RM' 4='CATH LAB';
+  value timef 1='AM' 2='PM' 3='24HR';
+  value enz 1='ENZ NOT DONE' 2='< 3 VALS' 3='3+ VALS';
+  value reason 1='REFUSED' 2='PT TOO SICK, NO PROXY' 3='PT EXPIRED'
+               4='PRIVATE MD REFUSED';
+  value vital 1='DEAD' 2='ALIVE';
+  value stat 0='RANDOMIZED' 1='ELIG, NON-RAND.' 2='INELIGIBLE';
+  value ereas 1='CLINEXCL' 2='SHOCK CRIT' 3='EKG' 4='TIME WINDOWS'
+              5='NO RHCATH' 6='HEMODYN CRIT';
+  value yn 0='NO' 1='YES';
+  value nys 1='NO' 2='YES' 3='SEDATED/UNK';
+  value spec_ty 1='%' 2='INDEX';
+  value type_mb 1='UNITS' 2='NG/ML' 3='uG/L' 4='OTHER';
+
+  value mproc 1='REPLACEMENT' 2='REPAIR';
+  value temp 1='WARM' 2='COLD';
+  value cardmmod 1='INTERMITTENT' 2='CONTINUOUS';
+  value conduit 1='NONE' 2='SVG' 3='IMA' 4='OTHER';
+  value panasts 1='PARTIAL AORTIC OCCL CLAMP' 
+		2='SINGLE TOTAL AORTIC CROSS CLAMP';
+  value lvef 1='ECHO' 2='LVGRAM' 3='RVG';
+  value measure 1='LVGRAM' 2='ECHO' 3='RVG';
+  value qualasst 1='NORMAL' 2='MILD DYSF' 3='MOD DYSF' 4='SEVERE DYSF';
+  value tricuspd 1='0' 2='1-2+' 3='3-4+';
+  value eff_size 1='< 5mm' 2='5-10mm' 3='11-15mm' 4='>15mm';
+  value sizequal 1='SMALL' 2='MODERATE' 3='LARGE';
+
+  value interven 1='PTCA' 2='DCA' 3='LASER' 4='STENT' 5='ROTABLATER'
+		 6='INTRACOR LYTIC' 7='OTHER';
+  value noecho 1='DIED' 2='OTHER';
+
+  value rhcgrp 1='SH TO RHC <= 24 HR' 2='SH TO RHC > 24 HR' 3='NO RHC';
+  value inoscore 0='0' 1='1' 2='2' 3='3' 4='4+';
+  value noswan 1='PT DIED' 2='PT REFUSED' 3='MD REFUSED'
+               4='PT IMPROVED' 5='OTHER';
+  value cause_d 1='CARDIAC' 2='CVA' 3='SEPSIS' 4='HEMORRHAGE' 5='RENAL FAILURE'
+		6='OTHER';
+  value cardtype 1='SUDDEN/ARRHYTHMIC' 2='NOT SUDDEN';
+  value ervnptca 2='RAPID DEATH' 3='UNSUIT VESSELS' 4='TIMI3 FLOW' 5='OTHER MEDICAL'
+		 6='SURGEON DEFERRED' 7='OTHER';
+
+  value center 11='ST. LUKES' 13='AECOM/WEILER' 14='CLINIQ UNIV' 15='BOSTON UNIV' 
+16='JOHNS HOPKINS' 17='CITADELLE' 18='U TEXAS' 19='RWJ' 20='MONTEFIORE'
+21='U ARKANSAS' 22='MT. GODINNE' 23='BAYSTATE' 24='NYH/CORNELL' 27='UMASS'
+28='MT. SINAI' 29='ST. PAULS' 33='VANC GENL' 36='GASTHUISBERG' 37='FLINDERS'
+38='GREEN LANE' 39='BRAZIL' 41='BUFFALO' 43='HENNEPIN, MN' 44='MICHIGAN'
+46='WINTHROP U' 47='SUNY/STONY BR' 50='NYH/QUEENS' 51='UNITED HOSP, MN'
+52='U ALBERTA' 53='U FLORIDA' 54='U SO CALIF' 55='BASEL' 12='BETH ISRAEL';
+
+value nfolup 1='Early Echo' 2='Late echo';
+value size 1="Small" 2="Normal" 3="Enlarged";
+value sver 1="Mild" 2="Moderate" 3="Severe";
+value func 1='Hyperkinetic' 2='Normal' 3='Impaired';
+value method 1="TTE" 2="TEE" 3="Both";
+value effsiz 1="Small" 2="Moderate" 3="Large";
+value lvvolum 1="Biplane" 2="Monoplane";
+value hypercod 1='Resolved' 2='Continued';
+value efrecovr 1='<5% increase' 2='>=5% increase';
+value efrecv 1='<10% increase' 2='>=10% increase';
+value dsphdeca 1='<0.1 DECR' 2='>=0.1 DECR'; 
+value dsphdecb 1='<0.2 DECR' 2='>=0.2 DECR'; 
+value survive 1='NO' 2='YES' 3='NOT SURE';
+value interven 1='PTCA' 2='DCA' 3='LASER' 4='STENT'
+        5='ROTABLATER'  6='LYTIC NOT W/PTCA';
+value culpves 1='LM' 2='LAD' 3='RCA' 4='LCX' 5='SVG';
+value culptype 1='A' 2='B1' 3='B2' 4='C';
+value suitptca 1='SUITABLE' 2='HIGH RISK' 3='UNSUITABLE';
+value disvesl 1='0/1';
+value age 1='75+' 2='<75';
+
+value yn  	0='NO ' 1='YES';
+
+*REGISTRY FORM 11;
+  value culp 1='LAD' 2='LCF' 3='RCA' 4='L. Main' 5='SVG';
+  value sten 0='0%' 1='<50%' 2='50-90%' 3='>90%' 4='Unknown';
+  value sten50f 1='sten >= 50%' 2='sten < 50%';
+  value cflow 1='TIMI 3' 2='TIMI 2' 3='TIMI 0-1' 4='NOT SPECIFIED';
+  value num_ves 0='NO CVD' 1='1VD' 2='2VD' 3='3VD';
+  value cs_cause 1='PRIMARY LV FAILURE' 2='ISOLATED RV FAILURE'
+                 3='MIXED LV/RV' 4='OTHER' 5='UNKNOWN';
+

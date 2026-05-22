@@ -13,9 +13,16 @@ features censored at ``prediction_hour``; target ``remaining_los_hours``. See
 
 Writes under ``--data-dir``:
   - ``los_cohort_manifest.json`` — inclusion rules, target policy, row counts
-  - ``los_patient_frame.parquet`` — modeling frame (v1 admit snapshot)
+  - ``los_patient_frame.parquet`` — legacy wide frame (v1 admit snapshot)
+  - ``los_modeling_frame.parquet`` — IDs + labels + final model features
+  - ``los_final_model_features.json`` — model feature list only
+  - ``los_split_manifest.json`` — train/val/test PERSON_IDs (no fit)
+  - ``los_feature_audit.json``, ``los_cleaning_log.json``, ``los_data_dictionary_notes.md``
+  - ``los_encounter_labels.parquet`` / ``los_modeling_features.parquet`` — ID / label / X split
   - ``los_data_quality_report.json`` — sentinel cleanup, reconciliation, truncation flags
-  - ``los_admit_features.parquet`` — DuckDB aggregates through 12h (v1 only)
+  - ``duckdb_los_features.parquet`` — DuckDB early-window (≤12h) feature sidecar
+  - ``duckdb_los_feature_audit.json`` — exploratory MI / Pearson vs LOS
+  - ``los_admit_features.parquet`` — legacy v1 subset of DuckDB sidecar
   - ``los_feature_columns.json`` — tiered feature manifest (update when adding columns)
   - ``los_prediction_policy.json`` — 24h checkpoint + forbidden-field rules
 """
@@ -38,6 +45,13 @@ if str(_MODELS) not in sys.path:
 
 from mortality_demographics import build_demo_profile_legend  # noqa: E402
 
+from los_data_cleaning import clean_bundle, copy_frontend_ranges, persist_cleaned_bundle  # noqa: E402
+from los_duckdb_features import (  # noqa: E402
+    build_exploratory_audit,
+    export_admit_features_subset,
+    materialize_duckdb_los_features,
+    merge_los_duckdb_features,
+)
 from los_feature_policy import (  # noqa: E402
     FIRST_PREDICTION_HOUR,
     LABEL_REMAINING,
@@ -50,7 +64,7 @@ from los_feature_policy import (  # noqa: E402
 )
 
 INCLUSION_RULES: dict[str, Any] = {
-    "grain": "one_row_per_person_id",
+    "grain": "one_row_per_encounter_id",
     "age_years_min": 18,
     "encounter_type": "INPATIENT",
     "unit_codes": ["CICU", "CVICU", "MICU"],
@@ -75,11 +89,8 @@ TARGET_POLICY: dict[str, Any] = {
     "reconcile": "prefer_datetime_diff_hours_when_within_1h_else_los_hours",
 }
 
-STRING_SENTINELS: frozenset[str] = frozenset(
-    {"", " ", "NULL", "null", "N/A", "n/a", "NA", "NONE", "UNK", "UNKNOWN", "-99", "999"}
-)
-
 COHORT_MANIFEST_NAME = "los_cohort_manifest.json"
+CLEANING_AUDIT_NAME = "los_data_cleaning_audit.json"
 QUALITY_REPORT_NAME = "los_data_quality_report.json"
 PATIENT_FRAME_NAME = "los_patient_frame.parquet"
 FEATURE_COLUMNS_NAME = "los_feature_columns.json"
@@ -93,25 +104,20 @@ def _resolve(p: Path) -> Path:
     return p.resolve() if p.is_absolute() else (_REPO / p).resolve()
 
 
-def _normalize_object_series(s: pd.Series) -> pd.Series:
-    out = s.astype("string")
-    out = out.str.strip()
-    upper = out.str.upper()
-    mask = upper.isin(STRING_SENTINELS) | out.isna()
-    return out.mask(mask, pd.NA)
-
-
-def _clean_table_strings(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
-    counts: dict[str, int] = {}
-    out = df.copy()
-    for c in out.select_dtypes(include=["object", "string"]).columns:
-        before_na = int(out[c].isna().sum())
-        cleaned = _normalize_object_series(out[c])
-        out[c] = cleaned
-        n_replaced = int(cleaned.isna().sum()) - before_na
-        if n_replaced > 0:
-            counts[c] = n_replaced
-    return out, counts
+def _load_and_clean_bundle(data_dir: Path) -> tuple[dict[str, pd.DataFrame], dict[str, Any]]:
+    """Load 8 core tables + code_value; run ``los_data_cleaning.clean_bundle``."""
+    names = [
+        "person",
+        "encounter",
+        "diagnosis",
+        "clinical_event",
+        "medication_admin",
+        "procedure_event",
+        "scai_stage_hourly",
+        "code_value",
+    ]
+    raw = {n: pd.read_parquet(data_dir / f"{n}.parquet") for n in names}
+    return clean_bundle(raw)
 
 
 def _age_at_admit(person: pd.DataFrame, enc: pd.DataFrame) -> pd.Series:
@@ -185,95 +191,51 @@ def _principal_dx_category(dx: pd.DataFrame) -> pd.DataFrame:
     return pr[["PERSON_ID", "icd_prefix"]].drop_duplicates("PERSON_ID")
 
 
-def materialize_admit_features(data_dir: Path) -> Path:
-    try:
-        import duckdb
-    except ImportError as exc:
-        raise ImportError("Install duckdb: pip install duckdb") from exc
-
-    data_dir = data_dir.resolve()
+def _duckdb_register_bundle(con: Any, data_dir: Path, tables: dict[str, pd.DataFrame] | None) -> None:
+    if tables is not None:
+        con.register("enc", tables["encounter"])
+        con.register("person", tables["person"])
+        con.register("med", tables["medication_admin"])
+        con.register("proc", tables["procedure_event"])
+        con.register("scai", tables["scai_stage_hourly"])
+        con.register("cevt", tables["clinical_event"])
+        return
 
     def q(p: Path) -> str:
         return str(p.resolve()).replace("'", "''")
 
-    out_p = data_dir / ADMIT_FEATURES_NAME
-    sql = f"""
-    PRAGMA threads=4;
-    CREATE OR REPLACE VIEW enc AS SELECT * FROM read_parquet('{q(data_dir / "encounter.parquet")}');
-    CREATE OR REPLACE VIEW person AS SELECT * FROM read_parquet('{q(data_dir / "person.parquet")}');
-    CREATE OR REPLACE VIEW med AS SELECT * FROM read_parquet('{q(data_dir / "medication_admin.parquet")}');
-    CREATE OR REPLACE VIEW proc AS SELECT * FROM read_parquet('{q(data_dir / "procedure_event.parquet")}');
-    CREATE OR REPLACE VIEW scai AS SELECT * FROM read_parquet('{q(data_dir / "scai_stage_hourly.parquet")}');
-    CREATE OR REPLACE VIEW cevt AS SELECT * FROM read_parquet('{q(data_dir / "clinical_event.parquet")}');
-
-    CREATE OR REPLACE VIEW enc_ts AS
-    SELECT e.*, TRY_CAST(e.REG_DT_TM AS TIMESTAMP) AS admit_ts FROM enc e;
-
-    CREATE OR REPLACE VIEW med_early AS
-    SELECT m.PERSON_ID,
-      COUNT(DISTINCT m.MEDICATION_CD)::DOUBLE AS med_distinct_12h,
-      AVG(TRY_CAST(m.INFUSION_RATE AS DOUBLE)) AS med_infusion_mean_12h,
-      COUNT(*)::DOUBLE AS med_admin_rows_12h
-    FROM med m JOIN enc_ts e ON e.ENCOUNTER_ID = m.ENCOUNTER_ID
-    WHERE EXTRACT(EPOCH FROM (TRY_CAST(m.ADMIN_START_DT_TM AS TIMESTAMP) - e.admit_ts))/3600.0 <= 12
-    GROUP BY 1;
-
-    CREATE OR REPLACE VIEW proc_early AS
-    SELECT pr.PERSON_ID, COUNT(*)::DOUBLE AS proc_n_12h
-    FROM proc pr JOIN enc_ts e ON e.ENCOUNTER_ID = pr.ENCOUNTER_ID
-    WHERE EXTRACT(EPOCH FROM (TRY_CAST(pr.PROC_START_DT_TM AS TIMESTAMP) - e.admit_ts))/3600.0 <= 12
-    GROUP BY 1;
-
-    CREATE OR REPLACE VIEW scai_early AS
-    SELECT e.PERSON_ID,
-      MIN(TRY_CAST(sh.SCAI_STAGE_NUM AS DOUBLE)) AS scai_first_12h,
-      MAX(TRY_CAST(sh.SCAI_STAGE_NUM AS DOUBLE)) AS scai_last_12h,
-      AVG(TRY_CAST(sh.SCAI_STAGE_NUM AS DOUBLE)) AS scai_mean_12h,
-      STDDEV_SAMP(TRY_CAST(sh.SCAI_STAGE_NUM AS DOUBLE)) AS scai_std_12h
-    FROM scai sh JOIN enc_ts e ON e.ENCOUNTER_ID = sh.ENCOUNTER_ID
-    WHERE TRY_CAST(sh.HOUR_FROM_ADMIT AS DOUBLE) <= 12
-    GROUP BY 1;
-
-    CREATE OR REPLACE VIEW ce_early AS
-    SELECT c.PERSON_ID, COUNT(*)::DOUBLE AS clinical_event_n_12h
-    FROM cevt c JOIN enc_ts e ON e.ENCOUNTER_ID = c.ENCOUNTER_ID
-    WHERE EXTRACT(EPOCH FROM (TRY_CAST(c.EVENT_END_DT_TM AS TIMESTAMP) - e.admit_ts))/3600.0 <= 12
-    GROUP BY 1;
-
-    CREATE OR REPLACE VIEW demo AS
-    SELECT e.PERSON_ID,
-      date_diff('year', TRY_CAST(p.BIRTH_DT_TM AS TIMESTAMP), TRY_CAST(e.REG_DT_TM AS TIMESTAMP))::DOUBLE AS age_years,
-      CASE WHEN UPPER(TRIM(COALESCE(p.SEX_CD,''))) IN ('M','MALE') THEN 1 ELSE 0 END::INT AS sex_bin,
-      UPPER(TRIM(COALESCE(p.RACE_CD,''))) AS race_cd,
-      UPPER(TRIM(COALESCE(p.ETHNICITY_CD,''))) AS ethnicity_cd
-    FROM enc_ts e JOIN person p ON p.PERSON_ID = e.PERSON_ID;
-
-    COPY (
-      SELECT d.PERSON_ID, d.age_years, d.sex_bin, d.race_cd, d.ethnicity_cd,
-        COALESCE(me.med_distinct_12h,0) AS med_distinct_12h,
-        COALESCE(me.med_infusion_mean_12h,0) AS med_infusion_mean_12h,
-        COALESCE(pe.proc_n_12h,0) AS proc_n_12h,
-        COALESCE(se.scai_first_12h,0) AS scai_first_12h,
-        COALESCE(se.scai_last_12h,0) AS scai_last_12h,
-        COALESCE(se.scai_mean_12h,0) AS scai_mean_12h,
-        COALESCE(se.scai_std_12h,0) AS scai_std_12h,
-        (COALESCE(se.scai_last_12h,0)-COALESCE(se.scai_first_12h,0))::DOUBLE AS scai_slope_12h,
-        COALESCE(ce.clinical_event_n_12h,0) AS clinical_event_n_12h,
-        COALESCE(me.med_admin_rows_12h,0)/NULLIF(COALESCE(ce.clinical_event_n_12h,0)+1.0,0) AS med_per_clinical_event_12h
-      FROM demo d
-      LEFT JOIN med_early me ON me.PERSON_ID = d.PERSON_ID
-      LEFT JOIN proc_early pe ON pe.PERSON_ID = d.PERSON_ID
-      LEFT JOIN scai_early se ON se.PERSON_ID = d.PERSON_ID
-      LEFT JOIN ce_early ce ON ce.PERSON_ID = d.PERSON_ID
-    ) TO '{q(out_p)}' (FORMAT PARQUET);
-    """
-    con = duckdb.connect(database=":memory:")
-    con.execute(sql)
-    con.close()
-    return out_p
+    data_dir = data_dir.resolve()
+    con.execute(f"CREATE OR REPLACE VIEW enc AS SELECT * FROM read_parquet('{q(data_dir / 'encounter.parquet')}')")
+    con.execute(f"CREATE OR REPLACE VIEW person AS SELECT * FROM read_parquet('{q(data_dir / 'person.parquet')}')")
+    con.execute(
+        f"CREATE OR REPLACE VIEW med AS SELECT * FROM read_parquet('{q(data_dir / 'medication_admin.parquet')}')"
+    )
+    con.execute(
+        f"CREATE OR REPLACE VIEW proc AS SELECT * FROM read_parquet('{q(data_dir / 'procedure_event.parquet')}')"
+    )
+    con.execute(
+        f"CREATE OR REPLACE VIEW scai AS SELECT * FROM read_parquet('{q(data_dir / 'scai_stage_hourly.parquet')}')"
+    )
+    con.execute(
+        f"CREATE OR REPLACE VIEW cevt AS SELECT * FROM read_parquet('{q(data_dir / 'clinical_event.parquet')}')"
+    )
 
 
-def materialize_checkpoint_frame(data_dir: Path) -> Path:
+def materialize_admit_features(
+    data_dir: Path,
+    *,
+    tables: dict[str, pd.DataFrame] | None = None,
+) -> Path:
+    """Legacy v1 parquet — subset of ``duckdb_los_features.parquet``."""
+    materialize_duckdb_los_features(data_dir, tables=tables)
+    return export_admit_features_subset(data_dir)
+
+
+def materialize_checkpoint_frame(
+    data_dir: Path,
+    *,
+    tables: dict[str, pd.DataFrame] | None = None,
+) -> Path:
     """
     v2 grain: (PERSON_ID, prediction_hour) every 24h while patient still in ICU.
     Features censored at prediction_hour; labels los_hours_total + remaining_los_hours.
@@ -291,16 +253,15 @@ def materialize_checkpoint_frame(data_dir: Path) -> Path:
         return str(p.resolve()).replace("'", "''")
 
     out_p = data_dir / CHECKPOINT_FRAME_NAME
-    sql = f"""
-    PRAGMA threads=4;
-    CREATE OR REPLACE VIEW enc AS SELECT * FROM read_parquet('{q(data_dir / "encounter.parquet")}');
-    CREATE OR REPLACE VIEW person AS SELECT * FROM read_parquet('{q(data_dir / "person.parquet")}');
-    CREATE OR REPLACE VIEW med AS SELECT * FROM read_parquet('{q(data_dir / "medication_admin.parquet")}');
-    CREATE OR REPLACE VIEW proc AS SELECT * FROM read_parquet('{q(data_dir / "procedure_event.parquet")}');
-    CREATE OR REPLACE VIEW scai AS SELECT * FROM read_parquet('{q(data_dir / "scai_stage_hourly.parquet")}');
-    CREATE OR REPLACE VIEW cevt AS SELECT * FROM read_parquet('{q(data_dir / "clinical_event.parquet")}');
-    CREATE OR REPLACE VIEW dx AS SELECT * FROM read_parquet('{q(data_dir / "diagnosis.parquet")}');
+    con = duckdb.connect(database=":memory:")
+    con.execute("PRAGMA threads=4;")
+    _duckdb_register_bundle(con, data_dir, tables)
+    if tables is not None:
+        con.register("dx", tables["diagnosis"])
+    else:
+        con.execute(f"CREATE OR REPLACE VIEW dx AS SELECT * FROM read_parquet('{q(data_dir / 'diagnosis.parquet')}')")
 
+    sql = f"""
     CREATE OR REPLACE VIEW enc_base AS
     SELECT
       e.PERSON_ID,
@@ -449,21 +410,23 @@ def materialize_checkpoint_frame(data_dir: Path) -> Path:
       ORDER BY c.PERSON_ID, c.prediction_hour
     ) TO '{q(out_p)}' (FORMAT PARQUET);
     """
-    con = duckdb.connect(database=":memory:")
     con.execute(sql)
     con.close()
     return out_p
 
 
-def build_los_patient_frame(data_dir: Path, *, force_admit_features: bool = False) -> pd.DataFrame:
+def build_los_patient_frame(
+    data_dir: Path,
+    *,
+    force_admit_features: bool = False,
+    tables: dict[str, pd.DataFrame] | None = None,
+) -> pd.DataFrame:
     data_dir = _resolve(data_dir)
-    enc_raw = pd.read_parquet(data_dir / "encounter.parquet")
-    person_raw = pd.read_parquet(data_dir / "person.parquet")
-    dx_raw = pd.read_parquet(data_dir / "diagnosis.parquet")
-
-    enc, _ = _clean_table_strings(enc_raw)
-    person, _ = _clean_table_strings(person_raw)
-    dx, _ = _clean_table_strings(dx_raw)
+    if tables is None:
+        tables, _ = _load_and_clean_bundle(data_dir)
+    enc = tables["encounter"]
+    person = tables["person"]
+    dx = tables["diagnosis"]
 
     enc = reconcile_los_hours(enc)
     incl = apply_inclusion_mask(enc, person)
@@ -472,11 +435,13 @@ def build_los_patient_frame(data_dir: Path, *, force_admit_features: bool = Fals
     enc_cohort = enc.loc[incl].copy()
     trunc_cohort = trunc.loc[incl].copy()
 
-    admit_path = data_dir / ADMIT_FEATURES_NAME
-    if force_admit_features or not admit_path.is_file():
-        materialize_admit_features(data_dir)
-    admit = pd.read_parquet(admit_path)
-    dx_cat = _principal_dx_category(dx)
+    if force_admit_features:
+        materialize_duckdb_los_features(data_dir, tables=tables)
+        export_admit_features_subset(data_dir)
+
+    person_demo = person[["PERSON_ID", "RACE_CD", "ETHNICITY_CD"]].copy()
+    person_demo["race_cd"] = person_demo["RACE_CD"].astype("string").str.upper().str.strip()
+    person_demo["ethnicity_cd"] = person_demo["ETHNICITY_CD"].astype("string").str.upper().str.strip()
 
     base = enc_cohort[
         [
@@ -491,8 +456,13 @@ def build_los_patient_frame(data_dir: Path, *, force_admit_features: bool = Fals
             "los_hours_reconciled",
             "los_reconcile_ok",
         ]
-    ].merge(admit, on="PERSON_ID", how="left")
-    base = base.merge(dx_cat, on="PERSON_ID", how="left")
+    ]
+    base = merge_los_duckdb_features(base, data_dir, force=force_admit_features)
+    base = base.merge(person_demo[["PERSON_ID", "race_cd", "ethnicity_cd"]], on="PERSON_ID", how="left")
+    if "principal_icd_12h" in base.columns:
+        base["icd_prefix"] = base["principal_icd_12h"].astype("string").str.slice(0, 3)
+    else:
+        base = base.merge(_principal_dx_category(dx), on="PERSON_ID", how="left")
     for c in trunc_cohort.columns:
         base[c] = trunc_cohort[c].values
 
@@ -526,17 +496,27 @@ def write_artifacts(
         "target_policy": TARGET_POLICY,
         "counts": {
             "encounters_raw": enc_raw_n,
-            "patients_included": int(len(frame)),
-            "patients_excluded": int(enc_raw_n - len(frame)),
+            "encounters_included": int(len(frame)),
+            "encounters_excluded": int(enc_raw_n - len(frame)),
             "los_truncated_flagged": int(frame["los_truncated"].sum()),
         },
         "outputs": {
             "patient_frame": PATIENT_FRAME_NAME,
             "checkpoint_frame": CHECKPOINT_FRAME_NAME,
+            "duckdb_los_features": "duckdb_los_features.parquet",
+            "duckdb_los_feature_audit": "duckdb_los_feature_audit.json",
+            "encounter_labels": "los_encounter_labels.parquet",
+            "modeling_features": "los_modeling_features.parquet",
+            "modeling_column_groups": "los_modeling_column_groups.json",
+            "imputation_policy": "los_imputation_policy.json",
+            "feature_missingness": "los_feature_missingness.json",
+            "cohort_excluded": "los_cohort_excluded.parquet",
             "admit_features": ADMIT_FEATURES_NAME,
             "feature_columns": FEATURE_COLUMNS_NAME,
             "prediction_policy": PREDICTION_POLICY_NAME,
             "early_window_doc": EARLY_WINDOW_DOC_NAME,
+            "data_cleaning_audit": CLEANING_AUDIT_NAME,
+            "frontend_value_ranges": "los_frontend_value_ranges.json",
         },
         "prediction_schedule_v2": {
             "cadence_hours": 24,
@@ -580,6 +560,7 @@ def write_artifacts(
         "feature_window_hours",
     ]
     v1_snapshot_features = [
+        "demo_profile_bucket",
         "med_infusion_mean_12h",
         "scai_mean_12h",
         "scai_last_12h",
@@ -589,7 +570,13 @@ def write_artifacts(
         "scai_slope_12h",
         "scai_first_12h",
         "scai_std_12h",
+        "scai_prop_ge3_12h",
         "med_per_clinical_event_12h",
+        "med_residual_within_scai_12h",
+        "infusion_residual_within_scai_12h",
+        "proc_residual_within_scai_12h",
+        "dx_cat_acute_mi",
+        "dx_cat_adhf",
         "icd_prefix",
     ]
     feature_cols_v2 = primary_features + [
@@ -665,8 +652,7 @@ def write_artifacts(
     )
 
     quality = {
-        "string_sentinels_normalized": sorted(STRING_SENTINELS),
-        "sentinel_replacements": sentinel_counts,
+        "data_cleaning_audit_file": CLEANING_AUDIT_NAME,
         "los_reconciliation": reconcile_summary,
         "truncation_flags": {
             "truncated_death": int(frame["truncated_death"].sum()),
@@ -685,16 +671,23 @@ def write_artifacts(
         legend_path.write_text(json.dumps(build_demo_profile_legend(), indent=2), encoding="utf-8")
 
 
-def run_prep(data_dir: Path, *, force: bool = False) -> Path:
+def run_prep(
+    data_dir: Path,
+    *,
+    force: bool = False,
+    write_cleaned_parquets: bool = False,
+) -> Path:
     data_dir = _resolve(data_dir)
-    enc_raw = pd.read_parquet(data_dir / "encounter.parquet")
-    person_raw = pd.read_parquet(data_dir / "person.parquet")
-    dx_raw = pd.read_parquet(data_dir / "diagnosis.parquet")
+    tables, cleaning_audit = _load_and_clean_bundle(data_dir)
+    (data_dir / CLEANING_AUDIT_NAME).write_text(
+        json.dumps(cleaning_audit, indent=2, default=str), encoding="utf-8"
+    )
+    if write_cleaned_parquets:
+        out_clean = persist_cleaned_bundle(data_dir, tables)
+        cleaning_audit["cleaned_bundle_dir"] = str(out_clean.relative_to(data_dir))
+    copy_frontend_ranges(data_dir)
 
-    _, enc_sent = _clean_table_strings(enc_raw)
-    _, person_sent = _clean_table_strings(person_raw)
-    _, dx_sent = _clean_table_strings(dx_raw)
-
+    enc_raw = tables["encounter"]
     enc_rec = reconcile_los_hours(enc_raw)
     reconcile_summary = {
         "n_total": int(len(enc_rec)),
@@ -704,13 +697,25 @@ def run_prep(data_dir: Path, *, force: bool = False) -> Path:
         "median_abs_delta_h": float(enc_rec["los_reconcile_delta_h"].median()),
     }
 
-    frame = build_los_patient_frame(data_dir, force_admit_features=force)
-    materialize_checkpoint_frame(data_dir)
+    tables["encounter"] = enc_rec
+    materialize_duckdb_los_features(data_dir, tables=tables)
+    export_admit_features_subset(data_dir)
+    try:
+        build_exploratory_audit(data_dir)
+    except Exception as exc:  # noqa: BLE001
+        print(f"Warning: DuckDB LOS audit JSON not written: {exc}", file=sys.stderr)
+    frame = build_los_patient_frame(data_dir, force_admit_features=force, tables=tables)
+    from los_modeling_frame import materialize_encounter_modeling
+    from los_publish_artifacts import publish_all
+
+    materialize_encounter_modeling(data_dir, tables=tables)
+    publish_all(data_dir, run_eda=True)
+    materialize_checkpoint_frame(data_dir, tables=tables)
     write_artifacts(
         data_dir,
         frame,
         enc_raw_n=len(enc_raw),
-        sentinel_counts={"encounter": enc_sent, "person": person_sent, "diagnosis": dx_sent},
+        sentinel_counts=cleaning_audit.get("per_table", {}),
         reconcile_summary=reconcile_summary,
     )
     return data_dir / PATIENT_FRAME_NAME
@@ -722,11 +727,20 @@ def main() -> int:
         "--data-dir",
         type=Path,
         default=Path("data"),
-        help="Parquet bundle (default data/ = 5000 patients; synth_cs_data = 500 dev sample)",
+        help="Dataset B parquet bundle (default: data/, 5000 patients)",
     )
     ap.add_argument("--force", action="store_true", help="Rebuild admit-features parquet")
+    ap.add_argument(
+        "--write-cleaned-parquets",
+        action="store_true",
+        help="Write cleaned tables to data/cleaned/ (raw data/*.parquet unchanged)",
+    )
     args = ap.parse_args()
-    out = run_prep(args.data_dir, force=args.force)
+    out = run_prep(
+        args.data_dir,
+        force=args.force,
+        write_cleaned_parquets=args.write_cleaned_parquets,
+    )
     print(f"Wrote {out}")
     print(f"Manifest: {_resolve(args.data_dir) / COHORT_MANIFEST_NAME}")
     return 0

@@ -1,0 +1,75 @@
+{
+  "sidecar_parquet": "duckdb_patient_features.parquet",
+  "note_mi_full_cohort": "mutual_information_full_cohort is exploratory (fit on all patients before split); training uses train-only metrics in xgb_mortality_model_meta.json.",
+  "mutual_information_full_cohort": {
+    "med_distinct": 0.2683228878875614,
+    "med_infusion_mean": 0.22753054024402397,
+    "proc_n": 0.2193008023791505,
+    "proc_distinct_nom": 0.22068321946179825,
+    "current_scai": 0.29692144350885097,
+    "scai_prop_ge3": 0.26348801438837777,
+    "scai_std": 0.1905934942014178,
+    "infusion_early_over_all_ratio": 0.09676661613664095,
+    "clinical_event_n": 0.037873893738175735,
+    "med_per_clinical_event": 0.08119080465747941,
+    "proc_n_bucket": 0.18538460781379396,
+    "med_distinct_bucket": 0.19593767135066464,
+    "med_residual_within_scai": 0.330797520827929,
+    "proc_residual_within_scai": 0.30895055638254454,
+    "demo_profile_bucket": 0.0
+  },
+  "stratified_residual_audit": {
+    "stratified_means_by_scai_bin": [
+      {
+        "scai_bin": 0,
+        "n": 259,
+        "mean_med_died": 4.0,
+        "mean_med_surv": 1.8049792531120332,
+        "mean_inf_died": 0.0038225912359245696,
+        "mean_inf_surv": 0.003236977869986169,
+        "mean_ce_died": 2728.0,
+        "mean_ce_surv": 1256.0829875518673
+      },
+      {
+        "scai_bin": 1,
+        "n": 69,
+        "mean_med_died": 5.333333333333333,
+        "mean_med_surv": 2.716666666666667,
+        "mean_inf_died": 0.020738580246913586,
+        "mean_inf_surv": 0.06686940013227512,
+        "mean_ce_died": 1886.5555555555557,
+        "mean_ce_surv": 1329.8333333333333
+      },
+      {
+        "scai_bin": 2,
+        "n": 48,
+        "mean_med_died": 4.416666666666667,
+        "mean_med_surv": 3.611111111111111,
+        "mean_inf_died": 1.1950453571428572,
+        "mean_inf_surv": 1.5468342283950616,
+        "mean_ce_died": 1573.5833333333333,
+        "mean_ce_surv": 1286.5555555555557
+      },
+      {
+        "scai_bin": 3,
+        "n": 17,
+        "mean_med_died": 5.0,
+        "mean_med_surv": 5.2,
+        "mean_inf_died": 1.580883192918193,
+        "mean_inf_surv": 1.265896940836941,
+        "mean_ce_died": 1443.4285714285713,
+        "mean_ce_surv": 1890.0
+      },
+      {
+        "scai_bin": 4,
+        "n": 107,
+        "mean_med_died": 5.01,
+        "mean_med_surv": 5.142857142857143,
+        "mean_inf_died": 2.0332500555194812,
+        "mean_inf_surv": 2.0277148299319725,
+        "mean_ce_died": 1250.09,
+        "mean_ce_surv": 918.0
+      }
+    ]
+  }
+}

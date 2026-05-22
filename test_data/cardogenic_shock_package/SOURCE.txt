@@ -1,0 +1,3 @@
+Data source: Zenodo record 14046978
+Title: SHOCK Trial - Early Revascularization in Acute Myocardial Infarction Complicated by Cardiogenic Shock
+Downloaded files match the record file list (CSV + forms + PDFs).

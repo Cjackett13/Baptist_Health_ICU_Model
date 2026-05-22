@@ -7,7 +7,7 @@ abstract final class ApiConfig {
   /// using full parquet-backed feature rows (/predict/cohort).
   static const useShockEscalationApi = true;
 
-  /// Full patient list from aggregator backend (optional, separate port).
-  static const useLiveApi = false;
-  static const baseUrl = 'http://localhost:8001';
+  /// Full patient list from aggregator backend (mortality + LOS on port 8001).
+  static const useLiveApi = true;
+  static const baseUrl = 'http://127.0.0.1:8001';
 }

@@ -26,7 +26,17 @@ class PatientRepository extends ChangeNotifier {
     List<PatientRecord> patients;
 
     if (ApiConfig.useLiveApi) {
-      patients = await _aggregatorApi.fetchPatients();
+      try {
+        patients = await _aggregatorApi.fetchPatients();
+      } catch (e) {
+        debugPrint('Live API failed, using bundled seed: $e');
+        final raw = await rootBundle.loadString('assets/patients_seed.json');
+        final decoded = jsonDecode(raw) as Map<String, dynamic>;
+        final list = decoded['patients'] as List<dynamic>;
+        patients = list
+            .map((e) => PatientRecord.fromSeedJson(e as Map<String, dynamic>))
+            .toList();
+      }
     } else {
       final raw = await rootBundle.loadString('assets/patients_seed.json');
       final decoded = jsonDecode(raw) as Map<String, dynamic>;

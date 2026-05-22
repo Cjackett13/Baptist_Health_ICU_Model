@@ -1,0 +1,6 @@
+# Large binaries — copy via sync_mortality_artifacts_from_data.py (not committed by default)
+*.joblib
+mortality_predictions_all.pkl
+mortality_ml_practice_ridge_pipeline.joblib
+
+# Tracked JSON (sync from data/): xgb_mortality_model_meta.json, mortality_feature_columns.json

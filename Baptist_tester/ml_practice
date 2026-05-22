@@ -1,0 +1,333 @@
+"""Step-by-step ML practice script for hospital mortality proxy.
+
+This script trains models one at a time in this order:
+1) Ridge Logistic Regression
+2) Lasso Logistic Regression
+3) Random Forest
+4) XGBoost (if installed)
+"""
+
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, average_precision_score, f1_score, roc_auc_score
+from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+try:
+    from xgboost import XGBClassifier
+except Exception:  # XGBoost is optional in case it is not installed yet.
+    XGBClassifier = None
+
+
+DATASET_PATH = Path("/Users/lillyreily/Downloads/archive-2/diabetic_data.csv")
+# Lower threshold => model flags more rare/high-risk cases (more sensitive).
+DECISION_THRESHOLD = 0.25
+CV_FOLDS = 5
+THEORETICAL_QUANTILE_LIMITS = {
+    "number_outpatient": (-4.0, 4.0),
+    "time_in_hospital": (-3.75, 3.75),
+    "num_lab_procedures": (-4.0, 4.0),
+    "num_medications": (-4.0, 4.0),
+    "number_diagnoses": (-3.75, 3.75),
+}
+
+
+def load_dataset() -> pd.DataFrame:
+    """Load raw data and standardize placeholder missing values."""
+    return pd.read_csv(DATASET_PATH).replace("?", np.nan)
+
+
+def build_target(df: pd.DataFrame) -> pd.DataFrame:
+    """Create a proxy target for hospital mortality.
+
+    Why this target:
+    - The dataset has no direct mortality column.
+    - `discharge_disposition_id` can be mapped to death-like outcomes.
+    """
+    death_like_codes = {11, 19, 20, 21}
+    df = df.copy()
+    df["hospital_mortality_proxy"] = (
+        df["discharge_disposition_id"].isin(death_like_codes).astype(int)
+    )
+    return df
+
+
+def apply_theoretical_quantile_filters(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
+    """Drop rows outside user-provided standardized quantile bounds.
+
+    We approximate QQ theoretical cutoffs with z-score bounds per feature:
+    z = (x - mean) / std.
+    Rows outside each feature's lower/upper bound are removed.
+    """
+    filtered = df.copy()
+    dropped_summary = {}
+
+    for feature, (lower, upper) in THEORETICAL_QUANTILE_LIMITS.items():
+        if feature not in filtered.columns:
+            dropped_summary[feature] = {
+                "dropped": 0,
+                "reason": "feature missing",
+            }
+            continue
+
+        numeric_feature = pd.to_numeric(filtered[feature], errors="coerce")
+        std = numeric_feature.std(ddof=1)
+        if pd.isna(std) or std == 0:
+            dropped_summary[feature] = {
+                "dropped": 0,
+                "reason": "no variation",
+            }
+            continue
+
+        z_scores = (numeric_feature - numeric_feature.mean()) / std
+        keep_mask = z_scores.isna() | ((z_scores >= lower) & (z_scores <= upper))
+        before = len(filtered)
+        filtered = filtered.loc[keep_mask].copy()
+        dropped_summary[feature] = {
+            "dropped": before - len(filtered),
+            "bounds": (lower, upper),
+        }
+
+    return filtered, dropped_summary
+
+
+def build_features_and_split(df: pd.DataFrame):
+    """Prepare leak-safe features and stratified split."""
+    # We drop IDs (not clinically meaningful predictors) and direct leakage fields.
+    leak_or_id_cols = [
+        "hospital_mortality_proxy",
+        "encounter_id",
+        "patient_nbr",
+        "discharge_disposition_id",  # used to define target, so must be dropped
+    ]
+
+    X = df.drop(columns=leak_or_id_cols, errors="ignore")
+    y = df["hospital_mortality_proxy"]
+
+    # Very sparse columns add noise more often than signal for this baseline.
+    missing_pct = X.isna().mean() * 100
+    high_missing_cols = missing_pct[missing_pct > 80].index.tolist()
+    X = X.drop(columns=high_missing_cols, errors="ignore")
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+    return X_train, X_test, y_train, y_test, high_missing_cols
+
+
+def make_preprocessor(X_train: pd.DataFrame) -> ColumnTransformer:
+    """Create a reusable preprocessing pipeline for all models."""
+    numeric_cols = X_train.select_dtypes(include=["number"]).columns.tolist()
+    categorical_cols = X_train.select_dtypes(exclude=["number"]).columns.tolist()
+
+    numeric_pipeline = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
+        ]
+    )
+    categorical_pipeline = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("onehot", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
+
+    return ColumnTransformer(
+        transformers=[
+            ("num", numeric_pipeline, numeric_cols),
+            ("cat", categorical_pipeline, categorical_cols),
+        ]
+    )
+
+
+def evaluate_model(
+    name: str,
+    model,
+    preprocessor,
+    X_train,
+    X_test,
+    y_train,
+    y_test,
+    decision_threshold: float = DECISION_THRESHOLD,
+):
+    """Train and score one model so learning stays step-by-step."""
+    pipeline = Pipeline(
+        steps=[
+            ("preprocess", preprocessor),
+            ("model", model),
+        ]
+    )
+    pipeline.fit(X_train, y_train)
+
+    probabilities = pipeline.predict_proba(X_test)[:, 1]
+    predictions = (probabilities >= decision_threshold).astype(int)
+
+    print(f"\n=== {name} ===")
+    print("ROC-AUC:", round(roc_auc_score(y_test, probabilities), 4))
+    print("PR-AUC :", round(average_precision_score(y_test, probabilities), 4))
+    print("Threshold used:", decision_threshold)
+    print("Accuracy:", round(accuracy_score(y_test, predictions), 4))
+    print("F1     :", round(f1_score(y_test, predictions), 4))
+
+
+def cross_validate_model(
+    name: str,
+    model,
+    preprocessor,
+    X_train,
+    y_train,
+    cv_folds: int = CV_FOLDS,
+) -> None:
+    """Run stratified K-fold CV on training data to check generalization."""
+    pipeline = Pipeline(
+        steps=[
+            ("preprocess", preprocessor),
+            ("model", model),
+        ]
+    )
+    cv = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=42)
+    cv_scores = cross_val_score(
+        pipeline,
+        X_train,
+        y_train,
+        scoring="roc_auc",
+        cv=cv,
+        n_jobs=-1,
+    )
+    print(
+        f"{name} CV ROC-AUC ({cv_folds}-fold): "
+        f"{cv_scores.mean():.4f} +/- {cv_scores.std():.4f}"
+    )
+
+
+def main() -> None:
+    print("Loading and preparing data...")
+    df = build_target(load_dataset())
+    before_filter = len(df)
+    df, dropped_summary = apply_theoretical_quantile_filters(df)
+    after_filter = len(df)
+    X_train, X_test, y_train, y_test, dropped_cols = build_features_and_split(df)
+    preprocessor = make_preprocessor(X_train)
+
+    print("Target positive rate (%):", round(df["hospital_mortality_proxy"].mean() * 100, 3))
+    print(f"Rows before quantile filters: {before_filter}")
+    print(f"Rows after quantile filters : {after_filter}")
+    print(f"Total rows removed          : {before_filter - after_filter}")
+    print("Quantile filter drops by feature:")
+    for feature, info in dropped_summary.items():
+        print(f"  - {feature}: {info}")
+    print("Dropped high-missing columns:", dropped_cols)
+    print("Train shape:", X_train.shape, "| Test shape:", X_test.shape)
+    print(
+        "Decision threshold for positive class:",
+        DECISION_THRESHOLD,
+        "(affects precision/recall/F1, not ROC-AUC).",
+    )
+    print(f"Cross-validation folds: {CV_FOLDS}")
+
+    # 1) Ridge logistic regression (L2): stable baseline for linearly separable patterns.
+    ridge = LogisticRegression(
+        penalty="l2",
+        C=0.25,
+        solver="liblinear",
+        class_weight="balanced",
+        max_iter=3000,
+    )
+    cross_validate_model("Ridge Logistic", ridge, preprocessor, X_train, y_train)
+    evaluate_model(
+        "Ridge Logistic",
+        ridge,
+        preprocessor,
+        X_train,
+        X_test,
+        y_train,
+        y_test,
+    )
+
+    # 2) Lasso logistic regression (L1): enforces sparsity and performs feature selection.
+    lasso = LogisticRegression(
+        penalty="l1",
+        C=0.03,
+        solver="liblinear",
+        class_weight="balanced",
+        max_iter=3000,
+    )
+    cross_validate_model("Lasso Logistic", lasso, preprocessor, X_train, y_train)
+    evaluate_model(
+        "Lasso Logistic",
+        lasso,
+        preprocessor,
+        X_train,
+        X_test,
+        y_train,
+        y_test,
+    )
+
+    # 3) Random Forest: captures non-linear interactions without heavy tuning.
+    forest = RandomForestClassifier(
+        n_estimators=300,
+        max_depth=8,
+        min_samples_leaf=20,
+        max_features=0.3,
+        random_state=42,
+        class_weight="balanced_subsample",
+        n_jobs=-1,
+    )
+    cross_validate_model("Random Forest", forest, preprocessor, X_train, y_train)
+    evaluate_model(
+        "Random Forest",
+        forest,
+        preprocessor,
+        X_train,
+        X_test,
+        y_train,
+        y_test,
+    )
+
+    # 4) XGBoost: strong tabular baseline, especially with heterogeneous features.
+    if XGBClassifier is None:
+        print("\n=== XGBoost ===")
+        print("Skipped: xgboost is not installed in this Python environment.")
+    else:
+        xgb = XGBClassifier(
+            n_estimators=500,
+            learning_rate=0.05,
+            max_depth=3,
+            min_child_weight=8,
+            subsample=0.7,
+            colsample_bytree=0.5,
+            colsample_bylevel=0.5,
+            colsample_bynode=0.5,
+            reg_lambda=8.0,
+            reg_alpha=1.0,
+            eval_metric="logloss",
+            random_state=42,
+            n_jobs=-1,
+        )
+        cross_validate_model("XGBoost", xgb, preprocessor, X_train, y_train)
+        evaluate_model(
+            "XGBoost",
+            xgb,
+            preprocessor,
+            X_train,
+            X_test,
+            y_train,
+            y_test,
+        )
+
+
+if __name__ == "__main__":
+    main()
+
+#for xgboost use principal componenet analysis to reduce dimensionality of the data; will rank importance, only choose 80% or higher 
+#confusion matrix to determine desried F1 score 
+# check feature selection 
+# parameters, cross validation, check outliers 

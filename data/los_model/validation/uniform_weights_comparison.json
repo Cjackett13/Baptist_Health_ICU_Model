@@ -1,0 +1,22 @@
+{
+  "comparison": "weighted (production) vs uniform XGB feature_weights",
+  "weighted_model_dir": "data/los_model",
+  "uniform_model_dir": "data/los_model_uniform",
+  "metrics_test_weighted": {
+    "mae_hours": 9.514508033752442,
+    "rmse_hours": 11.973207872848686,
+    "r2_hours": 0.7718380704005663
+  },
+  "metrics_test_uniform": {
+    "mae_hours": 9.583667510986329,
+    "rmse_hours": 11.964125377442508,
+    "r2_hours": 0.7721840919040197
+  },
+  "delta_uniform_minus_weighted": {
+    "mae_hours": 0.069159477233886,
+    "rmse_hours": -0.009082495406178,
+    "r2_hours": 0.000345946524181
+  },
+  "conclusion": "Uniform weights change test MAE by <0.1h and R² by <0.001 — weights are optional for accuracy; keep weighted build for clinical prioritization narrative.",
+  "rationale_doc": "data/los_model/FEATURE_WEIGHTS_RATIONALE.md"
+}

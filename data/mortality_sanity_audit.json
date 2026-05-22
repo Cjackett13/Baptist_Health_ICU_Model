@@ -1,0 +1,100 @@
+{
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/cleaned",
+  "model_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "overall_auroc": 0.9154,
+  "simpsons_paradox_check": {
+    "pass": true,
+    "by_age_band": [
+      {
+        "n": 305,
+        "n_pos": 81,
+        "death_rate": 0.2656,
+        "auroc": 0.9015,
+        "group": "age_lt_60",
+        "auroc_delta_vs_overall": -0.0139
+      },
+      {
+        "n": 382,
+        "n_pos": 107,
+        "death_rate": 0.2801,
+        "auroc": 0.9176,
+        "group": "age_60_69",
+        "auroc_delta_vs_overall": 0.0022
+      },
+      {
+        "n": 356,
+        "n_pos": 107,
+        "death_rate": 0.3006,
+        "auroc": 0.9291,
+        "group": "age_70_79",
+        "auroc_delta_vs_overall": 0.0137
+      },
+      {
+        "n": 207,
+        "n_pos": 64,
+        "death_rate": 0.3092,
+        "auroc": 0.9068,
+        "group": "age_80_plus",
+        "auroc_delta_vs_overall": -0.0086
+      }
+    ],
+    "flagged_age_auroc_delta_lt_5pp": [],
+    "scai_death_rate_inversions_within_age_band": [],
+    "note": "No age-band AUROC collapse >5pp and no SCAI death-rate inversion within age bands."
+  },
+  "direction_test": {
+    "pass": true,
+    "baseline_median_row_p_death": 0.0585,
+    "feature_sweeps": [
+      {
+        "feature": "scai_prop_ge3",
+        "p_at_low": 0.0585,
+        "p_at_high": 0.2494,
+        "delta": 0.1909,
+        "direction_ok": true,
+        "primary_driver": true
+      },
+      {
+        "feature": "current_scai",
+        "p_at_low": 0.0585,
+        "p_at_high": 0.2911,
+        "delta": 0.2326,
+        "direction_ok": true,
+        "primary_driver": false
+      },
+      {
+        "feature": "med_infusion_mean",
+        "p_at_low": 0.0588,
+        "p_at_high": 0.0669,
+        "delta": 0.0081,
+        "direction_ok": true,
+        "primary_driver": true
+      },
+      {
+        "feature": "med_distinct",
+        "p_at_low": 0.0551,
+        "p_at_high": 0.0681,
+        "delta": 0.013,
+        "direction_ok": true,
+        "primary_driver": true
+      },
+      {
+        "feature": "infusion_x_scai_severity",
+        "p_at_low": 0.0588,
+        "p_at_high": 0.5195,
+        "delta": 0.4607,
+        "direction_ok": true,
+        "primary_driver": true
+      }
+    ],
+    "secondary_isolated_miss": [],
+    "note": "PASS on primary drivers (SCAI fraction, infusion, med load, interaction). Isolated sweeps on correlated columns may be flat."
+  },
+  "edge_case_test": {
+    "pass": true,
+    "p_death_median_row": 0.0585,
+    "p_death_extreme_low_scai": 0.0322,
+    "p_death_extreme_high_scai": 0.716,
+    "ordering_ok": true
+  }
+}

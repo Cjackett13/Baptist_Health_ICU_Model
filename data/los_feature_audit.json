@@ -1,0 +1,536 @@
+{
+  "target": "los_hours_total",
+  "n_encounters": 5000,
+  "model_features": [
+    "med_infusion_mean_12h",
+    "scai_prop_ge3_12h",
+    "current_scai_12h",
+    "proc_n_12h",
+    "med_distinct_12h",
+    "clinical_event_n_12h",
+    "dx_cat_arrhythmia_arrest",
+    "med_per_clinical_event_12h",
+    "scai_slope_12h",
+    "age_years",
+    "sex_bin",
+    "admit_type_cd",
+    "admit_src_cd",
+    "unit_cd"
+  ],
+  "per_feature": [
+    {
+      "feature": "scai_mean_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.8054442672016517,
+      "pearson_r": 0.8054559331533869,
+      "mutual_information": null
+    },
+    {
+      "feature": "scai_last_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.7889494797836756,
+      "pearson_r": 0.786204882151713,
+      "mutual_information": null
+    },
+    {
+      "feature": "scai_first_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.7545015085411833,
+      "pearson_r": 0.7843098379554626,
+      "mutual_information": null
+    },
+    {
+      "feature": "clinical_event_n_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.7297562636635491,
+      "pearson_r": 0.5856422589994263,
+      "mutual_information": 0.422311117850378
+    },
+    {
+      "feature": "med_distinct_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.7164832203690825,
+      "pearson_r": 0.7152292738189366,
+      "mutual_information": 0.3658130538048354
+    },
+    {
+      "feature": "med_admin_rows_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.716300309249631,
+      "pearson_r": 0.7140821465466036,
+      "mutual_information": null
+    },
+    {
+      "feature": "current_scai_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.7103128034793106,
+      "pearson_r": 0.7298330577439209,
+      "mutual_information": 0.3637328982479713
+    },
+    {
+      "feature": "med_infusion_mean_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.681078173604125,
+      "pearson_r": 0.5831782100951024,
+      "mutual_information": 0.48850501042173633
+    },
+    {
+      "feature": "infusion_mean_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.6809633371257647,
+      "pearson_r": 0.5831782100951024,
+      "mutual_information": null
+    },
+    {
+      "feature": "proc_distinct_nom_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.5930514377041918,
+      "pearson_r": 0.6033286833933056,
+      "mutual_information": null
+    },
+    {
+      "feature": "proc_n_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.5930514377041918,
+      "pearson_r": 0.6033286833933056,
+      "mutual_information": 0.2144658608349439
+    },
+    {
+      "feature": "med_distinct_bucket_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.5856162235505534,
+      "pearson_r": 0.5933553877081438,
+      "mutual_information": null
+    },
+    {
+      "feature": "proc_n_bucket_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.5835554615663557,
+      "pearson_r": 0.6040883116552453,
+      "mutual_information": null
+    },
+    {
+      "feature": "scai_prop_ge3_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.5591484855949758,
+      "pearson_r": 0.602758591017443,
+      "mutual_information": 0.23771754498943887
+    },
+    {
+      "feature": "med_per_clinical_event_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.552549364656574,
+      "pearson_r": 0.5594856523877418,
+      "mutual_information": 0.38568892773430585
+    },
+    {
+      "feature": "med_residual_within_scai_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.40364264860516974,
+      "pearson_r": 0.1869708800409354,
+      "mutual_information": null
+    },
+    {
+      "feature": "scai_slope_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.37094909166895385,
+      "pearson_r": 0.3520856314519405,
+      "mutual_information": 0.0760594904684968
+    },
+    {
+      "feature": "scai_std_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.35443751612520724,
+      "pearson_r": 0.3469596230991821,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_myocarditis_cmp",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.20696697626227872,
+      "pearson_r": -0.20357884281028946,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_adhf",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.20583412234275852,
+      "pearson_r": 0.19596456342138882,
+      "mutual_information": null
+    },
+    {
+      "feature": "icd_prefix",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.2022917252357679,
+      "pearson_r": 0.22750715612488287,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_aortic_valve",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.19681953075999403,
+      "pearson_r": -0.19267808820175514,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_arrhythmia_arrest",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.19361409227490328,
+      "pearson_r": 0.19152314763640005,
+      "mutual_information": 0.01014113851804943
+    },
+    {
+      "feature": "infusion_residual_within_scai_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.1641722016859727,
+      "pearson_r": 0.146003601361653,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_acute_mi",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.12075435285647344,
+      "pearson_r": -0.11283417924524354,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_post_cardiotomy",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.10261766436034586,
+      "pearson_r": 0.09912569056343849,
+      "mutual_information": null
+    },
+    {
+      "feature": "demo_profile_bucket",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.039729762352745224,
+      "pearson_r": 0.04418279363501215,
+      "mutual_information": null
+    },
+    {
+      "feature": "age_years",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.03118824269272965,
+      "pearson_r": 0.034533534632365054,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "admit_src_cd",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": -0.02135862109050583,
+      "pearson_r": -0.01891006678768681,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "race_cd",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.014755195303695161,
+      "pearson_r": -0.018789234102236402,
+      "mutual_information": null
+    },
+    {
+      "feature": "proc_residual_within_scai_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.014388336698749738,
+      "pearson_r": 0.10536412280377966,
+      "mutual_information": null
+    },
+    {
+      "feature": "unit_cd",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.013865836650035752,
+      "pearson_r": 0.011763303486724287,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "unit_cicu",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.013865836650035752,
+      "pearson_r": -0.011763303486724287,
+      "mutual_information": null
+    },
+    {
+      "feature": "unit_cvicu",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": 0.013865836650035752,
+      "pearson_r": 0.011763303486724287,
+      "mutual_information": null
+    },
+    {
+      "feature": "admit_src_outside_hospital",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.010562946752890677,
+      "pearson_r": -0.008272412937548402,
+      "mutual_information": null
+    },
+    {
+      "feature": "admit_type_emergency",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.00956354344326876,
+      "pearson_r": -0.010177693065487254,
+      "mutual_information": null
+    },
+    {
+      "feature": "n_diagnoses_12h",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.008297768987548134,
+      "pearson_r": -0.00891380849071394,
+      "mutual_information": null
+    },
+    {
+      "feature": "admit_type_cd",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.007915509024250441,
+      "pearson_r": 0.004090487278407943,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "admit_src_ed",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.007457782189204388,
+      "pearson_r": -0.008448754028577693,
+      "mutual_information": null
+    },
+    {
+      "feature": "ethnicity_cd",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.005294321481066426,
+      "pearson_r": -0.0003232970543616823,
+      "mutual_information": null
+    },
+    {
+      "feature": "sex_bin",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.004328703558169352,
+      "pearson_r": 0.004182145743656411,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "admit_type_elective",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": -0.0031024707282564265,
+      "pearson_r": -0.0011521189140960436,
+      "mutual_information": null
+    },
+    {
+      "feature": "dx_cat_other",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": null,
+      "pearson_r": null,
+      "mutual_information": null
+    },
+    {
+      "feature": "feature_window_hours",
+      "in_frame": false
+    },
+    {
+      "feature": "prediction_hour",
+      "in_frame": false
+    },
+    {
+      "feature": "unit_micu",
+      "in_model": false,
+      "dropped": true,
+      "spearman_rho": null,
+      "pearson_r": null,
+      "mutual_information": null
+    }
+  ],
+  "model_features_only": [
+    {
+      "feature": "clinical_event_n_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.7297562636635491,
+      "pearson_r": 0.5856422589994263,
+      "mutual_information": 0.422311117850378
+    },
+    {
+      "feature": "med_distinct_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.7164832203690825,
+      "pearson_r": 0.7152292738189366,
+      "mutual_information": 0.3658130538048354
+    },
+    {
+      "feature": "current_scai_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.7103128034793106,
+      "pearson_r": 0.7298330577439209,
+      "mutual_information": 0.3637328982479713
+    },
+    {
+      "feature": "med_infusion_mean_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.681078173604125,
+      "pearson_r": 0.5831782100951024,
+      "mutual_information": 0.48850501042173633
+    },
+    {
+      "feature": "proc_n_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.5930514377041918,
+      "pearson_r": 0.6033286833933056,
+      "mutual_information": 0.2144658608349439
+    },
+    {
+      "feature": "scai_prop_ge3_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.5591484855949758,
+      "pearson_r": 0.602758591017443,
+      "mutual_information": 0.23771754498943887
+    },
+    {
+      "feature": "med_per_clinical_event_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.552549364656574,
+      "pearson_r": 0.5594856523877418,
+      "mutual_information": 0.38568892773430585
+    },
+    {
+      "feature": "scai_slope_12h",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.37094909166895385,
+      "pearson_r": 0.3520856314519405,
+      "mutual_information": 0.0760594904684968
+    },
+    {
+      "feature": "dx_cat_arrhythmia_arrest",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.19361409227490328,
+      "pearson_r": 0.19152314763640005,
+      "mutual_information": 0.01014113851804943
+    },
+    {
+      "feature": "age_years",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.03118824269272965,
+      "pearson_r": 0.034533534632365054,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "admit_src_cd",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": -0.02135862109050583,
+      "pearson_r": -0.01891006678768681,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "unit_cd",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.013865836650035752,
+      "pearson_r": 0.011763303486724287,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "admit_type_cd",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.007915509024250441,
+      "pearson_r": 0.004090487278407943,
+      "mutual_information": 0.0
+    },
+    {
+      "feature": "sex_bin",
+      "in_model": true,
+      "dropped": false,
+      "spearman_rho": 0.004328703558169352,
+      "pearson_r": 0.004182145743656411,
+      "mutual_information": 0.0
+    }
+  ],
+  "duckdb_exploratory_audit_file": "duckdb_los_feature_audit.json",
+  "duckdb_mi_full_cohort": {
+    "demo_profile_bucket": 0.005504747129714271,
+    "med_distinct_12h": 0.367960154159388,
+    "med_infusion_mean_12h": 0.473167115570686,
+    "med_admin_rows_12h": 0.3732090963764856,
+    "proc_n_12h": 0.22086551332313187,
+    "proc_distinct_nom_12h": 0.23018379878404183,
+    "scai_first_12h": 0.47041618920344996,
+    "scai_last_12h": 0.4645442308402057,
+    "scai_mean_12h": 0.5288223071443885,
+    "scai_std_12h": 0.0871522790593211,
+    "scai_slope_12h": 0.08837690555705402,
+    "scai_prop_ge3_12h": 0.2492474312085271,
+    "current_scai_12h": 0.3624618832129691,
+    "clinical_event_n_12h": 0.4462161746171214,
+    "med_per_clinical_event_12h": 0.38839526064412455,
+    "infusion_mean_12h": 0.47733710414772546,
+    "proc_n_bucket_12h": 0.19577324863890366,
+    "med_distinct_bucket_12h": 0.2195139566127713,
+    "med_residual_within_scai_12h": 0.4163802472227256,
+    "infusion_residual_within_scai_12h": 0.48363548193149297,
+    "proc_residual_within_scai_12h": 0.38800617408727645,
+    "admit_type_emergency": 0.0,
+    "admit_type_elective": 0.0,
+    "admit_src_ed": 0.0,
+    "admit_src_outside_hospital": 0.003998435983155968,
+    "unit_cicu": 0.0,
+    "unit_cvicu": 0.0,
+    "unit_micu": 0.011195163710635558,
+    "dx_cat_acute_mi": 0.003433770892443899,
+    "dx_cat_adhf": 0.06061746998947326,
+    "dx_cat_arrhythmia_arrest": 0.025484456737212113,
+    "dx_cat_myocarditis_cmp": 0.023422095363926365,
+    "dx_cat_aortic_valve": 0.017210389335779563,
+    "dx_cat_post_cardiotomy": 0.01277906026389486,
+    "dx_cat_other": 0.00023398120344220175,
+    "n_diagnoses_12h": 0.0
+  },
+  "note": "MI in per_feature is univariate on model columns; duckdb file is full-cohort exploratory."
+}

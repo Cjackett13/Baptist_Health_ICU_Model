@@ -41,7 +41,8 @@
     "admit_features": "los_admit_features.parquet",
     "feature_columns": "los_feature_columns.json",
     "prediction_policy": "los_prediction_policy.json",
-    "early_window_doc": "los_early_window_per_table.json"
+    "early_window_doc": "los_early_window_per_table.json",
+    "data_cleaning_audit": "los_data_cleaning_audit.json"
   },
   "prediction_schedule_v2": {
     "cadence_hours": 24,

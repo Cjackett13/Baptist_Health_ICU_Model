@@ -1,0 +1,111 @@
+{
+  "baseline_median_patient_pred_hours": 84.06,
+  "direction_tests": [
+    {
+      "feature": "clinical_event_n_12h",
+      "status": "PASS",
+      "clinical_expectation": "more events \u2192 longer stay",
+      "p05_value": 144.0,
+      "p95_value": 343.05,
+      "pred_at_p05_hours": 71.05,
+      "pred_at_p95_hours": 103.63,
+      "delta_hours_p95_minus_p05": 32.58,
+      "direction_correct": true,
+      "note": "Median patient template; only this feature moved to cohort p5/p95."
+    },
+    {
+      "feature": "med_infusion_mean_12h",
+      "status": "PASS",
+      "clinical_expectation": "more infusions \u2192 longer stay",
+      "p05_value": 0.0,
+      "p95_value": 4.5689,
+      "pred_at_p05_hours": 97.83,
+      "pred_at_p95_hours": 100.61,
+      "delta_hours_p95_minus_p05": 2.79,
+      "direction_correct": true,
+      "note": "Median patient template; only this feature moved to cohort p5/p95."
+    },
+    {
+      "feature": "scai_prop_ge3_12h",
+      "status": "PASS",
+      "clinical_expectation": "more time in high acuity \u2192 longer stay",
+      "p05_value": 0.0,
+      "p95_value": 1.0,
+      "pred_at_p05_hours": 84.06,
+      "pred_at_p95_hours": 86.4,
+      "delta_hours_p95_minus_p05": 2.34,
+      "direction_correct": true,
+      "note": "Median patient template; only this feature moved to cohort p5/p95."
+    },
+    {
+      "feature": "med_per_clinical_event_12h",
+      "status": "PASS",
+      "clinical_expectation": "higher med burden \u2192 longer stay",
+      "p05_value": 0.0,
+      "p95_value": 0.0231,
+      "pred_at_p05_hours": 77.83,
+      "pred_at_p95_hours": 90.03,
+      "delta_hours_p95_minus_p05": 12.2,
+      "direction_correct": true,
+      "note": "Median patient template; only this feature moved to cohort p5/p95."
+    },
+    {
+      "feature": "current_scai_12h",
+      "status": "PASS",
+      "clinical_expectation": "higher severity \u2192 longer stay",
+      "p05_value": 0.0,
+      "p95_value": 4.0,
+      "pred_at_p05_hours": 83.64,
+      "pred_at_p95_hours": 85.22,
+      "delta_hours_p95_minus_p05": 1.57,
+      "direction_correct": true,
+      "note": "Median patient template; only this feature moved to cohort p5/p95."
+    }
+  ],
+  "direction_test_pass": true,
+  "direction_pass_count": "5/5",
+  "direction_pass_rate": 1.0,
+  "edge_cases": {
+    "numeric_columns_tested": [
+      "med_infusion_mean_12h",
+      "scai_prop_ge3_12h",
+      "current_scai_12h",
+      "proc_n_12h",
+      "med_distinct_12h",
+      "clinical_event_n_12h",
+      "dx_cat_arrhythmia_arrest",
+      "med_per_clinical_event_12h",
+      "scai_slope_12h",
+      "age_years",
+      "sex_bin"
+    ],
+    "extreme_high_all_numeric_999": {
+      "pred_hours": 145.11,
+      "crashed": false,
+      "finite_output": true,
+      "in_reasonable_range": true,
+      "pass": true
+    },
+    "extreme_low_all_numeric_0": {
+      "pred_hours": 54.56,
+      "crashed": false,
+      "finite_output": true,
+      "in_reasonable_range": true,
+      "pass": true
+    },
+    "median_template": {
+      "pred_hours": 84.06,
+      "crashed": false,
+      "finite_output": true,
+      "in_reasonable_range": true,
+      "pass": true
+    },
+    "prediction_consistency_20x": {
+      "unique_predictions": 1,
+      "deterministic": true
+    },
+    "all_edge_pass": true
+  },
+  "edge_case_pass": true,
+  "summary": "Direction: p5\u2192p95 sweeps on median patient for 5 clinical features; PASS if all deltas are non-negative. Edge: extreme 0/999 on numeric manifest cols must return finite hours in (0, 10000)."
+}

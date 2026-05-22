@@ -1,0 +1,39 @@
+{
+  "source_raw_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "cleaned_subdir": "cleaned",
+  "tables": {
+    "code_value": {
+      "path": "cleaned/code_value.parquet",
+      "n_rows": 35
+    },
+    "person": {
+      "path": "cleaned/person.parquet",
+      "n_rows": 5000
+    },
+    "encounter": {
+      "path": "cleaned/encounter.parquet",
+      "n_rows": 5000
+    },
+    "diagnosis": {
+      "path": "cleaned/diagnosis.parquet",
+      "n_rows": 15081
+    },
+    "clinical_event": {
+      "path": "cleaned/clinical_event.parquet",
+      "n_rows": 5954230
+    },
+    "medication_admin": {
+      "path": "cleaned/medication_admin.parquet",
+      "n_rows": 18912
+    },
+    "procedure_event": {
+      "path": "cleaned/procedure_event.parquet",
+      "n_rows": 5231
+    },
+    "scai_stage_hourly": {
+      "path": "cleaned/scai_stage_hourly.parquet",
+      "n_rows": 400003
+    }
+  },
+  "note": "Cleaned in-memory bundle; raw data/*.parquet unchanged."
+}

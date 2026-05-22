@@ -1,0 +1,34 @@
+{
+  "feature_columns": [
+    "med_distinct",
+    "med_infusion_mean",
+    "proc_n",
+    "proc_distinct_nom",
+    "current_scai",
+    "scai_prop_ge3",
+    "scai_std",
+    "infusion_early_over_all_ratio",
+    "clinical_event_n",
+    "med_per_clinical_event",
+    "proc_n_bucket",
+    "med_distinct_bucket",
+    "med_residual_within_scai",
+    "proc_residual_within_scai",
+    "demo_profile_bucket"
+  ],
+  "n_features": 15,
+  "label_column": "died",
+  "log1p_columns": [
+    "clinical_event_n",
+    "med_per_clinical_event"
+  ],
+  "sqrt_columns": [
+    "med_infusion_mean",
+    "med_distinct",
+    "proc_n",
+    "clinical_event_n",
+    "scai_std"
+  ],
+  "bundle_artifact": "xgb_mortality_pipeline.joblib",
+  "meta_artifact": "xgb_mortality_model_meta.json"
+}

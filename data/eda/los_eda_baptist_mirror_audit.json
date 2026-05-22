@@ -1,0 +1,13 @@
+{
+  "mirror_of": "baptist_sample_eda.py",
+  "outputs": [
+    "eda/los_eda_report.html",
+    "eda/los_eda_high_corr_dist.html",
+    "eda/los_eda_feature_distributions_all.html",
+    "eda/los_eda_focal_hist_qq.html",
+    "eda/los_eda_raw_vs_log1p.html",
+    "eda/los_eda_curated_dist.html",
+    "eda/los_eda_index.html"
+  ],
+  "corr_threshold_high": 0.35
+}

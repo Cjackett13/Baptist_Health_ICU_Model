@@ -1,7 +1,88 @@
 {
   "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
-  "bundle": "synth_cs_data (8 core tables + code_value)",
+  "bundle": "8 core tables + code_value (LOS cleaning applied)",
+  "data_cleaning_audit": {
+    "tables_cleaned": [
+      "code_value",
+      "person",
+      "encounter",
+      "diagnosis",
+      "clinical_event",
+      "medication_admin",
+      "procedure_event",
+      "scai_stage_hourly"
+    ],
+    "per_table": {
+      "code_value": {
+        "table": "code_value",
+        "n_rows_in": 35,
+        "sentinels_to_missing": {
+          "RESULT_UNITS_CD": 5
+        },
+        "n_rows_out": 35
+      },
+      "person": {
+        "table": "person",
+        "n_rows_in": 5000,
+        "n_rows_out": 5000
+      },
+      "encounter": {
+        "table": "encounter",
+        "n_rows_in": 5000,
+        "n_rows_out": 5000
+      },
+      "diagnosis": {
+        "table": "diagnosis",
+        "n_rows_in": 15104,
+        "n_rows_out": 15104
+      },
+      "clinical_event": {
+        "table": "clinical_event",
+        "n_rows_in": 7047732,
+        "sentinels_to_missing": {
+          "RESULT_UNITS_CD": 1227516
+        },
+        "n_rows_out": 7047732
+      },
+      "medication_admin": {
+        "table": "medication_admin",
+        "n_rows_in": 20682,
+        "n_rows_out": 20682
+      },
+      "procedure_event": {
+        "table": "procedure_event",
+        "n_rows_in": 4954,
+        "n_rows_out": 4954
+      },
+      "scai_stage_hourly": {
+        "table": "scai_stage_hourly",
+        "n_rows_in": 500454,
+        "n_rows_out": 500454
+      }
+    },
+    "totals": {
+      "sentinels_to_missing": 1227521,
+      "invalid_icd_to_missing": 0,
+      "invalid_event_cd_to_missing": 0
+    }
+  },
   "tables": {
+    "code_value": {
+      "n_rows": 35,
+      "n_columns": 4,
+      "columns": [
+        "EVENT_CD",
+        "EVENT_TITLE_TXT",
+        "RESULT_UNITS_CD",
+        "EVENT_CLASS_CD"
+      ],
+      "dtypes": {
+        "EVENT_CD": "string",
+        "EVENT_TITLE_TXT": "string",
+        "RESULT_UNITS_CD": "string",
+        "EVENT_CLASS_CD": "string"
+      }
+    },
     "person": {
       "n_rows": 5000,
       "n_columns": 8,
@@ -20,9 +101,9 @@
         "NAME_LAST_TXT": "string",
         "NAME_FIRST_TXT": "string",
         "BIRTH_DT_TM": "datetime64[ns]",
-        "SEX_CD": "string",
-        "RACE_CD": "string",
-        "ETHNICITY_CD": "string",
+        "SEX_CD": "object",
+        "RACE_CD": "object",
+        "ETHNICITY_CD": "object",
         "DECEASED_DT_TM": "datetime64[us]"
       }
     },
@@ -49,14 +130,14 @@
       "dtypes": {
         "ENCOUNTER_ID": "int64",
         "PERSON_ID": "int64",
-        "ENCNTR_TYPE_CD": "string",
-        "ADMIT_TYPE_CD": "string",
-        "ADMIT_SRC_CD": "string",
+        "ENCNTR_TYPE_CD": "object",
+        "ADMIT_TYPE_CD": "object",
+        "ADMIT_SRC_CD": "object",
         "REG_DT_TM": "datetime64[ns]",
         "DISCH_DT_TM": "datetime64[ns]",
-        "DISCH_DISPOSITION_CD": "string",
+        "DISCH_DISPOSITION_CD": "object",
         "FACILITY_CD": "string",
-        "UNIT_CD": "string",
+        "UNIT_CD": "object",
         "LOS_HOURS": "float64",
         "los_hours_calc": "float64",
         "los_reconcile_delta_h": "float64",
@@ -188,22 +269,6 @@
         "EVENT_DT_TM": "datetime64[ns]",
         "SCAI_STAGE_CD": "string",
         "SCAI_STAGE_NUM": "int64"
-      }
-    },
-    "code_value": {
-      "n_rows": 35,
-      "n_columns": 4,
-      "columns": [
-        "EVENT_CD",
-        "EVENT_TITLE_TXT",
-        "RESULT_UNITS_CD",
-        "EVENT_CLASS_CD"
-      ],
-      "dtypes": {
-        "EVENT_CD": "string",
-        "EVENT_TITLE_TXT": "string",
-        "RESULT_UNITS_CD": "string",
-        "EVENT_CLASS_CD": "string"
       }
     }
   },

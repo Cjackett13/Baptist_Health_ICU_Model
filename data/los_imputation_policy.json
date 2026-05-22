@@ -1,0 +1,281 @@
+{
+  "policy_version": 1,
+  "grain": "encounter",
+  "training_scope": "train_fold_only",
+  "not_applied_in_prep": true,
+  "bundle_cleaning_note": "Table cleaning may median-impute medication_admin / scai_stage_hourly only; modeling imputation is deferred to training.",
+  "columns": {
+    "demo_profile_bucket": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "med_distinct_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "med_infusion_mean_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "med_admin_rows_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "proc_n_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "proc_distinct_nom_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "scai_first_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "scai_last_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "scai_mean_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "scai_std_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "scai_slope_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "scai_prop_ge3_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "current_scai_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "clinical_event_n_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "med_per_clinical_event_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "infusion_mean_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "proc_n_bucket_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "med_distinct_bucket_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "med_residual_within_scai_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "infusion_residual_within_scai_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "proc_residual_within_scai_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "admit_type_emergency": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "admit_type_elective": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "admit_src_ed": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "admit_src_outside_hospital": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "unit_cicu": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "unit_cvicu": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "unit_micu": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_acute_mi": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_adhf": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_arrhythmia_arrest": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_myocarditis_cmp": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_aortic_valve": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_post_cardiotomy": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "dx_cat_other": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "n_diagnoses_12h": {
+      "dtype": "float",
+      "prep_stage": "duckdb_coalesce_zero",
+      "train_imputation": "median_if_missing",
+      "note": "DuckDB COALESCE(...,0); if NaN remains after join, median on train fold."
+    },
+    "age_years": {
+      "dtype": "float",
+      "prep_stage": "as_observed",
+      "train_imputation": "median_if_missing"
+    },
+    "sex_bin": {
+      "dtype": "float",
+      "prep_stage": "as_observed",
+      "train_imputation": "median_if_missing"
+    },
+    "race_cd": {
+      "dtype": "string",
+      "prep_stage": "none_or_sentinel_cleaning",
+      "train_imputation": "mode",
+      "note": "Fit mode on train fold only; holdout/test use train statistics."
+    },
+    "ethnicity_cd": {
+      "dtype": "string",
+      "prep_stage": "none_or_sentinel_cleaning",
+      "train_imputation": "mode",
+      "note": "Fit mode on train fold only; holdout/test use train statistics."
+    },
+    "icd_prefix": {
+      "dtype": "string",
+      "prep_stage": "none_or_sentinel_cleaning",
+      "train_imputation": "mode",
+      "note": "Fit mode on train fold only; holdout/test use train statistics."
+    },
+    "admit_type_cd": {
+      "dtype": "string",
+      "prep_stage": "none_or_sentinel_cleaning",
+      "train_imputation": "mode",
+      "note": "Fit mode on train fold only; holdout/test use train statistics."
+    },
+    "admit_src_cd": {
+      "dtype": "string",
+      "prep_stage": "none_or_sentinel_cleaning",
+      "train_imputation": "mode",
+      "note": "Fit mode on train fold only; holdout/test use train statistics."
+    },
+    "unit_cd": {
+      "dtype": "string",
+      "prep_stage": "none_or_sentinel_cleaning",
+      "train_imputation": "mode",
+      "note": "Fit mode on train fold only; holdout/test use train statistics."
+    },
+    "prediction_hour": {
+      "dtype": "int",
+      "prep_stage": "fixed_v1_snapshot",
+      "train_imputation": "none"
+    },
+    "feature_window_hours": {
+      "dtype": "int",
+      "prep_stage": "fixed_v1_snapshot",
+      "train_imputation": "none"
+    }
+  }
+}

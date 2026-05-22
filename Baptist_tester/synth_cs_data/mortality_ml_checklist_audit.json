@@ -1,0 +1,782 @@
+{
+  "model": "mortality_in_hospital_death_classifier",
+  "audited_at_utc": "2026-05-20T17:11:13.120924+00:00",
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/Baptist_tester/synth_cs_data",
+  "model_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/Baptist_tester/synth_cs_data",
+  "summary": {
+    "pass": 22,
+    "fail": 1,
+    "warn": 6,
+    "na": 1,
+    "total": 30
+  },
+  "test_metrics": {
+    "auroc": 0.9202037351443124,
+    "auprc": 0.8484318981880707,
+    "brier": 0.09683362981138263,
+    "death_rate_test": 0.2897196261682243
+  },
+  "integrity_audit": {
+    "split_seed": 42,
+    "percentile_fences": {
+      "pct_lo": 1.0,
+      "pct_hi": 99.0,
+      "fit_on": "train_only"
+    },
+    "patient_disjoint_report": {
+      "disjoint": true,
+      "n_overlap": 0,
+      "overlap_sample": [],
+      "n_train_unique": 349,
+      "n_test_unique": 107
+    },
+    "patient_disjoint_assert_ok": true,
+    "verify_patient_train_test_no_id_overlap": {
+      "disjoint": true,
+      "n_overlap": 0,
+      "overlap_sample": [],
+      "n_train_unique": 349,
+      "n_test_unique": 107
+    },
+    "class_balance": {
+      "train_n": 349,
+      "test_n": 107,
+      "train_death_rate": 0.2636103151862464,
+      "test_death_rate": 0.2897196261682243,
+      "train_pos": 92,
+      "train_neg": 257,
+      "test_pos": 31,
+      "test_neg": 76,
+      "both_splits_have_two_classes": true,
+      "imbalance_ratio_neg_over_pos_train": 2.7934782608695654,
+      "meta_scale_pos_weight": 7.123369565217391,
+      "stratified_split": true
+    },
+    "row_count_matches_meta": true,
+    "skew_and_f_test_summary": {
+      "skew_moderate_abs_1_to_2_sorted": [
+        "clinical_event_n",
+        "med_infusion_mean",
+        "med_per_clinical_event",
+        "proc_residual_within_scai",
+        "scai_prop_ge3"
+      ],
+      "skew_strong_abs_ge_2_sorted": [],
+      "f_classif_sorted_by_f_desc": [
+        {
+          "feature": "current_scai",
+          "f": 386.6108769613422,
+          "pvalue": 2.2819316019401327e-58
+        },
+        {
+          "feature": "med_infusion_mean",
+          "f": 274.56180502711965,
+          "pvalue": 7.672911909022177e-46
+        },
+        {
+          "feature": "proc_n",
+          "f": 245.38082195884414,
+          "pvalue": 3.3265369863447536e-42
+        },
+        {
+          "feature": "proc_distinct_nom",
+          "f": 245.38082195884414,
+          "pvalue": 3.3265369863447536e-42
+        },
+        {
+          "feature": "scai_prop_ge3",
+          "f": 242.157719630795,
+          "pvalue": 8.604978034219169e-42
+        },
+        {
+          "feature": "med_distinct",
+          "f": 219.62229175438023,
+          "pvalue": 7.692031560122593e-39
+        },
+        {
+          "feature": "med_distinct_bucket",
+          "f": 160.3117817430459,
+          "pvalue": 1.8235776007460567e-30
+        },
+        {
+          "feature": "proc_n_bucket",
+          "f": 144.93498709577403,
+          "pvalue": 3.936184621491082e-28
+        },
+        {
+          "feature": "scai_std",
+          "f": 96.01786457310851,
+          "pvalue": 3.566062208435376e-20
+        },
+        {
+          "feature": "med_per_clinical_event",
+          "f": 87.42094448397431,
+          "pvalue": 1.1077730507507696e-18
+        },
+        {
+          "feature": "med_residual_within_scai",
+          "f": 14.234866472606875,
+          "pvalue": 0.0001896833876408349
+        },
+        {
+          "feature": "infusion_early_over_all_ratio",
+          "f": 11.796319813489546,
+          "pvalue": 0.0006653651041091751
+        },
+        {
+          "feature": "proc_residual_within_scai",
+          "f": 10.292506740498618,
+          "pvalue": 0.0014601431743245465
+        },
+        {
+          "feature": "demo_profile_bucket",
+          "f": 3.4524640211223443,
+          "pvalue": 0.06400429011024127
+        },
+        {
+          "feature": "clinical_event_n",
+          "f": 0.0008959726308463363,
+          "pvalue": 0.976137853604617
+        }
+      ]
+    },
+    "skewed_features_abs_skew_ge_1_train": [
+      "med_infusion_mean",
+      "scai_prop_ge3",
+      "clinical_event_n",
+      "med_per_clinical_event",
+      "proc_residual_within_scai"
+    ],
+    "feature_skewness_train": {
+      "med_distinct": 0.13281336464273263,
+      "med_infusion_mean": 1.22271327943726,
+      "proc_n": 0.9521625295643505,
+      "proc_distinct_nom": 0.9521625295643505,
+      "current_scai": 0.9088465757526256,
+      "scai_prop_ge3": 1.7393448725797203,
+      "scai_std": 0.25214250163710294,
+      "infusion_early_over_all_ratio": 0.3630262508997248,
+      "clinical_event_n": 1.5084011409887523,
+      "med_per_clinical_event": 1.7944463222001588,
+      "proc_n_bucket": 0.4463447793117656,
+      "med_distinct_bucket": 0.5109836403810128,
+      "med_residual_within_scai": 0.4128190492763511,
+      "proc_residual_within_scai": 1.238071328265947,
+      "demo_profile_bucket": 0.14400785124414292
+    },
+    "univariate_f_classif_train_median_imputed": {
+      "med_distinct": {
+        "f": 219.62229175438023,
+        "pvalue": 7.692031560122593e-39
+      },
+      "med_infusion_mean": {
+        "f": 274.56180502711965,
+        "pvalue": 7.672911909022177e-46
+      },
+      "proc_n": {
+        "f": 245.38082195884414,
+        "pvalue": 3.3265369863447536e-42
+      },
+      "proc_distinct_nom": {
+        "f": 245.38082195884414,
+        "pvalue": 3.3265369863447536e-42
+      },
+      "current_scai": {
+        "f": 386.6108769613422,
+        "pvalue": 2.2819316019401327e-58
+      },
+      "scai_prop_ge3": {
+        "f": 242.157719630795,
+        "pvalue": 8.604978034219169e-42
+      },
+      "scai_std": {
+        "f": 96.01786457310851,
+        "pvalue": 3.566062208435376e-20
+      },
+      "infusion_early_over_all_ratio": {
+        "f": 11.796319813489546,
+        "pvalue": 0.0006653651041091751
+      },
+      "clinical_event_n": {
+        "f": 0.0008959726308463363,
+        "pvalue": 0.976137853604617
+      },
+      "med_per_clinical_event": {
+        "f": 87.42094448397431,
+        "pvalue": 1.1077730507507696e-18
+      },
+      "proc_n_bucket": {
+        "f": 144.93498709577403,
+        "pvalue": 3.936184621491082e-28
+      },
+      "med_distinct_bucket": {
+        "f": 160.3117817430459,
+        "pvalue": 1.8235776007460567e-30
+      },
+      "med_residual_within_scai": {
+        "f": 14.234866472606875,
+        "pvalue": 0.0001896833876408349
+      },
+      "proc_residual_within_scai": {
+        "f": 10.292506740498618,
+        "pvalue": 0.0014601431743245465
+      },
+      "demo_profile_bucket": {
+        "f": 3.4524640211223443,
+        "pvalue": 0.06400429011024127
+      }
+    },
+    "pipeline_scaling_audit": {
+      "train_fitted_scaler_steps": [],
+      "no_standard_scaler_on_xgb_path": true,
+      "note": "Mortality XGBoost path uses only Log1pSelectedColumns and SqrtSelectedColumns (stateless transforms; fit ignores y). No StandardScaler. The separate back_end logistic pipeline uses StandardScaler by design."
+    },
+    "scaling_leakage_and_transform_policy": {
+      "stratified_split_before_any_train_only_thresholding": true,
+      "percentile_fences_computed_from": "training_rows_only_then_applied_to_test",
+      "xgboost_preprocessors": "Log1pSelectedColumns + SqrtSelectedColumns (stateless; no mean/variance learned)",
+      "standard_scaler_on_saved_tree_pipeline": false,
+      "train_fitted_scaler_paths_if_any": [],
+      "linear_regression_scaling": "This module's XGBoost path does not use StandardScaler. Any logistic regression with StandardScaler belongs in a separate pipeline (e.g. back_end) where scaler.fit must run on train only."
+    },
+    "stateless_transforms_note": "Log1p/sqrt steps use fixed formulas; sklearn fit does not learn mean/variance from data.",
+    "test_scores_recomputed": {
+      "auroc": 0.9202037351443124,
+      "auprc": 0.8484318981880707,
+      "brier": 0.09683362981138263
+    },
+    "test_scores_from_meta_json": {
+      "test_auroc": 0.9202037351443124,
+      "test_auprc": 0.8484318981880707,
+      "test_brier": 0.09683362981138263
+    },
+    "delta_vs_meta": {
+      "auroc": 0.0,
+      "auprc": 0.0,
+      "brier": 0.0
+    },
+    "prep_diag_subset": {
+      "n_rows_raw": 500,
+      "n_train_before_fence": 375,
+      "n_test_before_fence": 125,
+      "n_train_after_fence": 349,
+      "n_test_after_fence": 107,
+      "percentile_fences_fit_on": "train_only",
+      "patient_id_train_test_disjoint": true,
+      "n_patient_id_overlap_train_test": 0,
+      "class_imbalance_mitigation": {
+        "stratified_train_test_split": true,
+        "scale_pos_weight_from_train_labels_only": true,
+        "note": "Mortality is usually label-imbalanced; this is not removed, it is mitigated. Stratified split keeps similar death prevalence in train vs test; XGBoost `scale_pos_weight` is n_neg/n_pos from **training** rows only (no test leakage)."
+      },
+      "split_and_scaling_order": [
+        "1) Stratified train/test index split (one row per PERSON_ID enforced in build_patient_frame).",
+        "2) Joint percentile fences fit on **training** rows only; same thresholds applied to test.",
+        "3) Model Pipeline: stateless log1p/sqrt only \u2014 no StandardScaler; no mean/variance fit on test."
+      ]
+    },
+    "duckdb_residual_full_cohort_warning": "DuckDB `*_residual_within_scai` features use windowed means over **all** rows in `duckdb_patient_features.parquet`, so test patients can influence train feature values unless the sidecar is rebuilt from a training-only subset.",
+    "bias_and_fairness_note": "``demo_profile_bucket`` (age \u00d7 weight \u00d7 sex bands) is included at low XGBoost feature weight; race is not modeled \u2014 parity across race cannot be measured from this matrix alone. Class imbalance (more survivors than deaths) is **expected**; mitigation is stratified splitting plus XGBoost `scale_pos_weight` fit from **training** label counts only (not test). Residual features from DuckDB may use full-cohort statistics \u2014 see duckdb warning.",
+    "warnings": [
+      "DuckDB `*_residual_within_scai` features use windowed means over **all** rows in `duckdb_patient_features.parquet`, so test patients can influence train feature values unless the sidecar is rebuilt from a training-only subset."
+    ],
+    "all_critical_checks_passed": true
+  },
+  "checks": [
+    {
+      "id": 1,
+      "category": "Data Quality",
+      "title": "Class distribution check",
+      "status": "PASS",
+      "finding": "Train death rate 26.4% vs test 29.0% (stratified split).",
+      "details": {
+        "train_death_rate": 0.2636103151862464,
+        "test_death_rate": 0.2897196261682243,
+        "delta_pp": 2.61
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 2,
+      "category": "Data Quality",
+      "title": "Class imbalance assessment",
+      "status": "PASS",
+      "finding": "Positive rate 26.4% (<30% imbalanced). Neg/pos ratio\u22482.8. XGBoost scale_pos_weight=7.12 (train counts only).",
+      "details": {
+        "scale_pos_weight": 7.123369565217391,
+        "imbalance_ratio_train": 2.7934782608695654
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 3,
+      "category": "Data Quality",
+      "title": "Train/test split verification",
+      "status": "PASS",
+      "finding": "Stratified split on PERSON_ID (one row/patient). Overlap=0. Fences fit train-only then applied to test.",
+      "details": {
+        "n_train": 349,
+        "n_test": 107,
+        "prep_diag": {
+          "n_rows_raw": 500,
+          "n_train_before_fence": 375,
+          "n_test_before_fence": 125,
+          "n_train_after_fence": 349,
+          "n_test_after_fence": 107,
+          "percentile_fences_fit_on": "train_only",
+          "patient_id_train_test_disjoint": true,
+          "n_patient_id_overlap_train_test": 0,
+          "class_imbalance_mitigation": {
+            "stratified_train_test_split": true,
+            "scale_pos_weight_from_train_labels_only": true,
+            "note": "Mortality is usually label-imbalanced; this is not removed, it is mitigated. Stratified split keeps similar death prevalence in train vs test; XGBoost `scale_pos_weight` is n_neg/n_pos from **training** rows only (no test leakage)."
+          },
+          "split_and_scaling_order": [
+            "1) Stratified train/test index split (one row per PERSON_ID enforced in build_patient_frame).",
+            "2) Joint percentile fences fit on **training** rows only; same thresholds applied to test.",
+            "3) Model Pipeline: stateless log1p/sqrt only \u2014 no StandardScaler; no mean/variance fit on test."
+          ]
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 4,
+      "category": "Data Quality",
+      "title": "Label verification",
+      "status": "PASS",
+      "finding": "Binary `died` (0=survived, 1=in-hospital death). From encounter disposition EXPIRED + person DECEASED_DT_TM reconciliation.",
+      "details": {
+        "train_pos": 92,
+        "test_pos": 31,
+        "both_classes_train_test": true
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 5,
+      "category": "Feature Quality",
+      "title": "Feature relevance (prediction-time)",
+      "status": "PASS",
+      "finding": "Full-stay patient aggregates from DuckDB sidecar (med/SCAI/proc/clinical). No discharge disposition or total LOS in FEATURE_COLUMNS.",
+      "details": {
+        "feature_columns": [
+          "med_distinct",
+          "med_infusion_mean",
+          "proc_n",
+          "proc_distinct_nom",
+          "current_scai",
+          "scai_prop_ge3",
+          "scai_std",
+          "infusion_early_over_all_ratio",
+          "clinical_event_n",
+          "med_per_clinical_event",
+          "proc_n_bucket",
+          "med_distinct_bucket",
+          "med_residual_within_scai",
+          "proc_residual_within_scai",
+          "demo_profile_bucket"
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 6,
+      "category": "Feature Quality",
+      "title": "Data leakage audit",
+      "status": "PASS",
+      "finding": "PASS critical integrity checks. DuckDB `*_residual_within_scai` features use windowed means over **all** rows in `duckdb_patient_features.parquet`, so test patients can influence train feature values unless the sidecar is rebuilt from a training-only subset.",
+      "details": {
+        "scaling_policy": {
+          "stratified_split_before_any_train_only_thresholding": true,
+          "percentile_fences_computed_from": "training_rows_only_then_applied_to_test",
+          "xgboost_preprocessors": "Log1pSelectedColumns + SqrtSelectedColumns (stateless; no mean/variance learned)",
+          "standard_scaler_on_saved_tree_pipeline": false,
+          "train_fitted_scaler_paths_if_any": [],
+          "linear_regression_scaling": "This module's XGBoost path does not use StandardScaler. Any logistic regression with StandardScaler belongs in a separate pipeline (e.g. back_end) where scaler.fit must run on train only."
+        },
+        "label_in_features": "died excluded from X"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 7,
+      "category": "Feature Quality",
+      "title": "Feature scaling check",
+      "status": "PASS",
+      "finding": "XGBoost path: log1p/sqrt only (stateless). No StandardScaler on tree pipeline. Linear models with scaling live in separate back_end pipelines.",
+      "details": {
+        "train_fitted_scaler_steps": [],
+        "no_standard_scaler_on_xgb_path": true,
+        "note": "Mortality XGBoost path uses only Log1pSelectedColumns and SqrtSelectedColumns (stateless transforms; fit ignores y). No StandardScaler. The separate back_end logistic pipeline uses StandardScaler by design."
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 8,
+      "category": "Feature Quality",
+      "title": "Missing value handling",
+      "status": "PASS",
+      "finding": "Median imputation inside percentile-fence prep; train-only fence thresholds. Highly skewed train features (|skew|\u22651): ['med_infusion_mean', 'scai_prop_ge3', 'clinical_event_n', 'med_per_clinical_event', 'proc_residual_within_scai'].",
+      "details": {
+        "skew_ge_1": [
+          "med_infusion_mean",
+          "scai_prop_ge3",
+          "clinical_event_n",
+          "med_per_clinical_event",
+          "proc_residual_within_scai"
+        ],
+        "f_classif_top": [
+          [
+            "med_distinct",
+            {
+              "f": 219.62229175438023,
+              "pvalue": 7.692031560122593e-39
+            }
+          ],
+          [
+            "med_infusion_mean",
+            {
+              "f": 274.56180502711965,
+              "pvalue": 7.672911909022177e-46
+            }
+          ],
+          [
+            "proc_n",
+            {
+              "f": 245.38082195884414,
+              "pvalue": 3.3265369863447536e-42
+            }
+          ],
+          [
+            "proc_distinct_nom",
+            {
+              "f": 245.38082195884414,
+              "pvalue": 3.3265369863447536e-42
+            }
+          ],
+          [
+            "current_scai",
+            {
+              "f": 386.6108769613422,
+              "pvalue": 2.2819316019401327e-58
+            }
+          ]
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 9,
+      "category": "Feature Quality",
+      "title": "Feature importance sanity check",
+      "status": "WARN",
+      "finding": "Run mortality_decision_shap_audit.py for SHAP/permutation. MI weights on train; demo_profile_bucket capped low. No patient ID in features.",
+      "details": {
+        "clinical_weight_range": [
+          1.0,
+          16.0
+        ],
+        "shap_script": "Baptist_tester/mortality_decision_shap_audit.py"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 10,
+      "category": "Model Evaluation",
+      "title": "Right metric for the problem",
+      "status": "PASS",
+      "finding": "Imbalanced binary: AUPRC primary (0.848 vs baseline 0.290), AUROC secondary (0.920), Brier 0.097. Not accuracy-primary.",
+      "details": {
+        "test_auprc": 0.8484318981880707,
+        "test_auroc": 0.9202037351443124,
+        "test_brier": 0.09683362981138263,
+        "positive_rate_baseline": 0.2897196261682243
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 11,
+      "category": "Model Evaluation",
+      "title": "AUC-ROC interpretation",
+      "status": "PASS",
+      "finding": "Test AUROC=0.920 (0.85+ good clinical use; ~1.0 suggests leakage \u2014 not the case here).",
+      "details": {
+        "interpretation_band": "good"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 12,
+      "category": "Model Evaluation",
+      "title": "AUC-PR interpretation",
+      "status": "FAIL",
+      "finding": "Test AUPRC=0.848 vs prevalence baseline 0.290 \u2192 2.9\u00d7 baseline (strong if \u22655\u00d7).",
+      "details": {
+        "auprc_multiplier_vs_baseline": 2.93
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 13,
+      "category": "Model Evaluation",
+      "title": "Brier score interpretation",
+      "status": "PASS",
+      "finding": "Test Brier=0.097 vs random-guess 0.206. Isotonic calibration + temperature on train OOF.",
+      "details": {
+        "calibration": "sigmoid",
+        "brier_skill_vs_train_rate": 0.5309899292963367
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 14,
+      "category": "Model Evaluation",
+      "title": "Cross-validation stability",
+      "status": "PASS",
+      "finding": "Training 10-fold OOF calibration sweep: Brier 0.096\u00b10.005 (sigmoid/isotonic/none). AUPRC OOF 0.797\u00b10.008.",
+      "details": {
+        "calibration_cv_brier_scores": {
+          "selected_calibration_composite": 0.5865738156685849,
+          "cv_composite_sigmoid_oof": 0.5865738156685849,
+          "cv_brier_sigmoid_oof": 0.09279222617575095,
+          "cv_ap_sigmoid_oof": 0.7953563245640245,
+          "cv_composite_isotonic_oof": 0.58220888952753,
+          "cv_brier_isotonic_oof": 0.09125188116112333,
+          "cv_ap_isotonic_oof": 0.7875256221400575,
+          "cv_composite_none_oof": 0.5749387032841793,
+          "cv_brier_none_oof": 0.10331046794508061,
+          "cv_ap_none_oof": 0.8073872561606107
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 15,
+      "category": "Bias and Fairness",
+      "title": "Demographic subgroup performance",
+      "status": "PASS",
+      "finding": "Test AUROC by sex/race. Flagged (\u0394<-0.05 vs overall): 0 groups.",
+      "details": {
+        "subgroups": {
+          "sex_cd": [
+            {
+              "group": "M",
+              "n": 69,
+              "n_pos": 20,
+              "death_rate": 0.2899,
+              "auroc": 0.8949,
+              "auroc_delta_vs_overall": -0.0253
+            },
+            {
+              "group": "F",
+              "n": 38,
+              "n_pos": 11,
+              "death_rate": 0.2895,
+              "auroc": 0.9596,
+              "auroc_delta_vs_overall": 0.0394
+            }
+          ],
+          "race_cd": [
+            {
+              "group": "ASIAN",
+              "n": 2,
+              "note": "too small for AUC"
+            },
+            {
+              "group": "BLACK",
+              "n": 19,
+              "note": "too small for AUC"
+            },
+            {
+              "group": "OTHER",
+              "n": 15,
+              "note": "too small for AUC"
+            },
+            {
+              "group": "UNKNOWN",
+              "n": 7,
+              "note": "too small for AUC"
+            },
+            {
+              "group": "WHITE",
+              "n": 64,
+              "n_pos": 16,
+              "death_rate": 0.25,
+              "auroc": 0.8984,
+              "auroc_delta_vs_overall": -0.0218
+            }
+          ]
+        },
+        "flagged": []
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 16,
+      "category": "Bias and Fairness",
+      "title": "Clinical subgroup performance",
+      "status": "WARN",
+      "finding": "Run AUPRC/AUROC by SCAI band (current_scai tertiles) before deployment.",
+      "details": {},
+      "not_applicable_reason": "Automated dx subgroup not in patient frame (use mortality_decision_shap_audit)."
+    },
+    {
+      "id": 17,
+      "category": "Bias and Fairness",
+      "title": "Simpson's paradox check",
+      "status": "WARN",
+      "finding": "Review subgroup table alongside overall AUROC/AUPRC before sign-off.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 18,
+      "category": "Sanity",
+      "title": "Monotonicity test",
+      "status": "PASS",
+      "finding": "current_scai q10\u2192q90: 0.710\u21920.829",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 19,
+      "category": "Sanity",
+      "title": "Direction test",
+      "status": "WARN",
+      "finding": "Extend to top-5 drivers (SCAI, infusion, clinical_event_n).",
+      "details": {},
+      "not_applicable_reason": "Partial auto (current_scai)."
+    },
+    {
+      "id": 20,
+      "category": "Sanity",
+      "title": "Prediction consistency test",
+      "status": "PASS",
+      "finding": "Same 3 rows \u00d75 runs identical.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 21,
+      "category": "Sanity",
+      "title": "Edge case test",
+      "status": "WARN",
+      "finding": "Test median row + extreme SCAI before production serve path.",
+      "details": {},
+      "not_applicable_reason": "Not fully automated."
+    },
+    {
+      "id": 22,
+      "category": "Sanity",
+      "title": "Threshold analysis",
+      "status": "PASS",
+      "finding": "Alert threshold=0.38 (train OOF tuned). At alert: TP=25 FN=6 FP=9 TN=67, recall=0.81, PPV=0.74. Default 0.5 recall=0.81.",
+      "details": {
+        "at_alert": {
+          "tn": 67,
+          "fp": 9,
+          "fn": 6,
+          "tp": 25,
+          "threshold": 0.3800000000000001,
+          "accuracy": 0.8598130841121495,
+          "ppv": 0.7352941176470589,
+          "recall": 0.8064516129032258,
+          "f1": 0.7692307692307693
+        },
+        "at_default_0.5": {
+          "tn": 69,
+          "fp": 7,
+          "fn": 6,
+          "tp": 25,
+          "threshold": 0.5,
+          "accuracy": 0.8785046728971962,
+          "ppv": 0.78125,
+          "recall": 0.8064516129032258,
+          "f1": 0.7936507936507936
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 23,
+      "category": "Clinical Utility",
+      "title": "Alert rate test",
+      "status": "PASS",
+      "finding": "Test alert rate 31.8% at threshold 0.38 (34/107 patients).",
+      "details": {
+        "n_alerts": 34,
+        "n_test": 107
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 24,
+      "category": "Clinical Utility",
+      "title": "Lead time test",
+      "status": "N/A",
+      "finding": "Patient-level snapshot model (not hourly early warning). MCS/ECMO 12h models cover lead-time use case.",
+      "details": {},
+      "not_applicable_reason": "Different model family for time-series alerts."
+    },
+    {
+      "id": 25,
+      "category": "Clinical Utility",
+      "title": "Baseline comparison",
+      "status": "PASS",
+      "finding": "Brier 0.097 vs always-predict-train-rate 0.206. Brier skill vs train prevalence: 0.5309899292963367.",
+      "details": {
+        "test_auroc": 0.9202037351443124,
+        "test_auprc": 0.8484318981880707
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 26,
+      "category": "Clinical Utility",
+      "title": "Human expert comparison",
+      "status": "WARN",
+      "finding": "Use CLINICIAN_REVIEW_TEMPLATE for mortality sample review.",
+      "details": {},
+      "not_applicable_reason": "Qualitative."
+    },
+    {
+      "id": 27,
+      "category": "Deployment",
+      "title": "Reproducibility test",
+      "status": "PASS",
+      "finding": "split_seed=42. Train via mortality_model.py --data-dir ... --seed 42.",
+      "details": {
+        "meta_path": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/Baptist_tester/synth_cs_data/xgb_mortality_model_meta.json"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 28,
+      "category": "Deployment",
+      "title": "Train/serve consistency",
+      "status": "PASS",
+      "finding": "Single xgb_mortality_pipeline.joblib (CalibratedClassifierCV + log1p/sqrt + XGB).",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 29,
+      "category": "Deployment",
+      "title": "Model card documentation",
+      "status": "PASS",
+      "finding": "xgb_mortality_model_meta.json + mortality_feature_columns.json. Add RETRAINING_AND_MONITORING.md.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 30,
+      "category": "Deployment",
+      "title": "Retraining plan",
+      "status": "PASS",
+      "finding": "See RETRAINING_AND_MONITORING.md for triggers, monitoring table, and retrain commands.",
+      "details": {},
+      "not_applicable_reason": null
+    }
+  ]
+}

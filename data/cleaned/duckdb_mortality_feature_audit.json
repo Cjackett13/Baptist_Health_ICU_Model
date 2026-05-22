@@ -1,0 +1,131 @@
+{
+  "sidecar_parquet": "duckdb_patient_features.parquet",
+  "note_mi_full_cohort": "mutual_information_full_cohort is exploratory (fit on all patients before split); training uses train-only metrics in xgb_mortality_model_meta.json.",
+  "mutual_information_full_cohort": {
+    "med_distinct": 0.2553554185339102,
+    "med_infusion_mean": 0.2583663059329637,
+    "proc_n": 0.2360112379231576,
+    "proc_distinct_nom": 0.2395339157004348,
+    "current_scai": 0.2497009479685317,
+    "scai_prop_ge3": 0.2767028433528298,
+    "scai_std": 0.11264449457406589,
+    "scai_slope_12h": 0.07527501794771374,
+    "scai_max": 0.284109812255273,
+    "scai_increase_count": 0.1288816920005882,
+    "inf_early_minus_all": 0.1442755825134443,
+    "infusion_early_above_mean": 0.049281832314927554,
+    "clinical_events_last_4h": 0.09497377257528838,
+    "clinical_events_per_icu_hour": 0.2592305703652704,
+    "med_admin_per_icu_hour": 0.17478956339750118,
+    "proc_per_icu_hour": 0.23545812557453893,
+    "med_per_clinical_event": 0.1359465557578523,
+    "proc_n_bucket": 0.2018763793491598,
+    "med_distinct_bucket": 0.1982720825480928,
+    "med_residual_within_scai": 0.29286162196266186,
+    "proc_residual_within_scai": 0.2830864565756164,
+    "clinical_event_residual_within_scai": 0.2225465255905852,
+    "infusion_x_scai_severity": 0.2764564734892663,
+    "demo_profile_bucket": 0.0006130945247764252,
+    "age_years": 0.004685533811827014,
+    "frailty_index": 0.0
+  },
+  "stratified_residual_audit": {
+    "stratified_means_by_scai_bin": [
+      {
+        "scai_bin": 0,
+        "n": 2494,
+        "mean_med_died": 3.671641791044776,
+        "mean_med_surv": 1.539406779661017,
+        "mean_inf_died": 0.004834406538734896,
+        "mean_inf_surv": 0.0047419829499596566,
+        "mean_ce_rate_died": 15.5760788923954,
+        "mean_ce_rate_surv": 11.88415543698967,
+        "mean_ce_4h_died": 78.27611940298507,
+        "mean_ce_4h_surv": 66.80974576271187,
+        "mean_slope_died": 0.22388059701492538,
+        "mean_slope_surv": -0.11483050847457626,
+        "mean_scai_max_died": 2.4925373134328357,
+        "mean_scai_max_surv": 0.9334745762711865
+      },
+      {
+        "scai_bin": 1,
+        "n": 625,
+        "mean_med_died": 4.205882352941177,
+        "mean_med_surv": 2.423698384201077,
+        "mean_inf_died": 0.1335069619514473,
+        "mean_inf_surv": 0.12149970016917055,
+        "mean_ce_rate_died": 15.873115449711225,
+        "mean_ce_rate_surv": 12.820287838928866,
+        "mean_ce_4h_died": 77.3529411764706,
+        "mean_ce_4h_surv": 68.40574506283663,
+        "mean_slope_died": 0.36764705882352944,
+        "mean_slope_surv": -0.09874326750448834,
+        "mean_scai_max_died": 2.823529411764706,
+        "mean_scai_max_surv": 1.5080789946140036
+      },
+      {
+        "scai_bin": 2,
+        "n": 330,
+        "mean_med_died": 4.670886075949367,
+        "mean_med_surv": 3.597609561752988,
+        "mean_inf_died": 1.150636081977095,
+        "mean_inf_surv": 1.342716733010238,
+        "mean_ce_rate_died": 17.64672561360186,
+        "mean_ce_rate_surv": 14.968256456494792,
+        "mean_ce_4h_died": 83.35443037974683,
+        "mean_ce_4h_surv": 71.60159362549801,
+        "mean_slope_died": 0.27848101265822783,
+        "mean_slope_surv": -0.06374501992031872,
+        "mean_scai_max_died": 3.2278481012658227,
+        "mean_scai_max_surv": 2.4661354581673307
+      },
+      {
+        "scai_bin": 3,
+        "n": 265,
+        "mean_med_died": 5.043478260869565,
+        "mean_med_surv": 5.094488188976378,
+        "mean_inf_died": 1.784918377433758,
+        "mean_inf_surv": 1.5258407270682077,
+        "mean_ce_rate_died": 15.90026696049403,
+        "mean_ce_rate_surv": 18.429892818316116,
+        "mean_ce_4h_died": 84.22463768115942,
+        "mean_ce_4h_surv": 80.00787401574803,
+        "mean_slope_died": 0.427536231884058,
+        "mean_slope_surv": 0.31496062992125984,
+        "mean_scai_max_died": 3.7246376811594204,
+        "mean_scai_max_surv": 3.5511811023622046
+      },
+      {
+        "scai_bin": 4,
+        "n": 1286,
+        "mean_med_died": 5.052993130520118,
+        "mean_med_surv": 5.265917602996255,
+        "mean_inf_died": 2.6113010552976132,
+        "mean_inf_surv": 2.2381777502688736,
+        "mean_ce_rate_died": 13.097108335467016,
+        "mean_ce_rate_surv": 19.285605716514404,
+        "mean_ce_4h_died": 91.55839057899902,
+        "mean_ce_4h_surv": 89.77153558052434,
+        "mean_slope_died": 0.6526005888125613,
+        "mean_slope_surv": 0.31835205992509363,
+        "mean_scai_max_died": 4.0,
+        "mean_scai_max_surv": 4.0
+      }
+    ]
+  },
+  "infusion_feature_audit": {
+    "infusion_early_over_all_ratio": {
+      "n": 5000,
+      "pct_eq_1": 0.4046,
+      "pct_eq_1_02": 0.4394,
+      "median": 1.0
+    },
+    "inf_early_minus_all": {
+      "median": 0.0,
+      "pct_positive": 0.266
+    },
+    "infusion_early_above_mean": {
+      "pct_one": 0.2486
+    }
+  }
+}

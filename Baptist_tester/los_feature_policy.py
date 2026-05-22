@@ -53,6 +53,9 @@ LABEL_DERIVED_FORBIDDEN_AS_FEATURES: frozenset[str] = frozenset(
         "truncated_ama",
         "los_truncated",
         "truncated_disposition_cd",
+        # Synthetic admit-time LOS index (same formula as label assignment; not for modeling)
+        "admit_los_index_h",
+        "ADMIT_LOS_INDEX_H",
     }
 )
 
@@ -90,14 +93,49 @@ IDENTIFIER_FORBIDDEN_AS_FEATURES: frozenset[str] = frozenset(
     }
 )
 
+# Race/ethnicity: stratified evaluation only — never train on these directly.
+DEMOGRAPHIC_EVAL_ONLY_COLUMNS: frozenset[str] = frozenset(
+    {
+        "race_cd",
+        "ethnicity_cd",
+        "demo_profile_bucket",
+    }
+)
+
+DEMOGRAPHIC_TRAINING_FORBIDDEN: frozenset[str] = DEMOGRAPHIC_EVAL_ONLY_COLUMNS
+
 FORBIDDEN_AS_FEATURES: frozenset[str] = (
     LABEL_DERIVED_FORBIDDEN_AS_FEATURES
     | FULL_STAY_AGGREGATE_FORBIDDEN
     | IDENTIFIER_FORBIDDEN_AS_FEATURES
+    | DEMOGRAPHIC_TRAINING_FORBIDDEN
 )
 
 # v1 admit snapshot uses _12h suffix (valid only when prediction_hour <= 12)
 V1_WINDOW_SUFFIX = "_12h"
+V1_PREDICTION_HOUR = 12
+
+# v2 rolling: feature aggregates through min(prediction_hour, stay) — not yet in DuckDB SQL.
+ROLLING_FEATURE_MODE = "v1_static_12h"  # set to "rolling" when los_duckdb supports dynamic suffixes
+
+
+def feature_window_hours_for_prediction(prediction_hour: int) -> int:
+    """Hours of data included when building features for a checkpoint."""
+    if ROLLING_FEATURE_MODE == "v1_static_12h":
+        return V1_FEATURE_WINDOW_HOURS
+    return max(V1_FEATURE_WINDOW_HOURS, int(prediction_hour))
+
+
+def aggregate_suffix_for_prediction_hour(prediction_hour: int) -> str:
+    """
+    Column suffix for time-censored aggregates.
+
+    v1: always ``_12h`` (first-shift snapshot). v2 (future): ``_{h}h`` or ``_0_to_t``.
+    """
+    if ROLLING_FEATURE_MODE == "v1_static_12h":
+        return V1_WINDOW_SUFFIX
+    h = max(V1_FEATURE_WINDOW_HOURS, int(prediction_hour))
+    return f"_{h}h"
 
 # Checkpoint metadata allowed in X
 CHECKPOINT_META_FEATURES: frozenset[str] = frozenset(
@@ -147,10 +185,14 @@ EARLY_WINDOW_PER_TABLE: dict[str, dict[str, str]] = {
         "allowed_features": "scai_first_0_to_t, scai_last_0_to_t, scai_mean_0_to_t, scai_std_0_to_t, scai_slope_0_to_t",
     },
     "duckdb_patient_features": {
-        "time_column": "N/A (pre-aggregated full stay)",
-        "window_rule": "BLOCK entire table for modeling unless rebuilt with censor at T. "
-        "All columns in FULL_STAY_AGGREGATE_FORBIDDEN.",
-        "allowed_features": "none — use table-specific 0_to_t rebuilds instead",
+        "time_column": "N/A (mortality full-stay sidecar)",
+        "window_rule": "BLOCK for LOS — mortality aggregates leak future stay.",
+        "allowed_features": "none",
+    },
+    "duckdb_los_features": {
+        "time_column": "≤12h from REG_DT_TM (v1 snapshot)",
+        "window_rule": "All columns suffixed _12h or admit-time flags; built by los_duckdb_features.py.",
+        "allowed_features": "demo_profile_bucket, med_*_12h, scai_*_12h, proc_*_12h, dx_cat_*, residuals *_12h",
     },
 }
 
@@ -169,10 +211,14 @@ def build_policy_dict() -> dict[str, Any]:
             "both_are_targets": True,
             "neither_may_be_features": True,
         },
+        "rolling_feature_mode": ROLLING_FEATURE_MODE,
+        "v1_prediction_hour": V1_PREDICTION_HOUR,
+        "demographic_eval_only": sorted(DEMOGRAPHIC_EVAL_ONLY_COLUMNS),
         "forbidden_as_features": {
             "label_derived": sorted(LABEL_DERIVED_FORBIDDEN_AS_FEATURES),
             "full_stay_aggregates": sorted(FULL_STAY_AGGREGATE_FORBIDDEN),
             "identifiers": sorted(IDENTIFIER_FORBIDDEN_AS_FEATURES),
+            "demographic_training_forbidden": sorted(DEMOGRAPHIC_TRAINING_FORBIDDEN),
             "combined": sorted(FORBIDDEN_AS_FEATURES),
         },
         "early_window_per_table": EARLY_WINDOW_PER_TABLE,
@@ -196,6 +242,12 @@ def validate_modeling_columns(
     bad = [c for c in feature_columns if c in FORBIDDEN_AS_FEATURES]
     if bad:
         raise ValueError(f"Forbidden feature columns blocked: {bad}")
+
+    demo = [c for c in feature_columns if c in DEMOGRAPHIC_TRAINING_FORBIDDEN]
+    if demo:
+        raise ValueError(
+            f"Demographic columns are eval-only (use subgroup MAE), not training features: {demo}"
+        )
 
     label_in_x = [c for c in feature_columns if c in LABEL_COLUMNS]
     if label_in_x:

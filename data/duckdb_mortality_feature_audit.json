@@ -1,0 +1,75 @@
+{
+  "sidecar_parquet": "duckdb_patient_features.parquet",
+  "note_mi_full_cohort": "mutual_information_full_cohort is exploratory (fit on all patients before split); training uses train-only metrics in xgb_mortality_model_meta.json.",
+  "mutual_information_full_cohort": {
+    "med_distinct": 0.22507556211015878,
+    "med_infusion_mean": 0.2353534630758447,
+    "proc_n": 0.20850847571463782,
+    "proc_distinct_nom": 0.22800093739328742,
+    "current_scai": 0.2630797303644483,
+    "scai_prop_ge3": 0.2809849009380765,
+    "scai_std": 0.11481000475480152,
+    "infusion_early_over_all_ratio": 0.09582477788418764,
+    "clinical_event_n": 0.06317852866937224,
+    "med_per_clinical_event": 0.13899052986987104,
+    "proc_n_bucket": 0.1701283135298377,
+    "med_distinct_bucket": 0.16247686876336953,
+    "med_residual_within_scai": 0.30974627313619796,
+    "proc_residual_within_scai": 0.2967342272713267,
+    "demo_profile_bucket": 0.0005666295934458887
+  },
+  "stratified_residual_audit": {
+    "stratified_means_by_scai_bin": [
+      {
+        "scai_bin": 0,
+        "n": 2537,
+        "mean_med_died": 3.7754010695187166,
+        "mean_med_surv": 1.9370212765957446,
+        "mean_inf_died": 0.00402416406528706,
+        "mean_inf_surv": 0.004147170824919764,
+        "mean_ce_died": 2259.855614973262,
+        "mean_ce_surv": 1391.6170212765958
+      },
+      {
+        "scai_bin": 1,
+        "n": 729,
+        "mean_med_died": 4.225806451612903,
+        "mean_med_surv": 2.5676100628930816,
+        "mean_inf_died": 0.11241531014982634,
+        "mean_inf_surv": 0.1051000817539379,
+        "mean_ce_died": 1940.7096774193549,
+        "mean_ce_surv": 1308.7028301886792
+      },
+      {
+        "scai_bin": 2,
+        "n": 389,
+        "mean_med_died": 4.390243902439025,
+        "mean_med_surv": 3.452768729641694,
+        "mean_inf_died": 1.137968940977721,
+        "mean_inf_surv": 1.3612549372858418,
+        "mean_ce_died": 1744.0,
+        "mean_ce_surv": 1476.4885993485343
+      },
+      {
+        "scai_bin": 3,
+        "n": 248,
+        "mean_med_died": 5.014705882352941,
+        "mean_med_surv": 5.107142857142857,
+        "mean_inf_died": 1.461456022986409,
+        "mean_inf_surv": 1.4216783726268767,
+        "mean_ce_died": 1516.9705882352941,
+        "mean_ce_surv": 1635.0267857142858
+      },
+      {
+        "scai_bin": 4,
+        "n": 1097,
+        "mean_med_died": 5.004089979550102,
+        "mean_med_surv": 5.109243697478991,
+        "mean_inf_died": 2.096051331481146,
+        "mean_inf_surv": 1.9044708140225786,
+        "mean_ce_died": 1197.5460122699387,
+        "mean_ce_surv": 1555.436974789916
+      }
+    ]
+  }
+}

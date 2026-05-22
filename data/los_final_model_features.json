@@ -1,0 +1,42 @@
+{
+  "description": "Only features used in LOS v1 model (before one-hot expansion).",
+  "label_for_training": "log1p_los_hours_total",
+  "label_columns_raw": [
+    "los_hours_total",
+    "remaining_los_hours"
+  ],
+  "feature_columns": [
+    "med_infusion_mean_12h",
+    "scai_prop_ge3_12h",
+    "current_scai_12h",
+    "proc_n_12h",
+    "med_distinct_12h",
+    "clinical_event_n_12h",
+    "dx_cat_arrhythmia_arrest",
+    "med_per_clinical_event_12h",
+    "scai_slope_12h",
+    "age_years",
+    "sex_bin",
+    "admit_type_cd",
+    "admit_src_cd",
+    "unit_cd"
+  ],
+  "numeric": [
+    "med_infusion_mean_12h",
+    "scai_prop_ge3_12h",
+    "current_scai_12h",
+    "proc_n_12h",
+    "med_distinct_12h",
+    "clinical_event_n_12h",
+    "dx_cat_arrhythmia_arrest",
+    "med_per_clinical_event_12h",
+    "scai_slope_12h",
+    "age_years",
+    "sex_bin"
+  ],
+  "categorical_one_hot": [
+    "admit_type_cd",
+    "admit_src_cd",
+    "unit_cd"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "source_file": "los_data_cleaning_audit.json",
+  "summary": {
+    "sentinels_to_missing": 1024212,
+    "invalid_coded_to_missing": 0,
+    "datetime_unparseable": 0,
+    "numeric_coercion_failed": 0,
+    "invalid_icd_to_missing": 0,
+    "invalid_event_cd_to_missing": 0,
+    "numeric_median_imputed": 0,
+    "duplicate_encounter_id_dropped": 0,
+    "los_hours_reconciled_to_datetime": 0,
+    "los_hours_out_of_range_nullified": 0,
+    "missing_reg_dt_tm": 0,
+    "missing_disch_dt_tm": 0,
+    "clinical_result_out_of_range_nullified": 20788,
+    "open_interval_closed_at_discharge": 0,
+    "end_before_start_fixed": 0,
+    "age_implausible_birth_nullified": 0,
+    "invalid_scai_cd_nullified": 0,
+    "sentinels_to_missing_total": 1024212,
+    "numeric_median_imputation": {}
+  },
+  "imputation_policy": "median impute: medication_admin, scai_stage_hourly only; encounter/clinical_event/diagnosis keep NaN",
+  "datetime_policy": "unparseable datetimes coerced to NaT; rows retained (no row drops on parse failure)",
+  "raw_parquet_policy": "source data/*.parquet not overwritten; use persist_cleaned_bundle for cleaned copies",
+  "rules_applied": [
+    "sentinels_to_missing",
+    "invalid_coded_to_missing",
+    "datetime_unparseable",
+    "numeric_coercion_failed",
+    "invalid_icd_to_missing",
+    "invalid_event_cd_to_missing",
+    "duplicate_encounter_id_dropped",
+    "los_hours_reconciled_to_datetime",
+    "los_hours_out_of_range_nullified",
+    "clinical_result_out_of_range_nullified",
+    "numeric_median_imputed",
+    "open_interval_closed_at_discharge",
+    "end_before_start_fixed",
+    "age_implausible_birth_nullified",
+    "invalid_scai_cd_nullified"
+  ],
+  "per_table": {
+    "code_value": {
+      "table": "code_value",
+      "n_rows_in": 35,
+      "sentinels_to_missing": {
+        "RESULT_UNITS_CD": 5
+      },
+      "n_rows_out": 35
+    },
+    "person": {
+      "table": "person",
+      "n_rows_in": 5000,
+      "n_rows_out": 5000
+    },
+    "encounter": {
+      "table": "encounter",
+      "n_rows_in": 5000,
+      "n_rows_out": 5000
+    },
+    "diagnosis": {
+      "table": "diagnosis",
+      "n_rows_in": 15081,
+      "n_rows_out": 15081
+    },
+    "clinical_event": {
+      "table": "clinical_event",
+      "n_rows_in": 5954230,
+      "sentinels_to_missing": {
+        "RESULT_UNITS_CD": 1024207
+      },
+      "n_rows_out": 5954230
+    },
+    "medication_admin": {
+      "table": "medication_admin",
+      "n_rows_in": 18912,
+      "n_rows_out": 18912
+    },
+    "procedure_event": {
+      "table": "procedure_event",
+      "n_rows_in": 5231,
+      "n_rows_out": 5231
+    },
+    "scai_stage_hourly": {
+      "table": "scai_stage_hourly",
+      "n_rows_in": 400003,
+      "n_rows_out": 400003
+    }
+  },
+  "table_rules": {
+    "clinical_result_out_of_range_nullified": {
+      "clinical_event": 20788
+    }
+  },
+  "cleaned_bundle_manifest": "los_cleaned_bundle_manifest.json",
+  "corrections": [
+    "String sentinels (NULL, N/A, etc.) \u2192 pd.NA on object/string/category/_CD/_TXT columns",
+    "ICD-10 validation on diagnosis.NOMENCLATURE_CD",
+    "EVENT_CD validation on clinical_event",
+    "LOS reconcile: prefer datetime diff when |stored \u2212 delta| > 1h",
+    "LOS_HOURS outside (0, 336] nulled on encounter",
+    "Unparseable datetimes \u2192 NaT (rows kept)",
+    "Out-of-range RESULT_VAL nulled (not median-filled) on clinical_event",
+    "Median impute only medication_admin / scai_stage_hourly numerics in bundle clean",
+    "Optional cleaned parquets: data/cleaned/ (see los_cleaned_bundle_manifest.json)",
+    "Cohort exclusion (AMA, age, unit, etc.) applied in los_modeling_frame.py \u2014 not row drops in raw parquets"
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "good_patient_row": {
+    "med_distinct": 1.0,
+    "med_infusion_mean": 0.05,
+    "proc_n": 0.0,
+    "proc_distinct_nom": 0.0,
+    "current_scai": 0.0,
+    "scai_prop_ge3": 0.0,
+    "scai_std": 0.0,
+    "infusion_early_over_all_ratio": 1.0,
+    "clinical_event_n": 949.5,
+    "med_per_clinical_event": 0.002899601685741611,
+    "proc_n_bucket": 0.0,
+    "med_distinct_bucket": 1.0,
+    "med_residual_within_scai": -0.08650875386199797,
+    "proc_residual_within_scai": -0.23351063829787233,
+    "infusion_x_scai_severity": 0.0,
+    "age_years": 68.0,
+    "weight_kg_est": 92.0,
+    "sex_bin": 1.0
+  },
+  "p_death_good_row": 0.023405438956869144,
+  "test_metrics": {
+    "auroc": 0.9159859192356872,
+    "auprc": 0.8307828131907874,
+    "brier": 0.09989211187865367,
+    "pr_auc": 0.8305404781468165
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 0.05,
+      "frac_pred_positive": 0.5408,
+      "precision": 0.507396449704142,
+      "recall": 0.9554317548746518,
+      "specificity": 0.6262626262626263,
+      "npv": 0.9721254355400697,
+      "net_benefit": 0.26037894736842104,
+      "f1": 0.6628019323671497
+    },
+    {
+      "threshold": 0.1,
+      "frac_pred_positive": 0.4488,
+      "precision": 0.5811051693404634,
+      "recall": 0.9080779944289693,
+      "specificity": 0.7362514029180696,
+      "npv": 0.9521044992743106,
+      "net_benefit": 0.23991111111111108,
+      "f1": 0.708695652173913
+    },
+    {
+      "threshold": 0.15,
+      "frac_pred_positive": 0.388,
+      "precision": 0.6577319587628866,
+      "recall": 0.8885793871866295,
+      "specificity": 0.813692480359147,
+      "npv": 0.9477124183006536,
+      "net_benefit": 0.23176470588235293,
+      "f1": 0.7559241706161137
+    },
+    {
+      "threshold": 0.2,
+      "frac_pred_positive": 0.3688,
+      "precision": 0.6832971800433839,
+      "recall": 0.8774373259052924,
+      "specificity": 0.8361391694725028,
+      "npv": 0.944233206590621,
+      "net_benefit": 0.2228,
+      "f1": 0.7682926829268293
+    },
+    {
+      "threshold": 0.25,
+      "frac_pred_positive": 0.3592,
+      "precision": 0.6904231625835189,
+      "recall": 0.8635097493036211,
+      "specificity": 0.8439955106621774,
+      "npv": 0.9388264669163545,
+      "net_benefit": 0.21093333333333333,
+      "f1": 0.7673267326732672
+    },
+    {
+      "threshold": 0.3,
+      "frac_pred_positive": 0.352,
+      "precision": 0.6977272727272728,
+      "recall": 0.8551532033426184,
+      "specificity": 0.8507295173961841,
+      "npv": 0.9358024691358025,
+      "net_benefit": 0.2,
+      "f1": 0.7684605757196495
+    },
+    {
+      "threshold": 0.35,
+      "frac_pred_positive": 0.34,
+      "precision": 0.7082352941176471,
+      "recall": 0.8384401114206128,
+      "specificity": 0.8608305274971941,
+      "npv": 0.9296969696969697,
+      "net_benefit": 0.18738461538461537,
+      "f1": 0.7678571428571429
+    },
+    {
+      "threshold": 0.4,
+      "frac_pred_positive": 0.3288,
+      "precision": 0.7226277372262774,
+      "recall": 0.8272980501392758,
+      "specificity": 0.8720538720538721,
+      "npv": 0.9261025029797377,
+      "net_benefit": 0.1768,
+      "f1": 0.7714285714285715
+    },
+    {
+      "threshold": 0.45,
+      "frac_pred_positive": 0.3192,
+      "precision": 0.7368421052631579,
+      "recall": 0.8189415041782729,
+      "specificity": 0.8821548821548821,
+      "npv": 0.9236192714453584,
+      "net_benefit": 0.16647272727272727,
+      "f1": 0.7757255936675461
+    },
+    {
+      "threshold": 0.5,
+      "frac_pred_positive": 0.3,
+      "precision": 0.7466666666666667,
+      "recall": 0.7799442896935933,
+      "specificity": 0.8933782267115601,
+      "npv": 0.9097142857142857,
+      "net_benefit": 0.14800000000000002,
+      "f1": 0.7629427792915531
+    },
+    {
+      "threshold": 0.55,
+      "frac_pred_positive": 0.2768,
+      "precision": 0.7543352601156069,
+      "recall": 0.7270194986072424,
+      "specificity": 0.9046015712682379,
+      "npv": 0.8915929203539823,
+      "net_benefit": 0.12568888888888888,
+      "f1": 0.7404255319148937
+    },
+    {
+      "threshold": 0.6,
+      "frac_pred_positive": 0.2456,
+      "precision": 0.7654723127035831,
+      "recall": 0.6545961002785515,
+      "specificity": 0.9191919191919192,
+      "npv": 0.8685047720042418,
+      "net_benefit": 0.10160000000000001,
+      "f1": 0.7057057057057057
+    },
+    {
+      "threshold": 0.65,
+      "frac_pred_positive": 0.1888,
+      "precision": 0.8177966101694916,
+      "recall": 0.5376044568245125,
+      "specificity": 0.9517396184062851,
+      "npv": 0.8362919132149902,
+      "net_benefit": 0.09051428571428571,
+      "f1": 0.6487394957983192
+    },
+    {
+      "threshold": 0.7,
+      "frac_pred_positive": 0.1592,
+      "precision": 0.8442211055276382,
+      "recall": 0.467966573816156,
+      "specificity": 0.9652076318742986,
+      "npv": 0.8182683158896289,
+      "net_benefit": 0.07653333333333334,
+      "f1": 0.6021505376344086
+    },
+    {
+      "threshold": 0.75,
+      "frac_pred_positive": 0.132,
+      "precision": 0.8909090909090909,
+      "recall": 0.40947075208913647,
+      "specificity": 0.9797979797979798,
+      "npv": 0.8046082949308756,
+      "net_benefit": 0.0744,
+      "f1": 0.5610687022900763
+    },
+    {
+      "threshold": 0.8,
+      "frac_pred_positive": 0.1136,
+      "precision": 0.9366197183098591,
+      "recall": 0.37047353760445684,
+      "specificity": 0.98989898989899,
+      "npv": 0.796028880866426,
+      "net_benefit": 0.07759999999999999,
+      "f1": 0.5309381237524949
+    },
+    {
+      "threshold": 0.85,
+      "frac_pred_positive": 0.0952,
+      "precision": 0.9663865546218487,
+      "recall": 0.3203342618384401,
+      "specificity": 0.9955106621773289,
+      "npv": 0.784261715296198,
+      "net_benefit": 0.07386666666666666,
+      "f1": 0.4811715481171548
+    },
+    {
+      "threshold": 0.9,
+      "frac_pred_positive": 0.0848,
+      "precision": 0.9716981132075472,
+      "recall": 0.28690807799442897,
+      "specificity": 0.9966329966329966,
+      "npv": 0.7762237762237763,
+      "net_benefit": 0.0608,
+      "f1": 0.443010752688172
+    },
+    {
+      "threshold": 0.95,
+      "frac_pred_positive": 0.072,
+      "precision": 0.9777777777777777,
+      "recall": 0.24512534818941503,
+      "specificity": 0.9977553310886644,
+      "npv": 0.7663793103448275,
+      "net_benefit": 0.040000000000000036,
+      "f1": 0.39198218262806234
+    }
+  ],
+  "suggested_threshold_max_f1": 0.45,
+  "suggested_threshold_max_net_benefit": 0.05,
+  "suggested_threshold_max_net_benefit_mid_flag_rate": 0.05,
+  "permutation_importance_mean": {
+    "med_distinct": 0.007383803994760396,
+    "med_infusion_mean": 0.016545992265583797,
+    "proc_n": -0.00025815255620264546,
+    "proc_distinct_nom": -2.0008190853099128e-05,
+    "current_scai": 0.003048669924250297,
+    "scai_prop_ge3": 0.13631619506735576,
+    "scai_std": 0.004137240557853411,
+    "infusion_early_over_all_ratio": -0.00045823446473393093,
+    "clinical_event_n": 0.0065833982036396736,
+    "med_per_clinical_event": 0.005973382853605741,
+    "proc_n_bucket": 0.0,
+    "med_distinct_bucket": -0.00015217167027745115,
+    "med_residual_within_scai": 0.0020574829070651502,
+    "proc_residual_within_scai": 0.0026110689063335857,
+    "infusion_x_scai_severity": 0.00438624874558029,
+    "age_years": 0.0,
+    "weight_kg_est": 7.190443587890005e-06,
+    "sex_bin": 0.0
+  }
+}

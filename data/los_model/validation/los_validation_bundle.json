@@ -1,0 +1,678 @@
+{
+  "artifact_validation": {
+    "meta_path": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/los_model/xgb_los_model_meta.json",
+    "metrics_test": {
+      "mae_hours": 9.514508033752442,
+      "rmse_hours": 11.973207872848686,
+      "r2_hours": 0.7718380704005663,
+      "mae_days": 0.396,
+      "rmse_days": 0.499,
+      "mae_log1p": 0.11484389475242801,
+      "baseline_mae_hours_median_predictor": 20.199,
+      "mae_improvement_vs_baseline_pct": 52.9,
+      "pct_within_24h": 94.7,
+      "pct_within_36h": 99.6,
+      "pct_within_48h": 100.0
+    },
+    "targets_met_test": {
+      "mae_hours": true,
+      "rmse_hours": true,
+      "r2_hours": true
+    },
+    "manifest_alignment": {
+      "pass": true,
+      "n_raw_features": 14,
+      "expected_raw_features": 14,
+      "n_model_matrix_features": 21,
+      "expected_model_matrix_min": 14,
+      "manifest_match": true,
+      "forbidden_in_raw": [],
+      "use_scai_pca": false,
+      "demographic_policy": "race_cd and ethnicity_cd excluded; use subgroup MAE only"
+    },
+    "preprocessor_train_only": {
+      "pass": true,
+      "global_mean_after_fit": 0.8758013191269841,
+      "global_mean_after_transform_test": 0.8758013191269841,
+      "global_mean_if_refit_on_test": 0.9575278749999999,
+      "bin_means_unchanged_after_transform": true,
+      "residual_out_col_dropped_from_model": true
+    },
+    "feature_weights_sanity": {
+      "pass": true,
+      "n_weighted_features": 21,
+      "high_weight_features": [
+        "med_infusion_mean_12h",
+        "scai_prop_ge3_12h",
+        "current_scai_12h",
+        "proc_n_12h",
+        "med_distinct_12h",
+        "clinical_event_n_12h",
+        "med_per_clinical_event_12h",
+        "scai_slope_12h"
+      ],
+      "note": "XGB feature_weights scale splits; confirm top-weight cols match clinical drivers in SHAP audit."
+    },
+    "all_pass": true
+  },
+  "shap": {
+    "task": "length_of_stay_regression",
+    "n_test": 1000,
+    "mae_hours_test": 9.514508033752442,
+    "feature_names": [
+      "med_infusion_mean_12h",
+      "scai_prop_ge3_12h",
+      "current_scai_12h",
+      "proc_n_12h",
+      "med_distinct_12h",
+      "clinical_event_n_12h",
+      "dx_cat_arrhythmia_arrest",
+      "med_per_clinical_event_12h",
+      "scai_slope_12h",
+      "age_years",
+      "sex_bin",
+      "admit_type_cd_ELECTIVE",
+      "admit_type_cd_EMERGENCY",
+      "admit_type_cd_TRANSFER",
+      "admit_type_cd_URGENT",
+      "admit_src_cd_DIRECT",
+      "admit_src_cd_ED",
+      "admit_src_cd_OR",
+      "admit_src_cd_OUTSIDE_HOSPITAL",
+      "unit_cd_CICU",
+      "unit_cd_CVICU"
+    ],
+    "shap_available": true,
+    "permutation_importance": [
+      {
+        "feature": "clinical_event_n_12h",
+        "perm_mae_increase_log1p": -0.07361011074391516,
+        "perm_std": 0.004286741289702323
+      },
+      {
+        "feature": "med_infusion_mean_12h",
+        "perm_mae_increase_log1p": -0.048756511794703875,
+        "perm_std": 0.002762698441729221
+      },
+      {
+        "feature": "scai_slope_12h",
+        "perm_mae_increase_log1p": -0.020580672960460688,
+        "perm_std": 0.002221758075073612
+      },
+      {
+        "feature": "scai_prop_ge3_12h",
+        "perm_mae_increase_log1p": -0.017028914602826767,
+        "perm_std": 0.0009527257824906581
+      },
+      {
+        "feature": "med_per_clinical_event_12h",
+        "perm_mae_increase_log1p": -0.008994151668182605,
+        "perm_std": 0.0010336064213449872
+      },
+      {
+        "feature": "med_distinct_12h",
+        "perm_mae_increase_log1p": -0.00555443282204757,
+        "perm_std": 0.00037196582209192403
+      },
+      {
+        "feature": "current_scai_12h",
+        "perm_mae_increase_log1p": -0.0044723946887287435,
+        "perm_std": 0.0004789066251164803
+      },
+      {
+        "feature": "age_years",
+        "perm_mae_increase_log1p": -0.0014736195719546614,
+        "perm_std": 0.0003986728283356905
+      },
+      {
+        "feature": "dx_cat_arrhythmia_arrest",
+        "perm_mae_increase_log1p": -0.0004888288117529775,
+        "perm_std": 8.922600037729886e-05
+      },
+      {
+        "feature": "admit_type_cd_URGENT",
+        "perm_mae_increase_log1p": -0.0002889462678540688,
+        "perm_std": 0.00014540091922831368
+      },
+      {
+        "feature": "admit_type_cd_ELECTIVE",
+        "perm_mae_increase_log1p": -0.0002341283564585711,
+        "perm_std": 0.00025677166282213776
+      },
+      {
+        "feature": "unit_cd_CICU",
+        "perm_mae_increase_log1p": -0.0001892258709218133,
+        "perm_std": 0.00016645419708521587
+      },
+      {
+        "feature": "sex_bin",
+        "perm_mae_increase_log1p": -0.00013720504158213492,
+        "perm_std": 0.0002149481766944065
+      },
+      {
+        "feature": "admit_type_cd_TRANSFER",
+        "perm_mae_increase_log1p": -0.00010770593239588754,
+        "perm_std": 0.00011658930780838169
+      },
+      {
+        "feature": "admit_type_cd_EMERGENCY",
+        "perm_mae_increase_log1p": -2.7106977742667043e-05,
+        "perm_std": 0.00014154403683363593
+      },
+      {
+        "feature": "unit_cd_CVICU",
+        "perm_mae_increase_log1p": -0.0,
+        "perm_std": 0.0
+      },
+      {
+        "feature": "proc_n_12h",
+        "perm_mae_increase_log1p": 3.1997391775819006e-05,
+        "perm_std": 4.321442622949912e-05
+      },
+      {
+        "feature": "admit_src_cd_DIRECT",
+        "perm_mae_increase_log1p": 7.809233411798858e-05,
+        "perm_std": 0.00015869593344844786
+      },
+      {
+        "feature": "admit_src_cd_OUTSIDE_HOSPITAL",
+        "perm_mae_increase_log1p": 9.698874952591453e-05,
+        "perm_std": 0.00021802481770841363
+      },
+      {
+        "feature": "admit_src_cd_OR",
+        "perm_mae_increase_log1p": 0.0002444874851288848,
+        "perm_std": 0.00011875350158627809
+      }
+    ],
+    "weights_sanity": {
+      "top_xgb_feature_weights": [
+        "med_infusion_mean_12h",
+        "scai_prop_ge3_12h",
+        "current_scai_12h",
+        "proc_n_12h",
+        "med_distinct_12h",
+        "clinical_event_n_12h",
+        "med_per_clinical_event_12h",
+        "scai_slope_12h"
+      ],
+      "top_permutation_features": [
+        "clinical_event_n_12h",
+        "med_infusion_mean_12h",
+        "scai_slope_12h",
+        "scai_prop_ge3_12h",
+        "med_per_clinical_event_12h",
+        "med_distinct_12h",
+        "current_scai_12h",
+        "age_years"
+      ],
+      "overlap_count": 7,
+      "note": "feature_weights bias splits; permutation ranks impact on MAE (log1p)."
+    },
+    "shap_note": "pip install shap for TreeExplainer; using XGBoost pred_contribs fallback",
+    "shap_backend": "xgboost_pred_contribs",
+    "mean_abs_shap": [
+      {
+        "feature": "clinical_event_n_12h",
+        "mean_abs_shap_log1p": 0.133592888712883,
+        "mean_shap_log1p": -0.004867579787969589
+      },
+      {
+        "feature": "med_infusion_mean_12h",
+        "mean_abs_shap_log1p": 0.06556429713964462,
+        "mean_shap_log1p": 0.010356596671044827
+      },
+      {
+        "feature": "scai_prop_ge3_12h",
+        "mean_abs_shap_log1p": 0.02837519533932209,
+        "mean_shap_log1p": -0.0027973493561148643
+      },
+      {
+        "feature": "med_per_clinical_event_12h",
+        "mean_abs_shap_log1p": 0.019299082458019257,
+        "mean_shap_log1p": 0.0014902929542586207
+      },
+      {
+        "feature": "scai_slope_12h",
+        "mean_abs_shap_log1p": 0.014848096296191216,
+        "mean_shap_log1p": 0.005389293190091848
+      },
+      {
+        "feature": "age_years",
+        "mean_abs_shap_log1p": 0.008393245749175549,
+        "mean_shap_log1p": -0.00015981748583726585
+      },
+      {
+        "feature": "med_distinct_12h",
+        "mean_abs_shap_log1p": 0.006932883057743311,
+        "mean_shap_log1p": 0.0022284165024757385
+      },
+      {
+        "feature": "current_scai_12h",
+        "mean_abs_shap_log1p": 0.0061655063182115555,
+        "mean_shap_log1p": 0.0014368284028023481
+      },
+      {
+        "feature": "dx_cat_arrhythmia_arrest",
+        "mean_abs_shap_log1p": 0.0023687444627285004,
+        "mean_shap_log1p": 3.663458483060822e-05
+      },
+      {
+        "feature": "admit_src_cd_ED",
+        "mean_abs_shap_log1p": 0.0020479061640799046,
+        "mean_shap_log1p": -0.0001686182658886537
+      },
+      {
+        "feature": "unit_cd_CICU",
+        "mean_abs_shap_log1p": 0.0018886830657720566,
+        "mean_shap_log1p": 0.00015308460569940507
+      },
+      {
+        "feature": "admit_src_cd_OUTSIDE_HOSPITAL",
+        "mean_abs_shap_log1p": 0.0017385538667440414,
+        "mean_shap_log1p": -0.0001686444884398952
+      },
+      {
+        "feature": "admit_type_cd_ELECTIVE",
+        "mean_abs_shap_log1p": 0.0017362621147185564,
+        "mean_shap_log1p": 1.6934523955569603e-05
+      },
+      {
+        "feature": "sex_bin",
+        "mean_abs_shap_log1p": 0.001507517066784203,
+        "mean_shap_log1p": 3.1206094718072563e-05
+      },
+      {
+        "feature": "admit_src_cd_DIRECT",
+        "mean_abs_shap_log1p": 0.0013841796899214387,
+        "mean_shap_log1p": 2.8515145459095947e-05
+      },
+      {
+        "feature": "admit_type_cd_EMERGENCY",
+        "mean_abs_shap_log1p": 0.001324569690041244,
+        "mean_shap_log1p": -7.345758785959333e-05
+      },
+      {
+        "feature": "admit_type_cd_URGENT",
+        "mean_abs_shap_log1p": 0.0012957695871591568,
+        "mean_shap_log1p": 2.3980357582331635e-05
+      },
+      {
+        "feature": "admit_src_cd_OR",
+        "mean_abs_shap_log1p": 0.0010364364134147763,
+        "mean_shap_log1p": 5.344511373550631e-05
+      },
+      {
+        "feature": "admit_type_cd_TRANSFER",
+        "mean_abs_shap_log1p": 0.0007596639334224164,
+        "mean_shap_log1p": -2.7834170396090485e-05
+      },
+      {
+        "feature": "proc_n_12h",
+        "mean_abs_shap_log1p": 0.0003813881485257298,
+        "mean_shap_log1p": 0.00013541331281885505
+      },
+      {
+        "feature": "unit_cd_CVICU",
+        "mean_abs_shap_log1p": 0.0,
+        "mean_shap_log1p": 0.0
+      }
+    ]
+  },
+  "subgroup_mae": {
+    "overall_test": {
+      "n": 1000,
+      "mae_hours": 9.514508033752442,
+      "rmse_hours": 11.973207872848686,
+      "r2_hours": 0.7718380704005663
+    },
+    "subgroups": {
+      "race_cd": [
+        {
+          "n": 43,
+          "mae_hours": 8.806281333745913,
+          "rmse_hours": 11.375318959546071,
+          "r2_hours": 0.7994663626127954,
+          "group": "UNKNOWN",
+          "mae_vs_overall_delta": -0.71
+        },
+        {
+          "n": 53,
+          "mae_hours": 8.86964315738318,
+          "rmse_hours": 10.837023093562358,
+          "r2_hours": 0.7898220392722501,
+          "group": "ASIAN",
+          "mae_vs_overall_delta": -0.64
+        },
+        {
+          "n": 228,
+          "mae_hours": 8.923165254425584,
+          "rmse_hours": 11.29760155308376,
+          "r2_hours": 0.7870334852510489,
+          "group": "BLACK",
+          "mae_vs_overall_delta": -0.59
+        },
+        {
+          "n": 544,
+          "mae_hours": 9.726328772657057,
+          "rmse_hours": 12.203516684069918,
+          "r2_hours": 0.7626436395004946,
+          "group": "WHITE",
+          "mae_vs_overall_delta": 0.21
+        },
+        {
+          "n": 132,
+          "mae_hours": 10.152593323678682,
+          "rmse_hours": 12.748325142554558,
+          "r2_hours": 0.7599211119218053,
+          "group": "OTHER",
+          "mae_vs_overall_delta": 0.64
+        }
+      ],
+      "sex_cd": [
+        {
+          "n": 620,
+          "mae_hours": 9.287416882668772,
+          "rmse_hours": 11.752096043139016,
+          "r2_hours": 0.7827993928641077,
+          "group": "M",
+          "mae_vs_overall_delta": -0.23
+        },
+        {
+          "n": 380,
+          "mae_hours": 9.885025174994217,
+          "rmse_hours": 12.325456615221011,
+          "r2_hours": 0.7531885090282386,
+          "group": "F",
+          "mae_vs_overall_delta": 0.37
+        }
+      ],
+      "ethnicity_cd": [
+        {
+          "n": 671,
+          "mae_hours": 9.42912831995775,
+          "rmse_hours": 11.761991017279176,
+          "r2_hours": 0.7856861847358594,
+          "group": "NON_HISPANIC",
+          "mae_vs_overall_delta": -0.09
+        },
+        {
+          "n": 42,
+          "mae_hours": 9.574765886579241,
+          "rmse_hours": 12.859241857157333,
+          "r2_hours": 0.7119878805707713,
+          "group": "UNKNOWN",
+          "mae_vs_overall_delta": 0.06
+        },
+        {
+          "n": 287,
+          "mae_hours": 9.70530579729778,
+          "rmse_hours": 12.3230992107251,
+          "r2_hours": 0.7437220147975949,
+          "group": "HISPANIC",
+          "mae_vs_overall_delta": 0.19
+        }
+      ],
+      "unit_cd": [
+        {
+          "n": 354,
+          "mae_hours": 9.059140049131576,
+          "rmse_hours": 11.54867455682984,
+          "r2_hours": 0.7776213124834502,
+          "group": "CVICU",
+          "mae_vs_overall_delta": -0.46
+        },
+        {
+          "n": 646,
+          "mae_hours": 9.764044050092668,
+          "rmse_hours": 12.199582532541623,
+          "r2_hours": 0.768881368621938,
+          "group": "CICU",
+          "mae_vs_overall_delta": 0.25
+        }
+      ],
+      "primary_dx": [
+        {
+          "n": 102,
+          "mae_hours": 7.441472595813227,
+          "rmse_hours": 9.848132067777986,
+          "r2_hours": 0.7429396428058314,
+          "group": "arrhythmia_arrest",
+          "mae_vs_overall_delta": -2.07
+        },
+        {
+          "n": 75,
+          "mae_hours": 8.02955103556315,
+          "rmse_hours": 10.586636916738769,
+          "r2_hours": 0.7171363065446704,
+          "group": "post_cardiotomy",
+          "mae_vs_overall_delta": -1.48
+        },
+        {
+          "n": 347,
+          "mae_hours": 9.62457641469642,
+          "rmse_hours": 12.120054047865342,
+          "r2_hours": 0.78568614928284,
+          "group": "acute_mi",
+          "mae_vs_overall_delta": 0.11
+        },
+        {
+          "n": 287,
+          "mae_hours": 9.982132915005035,
+          "rmse_hours": 12.46985142595671,
+          "r2_hours": 0.7136818173427482,
+          "group": "adhf",
+          "mae_vs_overall_delta": 0.47
+        },
+        {
+          "n": 105,
+          "mae_hours": 10.293502625964937,
+          "rmse_hours": 12.425746562178372,
+          "r2_hours": 0.6546644199475031,
+          "group": "myocarditis_cmp",
+          "mae_vs_overall_delta": 0.78
+        },
+        {
+          "n": 84,
+          "mae_hours": 10.331470989045643,
+          "rmse_hours": 12.55795082682617,
+          "r2_hours": 0.5211826164688129,
+          "group": "aortic_valve",
+          "mae_vs_overall_delta": 0.82
+        }
+      ],
+      "admit_type_cd": [
+        {
+          "n": 212,
+          "mae_hours": 8.542359676001206,
+          "rmse_hours": 10.75491757660015,
+          "r2_hours": 0.7962585331404826,
+          "group": "URGENT",
+          "mae_vs_overall_delta": -0.97
+        },
+        {
+          "n": 604,
+          "mae_hours": 9.722748806934483,
+          "rmse_hours": 12.339590269339691,
+          "r2_hours": 0.7647560488012078,
+          "group": "EMERGENCY",
+          "mae_vs_overall_delta": 0.21
+        },
+        {
+          "n": 85,
+          "mae_hours": 9.879943757898667,
+          "rmse_hours": 12.062653260098404,
+          "r2_hours": 0.7931334619432007,
+          "group": "ELECTIVE",
+          "mae_vs_overall_delta": 0.37
+        },
+        {
+          "n": 99,
+          "mae_hours": 10.012043268993647,
+          "rmse_hours": 12.102064375277779,
+          "r2_hours": 0.744438335837613,
+          "group": "TRANSFER",
+          "mae_vs_overall_delta": 0.5
+        }
+      ]
+    },
+    "flagged_mae_worse_than_overall_by_5h": [],
+    "demographic_source": "person.parquet (eval-only join; not in model X)",
+    "model_features_excluded_from_fairness_join": [],
+    "interpretation": "Compare subgroup MAE to overall; deltas >5h warrant fairness review. Small groups (n<25) are unreliable. Race/ethnicity used only for reporting."
+  },
+  "infusion_residual_audit": {
+    "feature": "infusion_residual_within_scai_12h",
+    "value_column": "med_infusion_mean_12h",
+    "bin_column": "current_scai_12h",
+    "definitions": {
+      "duckdb_sidecar": "med_infusion_mean_12h - AVG(med_infusion_mean_12h) OVER (PARTITION BY CAST(ROUND(current_scai_12h) AS INT)) on full cohort at SQL time",
+      "model_training": "Same formula but bin means computed on TRAIN fold only during LosTrainPreprocessor.fit; test/val use train bin means (no test leakage)"
+    },
+    "train_fold_bin_means": {
+      "0": 0.0020921440972222222,
+      "1": 0.1171326484338476,
+      "2": 2.5719325440528635,
+      "3": 2.345263091666667,
+      "4": 3.129296000164772
+    },
+    "train_fold_global_mean": 0.8758013191269841,
+    "comparison_train_duckdb_vs_train_fold_policy": {
+      "n": 3000,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "correlation": 1.0
+    },
+    "comparison_test_duckdb_vs_train_fold_policy": {
+      "n": 1000,
+      "max_abs_diff": 0.15775686944968914,
+      "mean_abs_diff": 0.05800412921790687,
+      "correlation": 0.9975699866456923
+    },
+    "model_uses": "train_fold_policy (recomputed in pipeline; not DuckDB parquet column)",
+    "comparison_test_parquet_vs_train_fold_policy": {
+      "n": 1000,
+      "max_abs_diff": 0.034271798532173214,
+      "mean_abs_diff": 0.009006649448257768,
+      "correlation": 0.9999397799309059
+    },
+    "comparison_test_parquet_vs_duckdb": {
+      "n": 1000,
+      "max_abs_diff": 0.18738833189033421,
+      "mean_abs_diff": 0.05899032220757903,
+      "correlation": 0.9973755423977598
+    },
+    "leakage_assessment": "PASS for strict policy: bin means fit on train only. WARN: DuckDB audit column uses full-cohort means \u2014 do not use parquet residual for training; pipeline overwrites with train-fold version."
+  },
+  "sanity_tests": {
+    "baseline_median_patient_pred_hours": 84.06,
+    "direction_tests": [
+      {
+        "feature": "clinical_event_n_12h",
+        "status": "PASS",
+        "clinical_expectation": "more events \u2192 longer stay",
+        "p05_value": 144.0,
+        "p95_value": 343.05,
+        "pred_at_p05_hours": 71.05,
+        "pred_at_p95_hours": 103.63,
+        "delta_hours_p95_minus_p05": 32.58,
+        "direction_correct": true,
+        "note": "Median patient template; only this feature moved to cohort p5/p95."
+      },
+      {
+        "feature": "med_infusion_mean_12h",
+        "status": "PASS",
+        "clinical_expectation": "more infusions \u2192 longer stay",
+        "p05_value": 0.0,
+        "p95_value": 4.5689,
+        "pred_at_p05_hours": 97.83,
+        "pred_at_p95_hours": 100.61,
+        "delta_hours_p95_minus_p05": 2.79,
+        "direction_correct": true,
+        "note": "Median patient template; only this feature moved to cohort p5/p95."
+      },
+      {
+        "feature": "scai_prop_ge3_12h",
+        "status": "PASS",
+        "clinical_expectation": "more time in high acuity \u2192 longer stay",
+        "p05_value": 0.0,
+        "p95_value": 1.0,
+        "pred_at_p05_hours": 84.06,
+        "pred_at_p95_hours": 86.4,
+        "delta_hours_p95_minus_p05": 2.34,
+        "direction_correct": true,
+        "note": "Median patient template; only this feature moved to cohort p5/p95."
+      },
+      {
+        "feature": "med_per_clinical_event_12h",
+        "status": "PASS",
+        "clinical_expectation": "higher med burden \u2192 longer stay",
+        "p05_value": 0.0,
+        "p95_value": 0.0231,
+        "pred_at_p05_hours": 77.83,
+        "pred_at_p95_hours": 90.03,
+        "delta_hours_p95_minus_p05": 12.2,
+        "direction_correct": true,
+        "note": "Median patient template; only this feature moved to cohort p5/p95."
+      },
+      {
+        "feature": "current_scai_12h",
+        "status": "PASS",
+        "clinical_expectation": "higher severity \u2192 longer stay",
+        "p05_value": 0.0,
+        "p95_value": 4.0,
+        "pred_at_p05_hours": 83.64,
+        "pred_at_p95_hours": 85.22,
+        "delta_hours_p95_minus_p05": 1.57,
+        "direction_correct": true,
+        "note": "Median patient template; only this feature moved to cohort p5/p95."
+      }
+    ],
+    "direction_test_pass": true,
+    "direction_pass_count": "5/5",
+    "direction_pass_rate": 1.0,
+    "edge_cases": {
+      "numeric_columns_tested": [
+        "med_infusion_mean_12h",
+        "scai_prop_ge3_12h",
+        "current_scai_12h",
+        "proc_n_12h",
+        "med_distinct_12h",
+        "clinical_event_n_12h",
+        "dx_cat_arrhythmia_arrest",
+        "med_per_clinical_event_12h",
+        "scai_slope_12h",
+        "age_years",
+        "sex_bin"
+      ],
+      "extreme_high_all_numeric_999": {
+        "pred_hours": 145.11,
+        "crashed": false,
+        "finite_output": true,
+        "in_reasonable_range": true,
+        "pass": true
+      },
+      "extreme_low_all_numeric_0": {
+        "pred_hours": 54.56,
+        "crashed": false,
+        "finite_output": true,
+        "in_reasonable_range": true,
+        "pass": true
+      },
+      "median_template": {
+        "pred_hours": 84.06,
+        "crashed": false,
+        "finite_output": true,
+        "in_reasonable_range": true,
+        "pass": true
+      },
+      "prediction_consistency_20x": {
+        "unique_predictions": 1,
+        "deterministic": true
+      },
+      "all_edge_pass": true
+    },
+    "edge_case_pass": true,
+    "summary": "Direction: p5\u2192p95 sweeps on median patient for 5 clinical features; PASS if all deltas are non-negative. Edge: extreme 0/999 on numeric manifest cols must return finite hours in (0, 10000)."
+  }
+}

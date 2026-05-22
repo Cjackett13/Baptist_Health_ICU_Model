@@ -3,16 +3,7 @@
   "los_hours_mean": 96.068,
   "los_hours_median": 84.0,
   "los_truncated_n": 147,
-  "top_corr_with_los": {
-    "med_infusion_mean_12h": 0.2699565782304752,
-    "scai_mean_12h": 0.2079522798361414,
-    "scai_first_12h": 0.2023660368909445,
-    "scai_last_12h": 0.1974091067198757,
-    "proc_n_12h": 0.18694302429438148,
-    "med_distinct_12h": 0.18159580241085538,
-    "clinical_event_n_12h": 0.16737435179293148,
-    "med_per_clinical_event_12h": 0.12580244879210065
-  },
+  "top_corr_with_los": {},
   "outputs": [
     "eda/los_eda_report.html",
     "eda/los_eda_binned_mean.html",

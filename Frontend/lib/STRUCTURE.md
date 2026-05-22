@@ -24,7 +24,7 @@ lib/
 
 ## Assets
 
-- `assets/patients_seed.json` — 60 patients (10 per demo hospital, real encounters). Regenerate: `python scripts/export_patient_seed.py` from workspace root.
+- `assets/patients_seed.json` — 60 patients (10 per demo hospital). **Names are display-only**; models use `model_person_id` / `model_encounter_id`. Rebuild clinical + predictions from parquets: `PYTHONPATH=back_end BAPTIST_DATA_DIR=data python3 back_end/scripts/export_patients_seed_from_data.py` then restart API (`uvicorn` on 8001) or `POST /admin/reload-seed`.
 
 ## API
 

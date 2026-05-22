@@ -1,0 +1,177 @@
+{
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/cleaned",
+  "model_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "n_test": 1250,
+  "overall": {
+    "auroc": 0.9154,
+    "auprc": 0.8369
+  },
+  "by_scai_tertile": [
+    {
+      "n": 377,
+      "n_pos": 276,
+      "death_rate": 0.7321,
+      "auroc": 0.7559,
+      "auprc": 0.9104,
+      "group": "(2.0, 4.0]",
+      "auroc_delta_vs_overall": -0.1595,
+      "auprc_delta_vs_overall": 0.0735
+    },
+    {
+      "n": 873,
+      "n_pos": 83,
+      "death_rate": 0.0951,
+      "auroc": 0.8278,
+      "auprc": 0.3713,
+      "group": "(-0.001, 2.0]",
+      "auroc_delta_vs_overall": -0.0876,
+      "auprc_delta_vs_overall": -0.4656
+    }
+  ],
+  "by_primary_diagnosis": [
+    {
+      "n": 1250,
+      "n_pos": 359,
+      "death_rate": 0.2872,
+      "auroc": 0.9154,
+      "auprc": 0.8369,
+      "dimension": "CLASSIFICATION_CD",
+      "group": "PRINCIPAL",
+      "auroc_delta_vs_overall": -0.0
+    },
+    {
+      "n": 241,
+      "n_pos": 42,
+      "death_rate": 0.1743,
+      "auroc": 0.9268,
+      "auprc": 0.7776,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I21.4",
+      "auroc_delta_vs_overall": 0.0114
+    },
+    {
+      "n": 200,
+      "n_pos": 52,
+      "death_rate": 0.26,
+      "auroc": 0.919,
+      "auprc": 0.8217,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I50.21",
+      "auroc_delta_vs_overall": 0.0036
+    },
+    {
+      "n": 195,
+      "n_pos": 79,
+      "death_rate": 0.4051,
+      "auroc": 0.8911,
+      "auprc": 0.8602,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I21.3",
+      "auroc_delta_vs_overall": -0.0243
+    },
+    {
+      "n": 151,
+      "n_pos": 42,
+      "death_rate": 0.2781,
+      "auroc": 0.9146,
+      "auprc": 0.8345,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I50.23",
+      "auroc_delta_vs_overall": -0.0008
+    },
+    {
+      "n": 85,
+      "n_pos": 22,
+      "death_rate": 0.2588,
+      "auroc": 0.9214,
+      "auprc": 0.7977,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "Z95.1",
+      "auroc_delta_vs_overall": 0.006
+    },
+    {
+      "n": 72,
+      "n_pos": 15,
+      "death_rate": 0.2083,
+      "auroc": 0.9754,
+      "auprc": 0.9218,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I40.9",
+      "auroc_delta_vs_overall": 0.06
+    },
+    {
+      "n": 70,
+      "n_pos": 12,
+      "death_rate": 0.1714,
+      "auroc": 0.8951,
+      "auprc": 0.6929,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I35.0",
+      "auroc_delta_vs_overall": -0.0203
+    },
+    {
+      "n": 67,
+      "n_pos": 40,
+      "death_rate": 0.597,
+      "auroc": 0.9287,
+      "auprc": 0.957,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I46.9",
+      "auroc_delta_vs_overall": 0.0133
+    },
+    {
+      "n": 65,
+      "n_pos": 12,
+      "death_rate": 0.1846,
+      "auroc": 0.8428,
+      "auprc": 0.6223,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I42.0",
+      "auroc_delta_vs_overall": -0.0726
+    },
+    {
+      "n": 49,
+      "n_pos": 10,
+      "death_rate": 0.2041,
+      "auroc": 0.8487,
+      "auprc": 0.6086,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I71.01",
+      "auroc_delta_vs_overall": -0.0667
+    },
+    {
+      "n": 33,
+      "n_pos": 20,
+      "death_rate": 0.6061,
+      "auroc": 0.8077,
+      "auprc": 0.8842,
+      "dimension": "NOMENCLATURE_CD",
+      "group": "I49.01",
+      "auroc_delta_vs_overall": -0.1077
+    }
+  ],
+  "clinical_safety_note": "High-SCAI tertile: AUROC below overall is expected at ~74% death rate; AUPRC 0.910 supports ranking among high-risk patients. See mortality_presentation_signoff.md.",
+  "safety_flag_high_scai_underperformance": false,
+  "safety_flag_low_scai_auprc_limited": true,
+  "high_scai_review_completed": true,
+  "high_scai_tertile": {
+    "n": 377,
+    "n_pos": 276,
+    "death_rate": 0.7321,
+    "auroc": 0.7559,
+    "auprc": 0.9104,
+    "group": "(2.0, 4.0]",
+    "auroc_delta_vs_overall": -0.1595,
+    "auprc_delta_vs_overall": 0.0735
+  },
+  "low_scai_tertile": {
+    "n": 873,
+    "n_pos": 83,
+    "death_rate": 0.0951,
+    "auroc": 0.8278,
+    "auprc": 0.3713,
+    "group": "(-0.001, 2.0]",
+    "auroc_delta_vs_overall": -0.0876,
+    "auprc_delta_vs_overall": -0.4656
+  }
+}

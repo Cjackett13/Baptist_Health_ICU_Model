@@ -1,0 +1,169 @@
+{
+  "n_buckets": 24,
+  "age_bands": [
+    {
+      "min": 0,
+      "max_exclusive": 60,
+      "code": "age_lt_60"
+    },
+    {
+      "min": 60,
+      "max_exclusive": 70,
+      "code": "age_60_69"
+    },
+    {
+      "min": 70,
+      "max_exclusive": 80,
+      "code": "age_70_79"
+    },
+    {
+      "min": 80,
+      "max_exclusive": 200,
+      "code": "age_80_plus"
+    }
+  ],
+  "weight_bands_kg": [
+    {
+      "min": 0.0,
+      "max_exclusive": 65.0,
+      "code": "wt_lt_65kg"
+    },
+    {
+      "min": 65.0,
+      "max_exclusive": 85.0,
+      "code": "wt_65_85kg"
+    },
+    {
+      "min": 85.0,
+      "max_exclusive": 500.0,
+      "code": "wt_gt_85kg"
+    }
+  ],
+  "sex_codes": {
+    "0": "female",
+    "1": "male"
+  },
+  "feature_weight_cap_in_xgb": 0.001,
+  "buckets": [
+    {
+      "demo_profile_bucket": 0,
+      "demo_category": 1,
+      "label": "category_1: age_lt_60 + wt_lt_65kg + female"
+    },
+    {
+      "demo_profile_bucket": 1,
+      "demo_category": 2,
+      "label": "category_2: age_lt_60 + wt_lt_65kg + male"
+    },
+    {
+      "demo_profile_bucket": 2,
+      "demo_category": 3,
+      "label": "category_3: age_lt_60 + wt_65_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 3,
+      "demo_category": 4,
+      "label": "category_4: age_lt_60 + wt_65_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 4,
+      "demo_category": 5,
+      "label": "category_5: age_lt_60 + wt_gt_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 5,
+      "demo_category": 6,
+      "label": "category_6: age_lt_60 + wt_gt_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 6,
+      "demo_category": 7,
+      "label": "category_7: age_60_69 + wt_lt_65kg + female"
+    },
+    {
+      "demo_profile_bucket": 7,
+      "demo_category": 8,
+      "label": "category_8: age_60_69 + wt_lt_65kg + male"
+    },
+    {
+      "demo_profile_bucket": 8,
+      "demo_category": 9,
+      "label": "category_9: age_60_69 + wt_65_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 9,
+      "demo_category": 10,
+      "label": "category_10: age_60_69 + wt_65_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 10,
+      "demo_category": 11,
+      "label": "category_11: age_60_69 + wt_gt_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 11,
+      "demo_category": 12,
+      "label": "category_12: age_60_69 + wt_gt_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 12,
+      "demo_category": 13,
+      "label": "category_13: age_70_79 + wt_lt_65kg + female"
+    },
+    {
+      "demo_profile_bucket": 13,
+      "demo_category": 14,
+      "label": "category_14: age_70_79 + wt_lt_65kg + male"
+    },
+    {
+      "demo_profile_bucket": 14,
+      "demo_category": 15,
+      "label": "category_15: age_70_79 + wt_65_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 15,
+      "demo_category": 16,
+      "label": "category_16: age_70_79 + wt_65_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 16,
+      "demo_category": 17,
+      "label": "category_17: age_70_79 + wt_gt_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 17,
+      "demo_category": 18,
+      "label": "category_18: age_70_79 + wt_gt_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 18,
+      "demo_category": 19,
+      "label": "category_19: age_80_plus + wt_lt_65kg + female"
+    },
+    {
+      "demo_profile_bucket": 19,
+      "demo_category": 20,
+      "label": "category_20: age_80_plus + wt_lt_65kg + male"
+    },
+    {
+      "demo_profile_bucket": 20,
+      "demo_category": 21,
+      "label": "category_21: age_80_plus + wt_65_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 21,
+      "demo_category": 22,
+      "label": "category_22: age_80_plus + wt_65_85kg + male"
+    },
+    {
+      "demo_profile_bucket": 22,
+      "demo_category": 23,
+      "label": "category_23: age_80_plus + wt_gt_85kg + female"
+    },
+    {
+      "demo_profile_bucket": 23,
+      "demo_category": 24,
+      "label": "category_24: age_80_plus + wt_gt_85kg + male"
+    }
+  ]
+}

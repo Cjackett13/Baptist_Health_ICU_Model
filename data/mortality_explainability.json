@@ -1,0 +1,36 @@
+{
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/cleaned",
+  "model_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "presentation_narrative": "Primary signal: SCAI trajectory severity (scai_prop_ge3, current_scai). Secondary: medication infusion intensity and clinical-event load. Demographics are capped weak priors.",
+  "permutation_importance_test_auroc": {
+    "scai_prop_ge3": 0.13631619506735576,
+    "med_infusion_mean": 0.016545992265583797,
+    "med_distinct": 0.007383803994760396,
+    "clinical_event_n": 0.0065833982036396736,
+    "med_per_clinical_event": 0.005973382853605741,
+    "infusion_x_scai_severity": 0.00438624874558029,
+    "scai_std": 0.004137240557853411,
+    "current_scai": 0.003048669924250297,
+    "proc_residual_within_scai": 0.0026110689063335857,
+    "med_residual_within_scai": 0.0020574829070651502,
+    "weight_kg_est": 7.190443587890005e-06,
+    "proc_n_bucket": 0.0,
+    "age_years": 0.0,
+    "sex_bin": 0.0,
+    "proc_distinct_nom": -2.0008190853099128e-05,
+    "med_distinct_bucket": -0.00015217167027745115,
+    "proc_n": -0.00025815255620264546,
+    "infusion_early_over_all_ratio": -0.00045823446473393093
+  },
+  "permutation_top_features": [
+    "scai_prop_ge3",
+    "med_infusion_mean",
+    "med_distinct",
+    "clinical_event_n",
+    "med_per_clinical_event"
+  ],
+  "shap_available": false,
+  "shap_good_patient_top": [],
+  "shap_good_patient_text": null,
+  "verbal_answer_if_no_shap_plot": "The model behaves as a SCAI-trajectory severity score with secondary refinement from infusion intensity (med_infusion_mean) and clinical event load; permutation importance on the holdout shows scai_prop_ge3 dominates (\u0394AUROC ~0.14)."
+}

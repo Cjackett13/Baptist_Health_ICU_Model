@@ -126,7 +126,7 @@ class PatientListCard extends StatelessWidget {
                       size: 11, color: Colors.black38),
                   const SizedBox(width: 4),
                   Text(
-                    'Est. stay: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)}d hospital  ·  '
+                    'Est. remaining: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)}d hospital  ·  '
                     'SCAI ${patient.predictions.currentScaiStage}',
                     style: const TextStyle(
                         fontSize: 11, color: Colors.black45),
@@ -140,7 +140,7 @@ class PatientListCard extends StatelessWidget {
                       size: 11, color: Colors.black38),
                   const SizedBox(width: 4),
                   Text(
-                    'Predicted stay: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)} days',
+                    'Est. remaining stay: ${patient.predictions.hospitalLosDays.toStringAsFixed(1)} days',
                     style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

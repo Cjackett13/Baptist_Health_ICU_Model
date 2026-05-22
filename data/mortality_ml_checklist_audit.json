@@ -1,0 +1,1034 @@
+{
+  "model": "mortality_in_hospital_death_classifier",
+  "audited_at_utc": "2026-05-22T13:47:32.119491+00:00",
+  "data_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/cleaned",
+  "model_dir": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data",
+  "summary": {
+    "pass": 26,
+    "fail": 1,
+    "warn": 2,
+    "na": 1,
+    "total": 30
+  },
+  "test_metrics": {
+    "auroc": 0.9152950113952899,
+    "auprc": 0.8367192486264542,
+    "brier": 0.10016661349365258,
+    "death_rate_test": 0.2872
+  },
+  "integrity_audit": {
+    "split_seed": 42,
+    "percentile_fences": {
+      "pct_lo": 2.0,
+      "pct_hi": 98.0,
+      "fit_on": "train_only"
+    },
+    "patient_disjoint_report": {
+      "disjoint": true,
+      "n_overlap": 0,
+      "overlap_sample": [],
+      "n_train_unique": 3750,
+      "n_test_unique": 1250
+    },
+    "patient_disjoint_assert_ok": true,
+    "verify_patient_train_test_no_id_overlap": {
+      "disjoint": true,
+      "n_overlap": 0,
+      "overlap_sample": [],
+      "n_train_unique": 3750,
+      "n_test_unique": 1250
+    },
+    "class_balance": {
+      "train_n": 3750,
+      "test_n": 1250,
+      "train_death_rate": 0.28773333333333334,
+      "test_death_rate": 0.2872,
+      "train_pos": 1079,
+      "train_neg": 2671,
+      "test_pos": 359,
+      "test_neg": 891,
+      "both_splits_have_two_classes": true,
+      "imbalance_ratio_neg_over_pos_train": 2.4754402224281744,
+      "meta_scale_pos_weight": 7.426320667284523,
+      "stratified_split": true
+    },
+    "row_count_matches_meta": true,
+    "skew_and_f_test_summary": {
+      "skew_moderate_abs_1_to_2_sorted": [
+        "clinical_events_last_4h",
+        "clinical_events_per_icu_hour",
+        "inf_early_minus_all",
+        "infusion_early_above_mean",
+        "infusion_x_scai_severity",
+        "med_infusion_mean",
+        "med_per_clinical_event",
+        "scai_prop_ge3"
+      ],
+      "skew_strong_abs_ge_2_sorted": [],
+      "f_classif_sorted_by_f_desc": [
+        {
+          "feature": "current_scai",
+          "f": 3442.103987871578,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "scai_max",
+          "f": 3415.588073411207,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "scai_prop_ge3",
+          "f": 3219.8661986568322,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "med_infusion_mean",
+          "f": 3169.3045796985703,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "proc_n",
+          "f": 2705.1009445218756,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "proc_distinct_nom",
+          "f": 2705.1009445218756,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "infusion_x_scai_severity",
+          "f": 2561.3287359121746,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "med_distinct",
+          "f": 2327.2875303075357,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "proc_per_icu_hour",
+          "f": 2121.3212745732644,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "proc_n_bucket",
+          "f": 2029.3328435744022,
+          "pvalue": 0.0
+        },
+        {
+          "feature": "med_distinct_bucket",
+          "f": 1518.3372748560746,
+          "pvalue": 3.7841355719024875e-279
+        },
+        {
+          "feature": "med_per_clinical_event",
+          "f": 1051.0680785487073,
+          "pvalue": 1.8060451365582277e-203
+        },
+        {
+          "feature": "scai_increase_count",
+          "f": 948.3867303771551,
+          "pvalue": 7.531854103475743e-186
+        },
+        {
+          "feature": "scai_std",
+          "f": 756.5922218503931,
+          "pvalue": 7.1101534680210854e-152
+        },
+        {
+          "feature": "clinical_events_last_4h",
+          "f": 683.1502668550175,
+          "pvalue": 1.7738460470624862e-138
+        },
+        {
+          "feature": "med_admin_per_icu_hour",
+          "f": 647.2857429781396,
+          "pvalue": 7.461971672399011e-132
+        },
+        {
+          "feature": "scai_slope_12h",
+          "f": 624.8025102387417,
+          "pvalue": 1.1304736968663758e-127
+        },
+        {
+          "feature": "infusion_early_above_mean",
+          "f": 526.0532051000176,
+          "pvalue": 4.736902321660793e-109
+        },
+        {
+          "feature": "inf_early_minus_all",
+          "f": 156.38435636179656,
+          "pvalue": 3.482333752541531e-35
+        },
+        {
+          "feature": "proc_residual_within_scai",
+          "f": 80.55077314427221,
+          "pvalue": 4.387261816552601e-19
+        },
+        {
+          "feature": "med_residual_within_scai",
+          "f": 76.76566107607289,
+          "pvalue": 2.865573927859332e-18
+        },
+        {
+          "feature": "clinical_events_per_icu_hour",
+          "f": 21.12626257230802,
+          "pvalue": 4.441640396790961e-06
+        },
+        {
+          "feature": "clinical_event_residual_within_scai",
+          "f": 11.790695612491612,
+          "pvalue": 0.0006017298082243913
+        },
+        {
+          "feature": "age_years",
+          "f": 1.6634306046747787,
+          "pvalue": 0.19722034276724199
+        },
+        {
+          "feature": "demo_profile_bucket",
+          "f": 1.0417519725165734,
+          "pvalue": 0.30748023458132195
+        },
+        {
+          "feature": "frailty_index",
+          "f": 0.9670425470682111,
+          "pvalue": 0.32548234254844616
+        }
+      ]
+    },
+    "skewed_features_abs_skew_ge_1_train": [
+      "med_infusion_mean",
+      "scai_prop_ge3",
+      "inf_early_minus_all",
+      "infusion_early_above_mean",
+      "clinical_events_last_4h",
+      "clinical_events_per_icu_hour",
+      "med_per_clinical_event",
+      "infusion_x_scai_severity"
+    ],
+    "feature_skewness_train": {
+      "med_distinct": 0.06234564859434866,
+      "med_infusion_mean": 1.1302257246098009,
+      "proc_n": 0.7559937388383858,
+      "proc_distinct_nom": 0.7559937388383858,
+      "current_scai": 0.5957296343694413,
+      "scai_prop_ge3": 1.151494669969558,
+      "scai_std": 0.4539599381916824,
+      "scai_slope_12h": 0.7224332955606495,
+      "scai_max": 0.1247187473933488,
+      "scai_increase_count": 0.7400397917139361,
+      "inf_early_minus_all": 1.6422854573471584,
+      "infusion_early_above_mean": 1.136383956151095,
+      "clinical_events_last_4h": 1.860153640912143,
+      "clinical_events_per_icu_hour": 1.1387320289412937,
+      "med_admin_per_icu_hour": 0.3868583668224008,
+      "proc_per_icu_hour": 0.677570919670657,
+      "med_per_clinical_event": 1.3037228292059604,
+      "proc_n_bucket": 0.5898366487757858,
+      "med_distinct_bucket": 0.5694158295289052,
+      "med_residual_within_scai": 0.7691900732168656,
+      "proc_residual_within_scai": 0.9541470546715989,
+      "clinical_event_residual_within_scai": 0.7936873067715456,
+      "infusion_x_scai_severity": 1.8888713403542194,
+      "demo_profile_bucket": 0.19655497831283605,
+      "age_years": 0.07904955516213602,
+      "frailty_index": 0.21149260462681607
+    },
+    "univariate_f_classif_train_median_imputed": {
+      "med_distinct": {
+        "f": 2327.2875303075357,
+        "pvalue": 0.0
+      },
+      "med_infusion_mean": {
+        "f": 3169.3045796985703,
+        "pvalue": 0.0
+      },
+      "proc_n": {
+        "f": 2705.1009445218756,
+        "pvalue": 0.0
+      },
+      "proc_distinct_nom": {
+        "f": 2705.1009445218756,
+        "pvalue": 0.0
+      },
+      "current_scai": {
+        "f": 3442.103987871578,
+        "pvalue": 0.0
+      },
+      "scai_prop_ge3": {
+        "f": 3219.8661986568322,
+        "pvalue": 0.0
+      },
+      "scai_std": {
+        "f": 756.5922218503931,
+        "pvalue": 7.1101534680210854e-152
+      },
+      "scai_slope_12h": {
+        "f": 624.8025102387417,
+        "pvalue": 1.1304736968663758e-127
+      },
+      "scai_max": {
+        "f": 3415.588073411207,
+        "pvalue": 0.0
+      },
+      "scai_increase_count": {
+        "f": 948.3867303771551,
+        "pvalue": 7.531854103475743e-186
+      },
+      "inf_early_minus_all": {
+        "f": 156.38435636179656,
+        "pvalue": 3.482333752541531e-35
+      },
+      "infusion_early_above_mean": {
+        "f": 526.0532051000176,
+        "pvalue": 4.736902321660793e-109
+      },
+      "clinical_events_last_4h": {
+        "f": 683.1502668550175,
+        "pvalue": 1.7738460470624862e-138
+      },
+      "clinical_events_per_icu_hour": {
+        "f": 21.12626257230802,
+        "pvalue": 4.441640396790961e-06
+      },
+      "med_admin_per_icu_hour": {
+        "f": 647.2857429781396,
+        "pvalue": 7.461971672399011e-132
+      },
+      "proc_per_icu_hour": {
+        "f": 2121.3212745732644,
+        "pvalue": 0.0
+      },
+      "med_per_clinical_event": {
+        "f": 1051.0680785487073,
+        "pvalue": 1.8060451365582277e-203
+      },
+      "proc_n_bucket": {
+        "f": 2029.3328435744022,
+        "pvalue": 0.0
+      },
+      "med_distinct_bucket": {
+        "f": 1518.3372748560746,
+        "pvalue": 3.7841355719024875e-279
+      },
+      "med_residual_within_scai": {
+        "f": 76.76566107607289,
+        "pvalue": 2.865573927859332e-18
+      },
+      "proc_residual_within_scai": {
+        "f": 80.55077314427221,
+        "pvalue": 4.387261816552601e-19
+      },
+      "clinical_event_residual_within_scai": {
+        "f": 11.790695612491612,
+        "pvalue": 0.0006017298082243913
+      },
+      "infusion_x_scai_severity": {
+        "f": 2561.3287359121746,
+        "pvalue": 0.0
+      },
+      "demo_profile_bucket": {
+        "f": 1.0417519725165734,
+        "pvalue": 0.30748023458132195
+      },
+      "age_years": {
+        "f": 1.6634306046747787,
+        "pvalue": 0.19722034276724199
+      },
+      "frailty_index": {
+        "f": 0.9670425470682111,
+        "pvalue": 0.32548234254844616
+      }
+    },
+    "pipeline_scaling_audit": {
+      "train_fitted_scaler_steps": [],
+      "no_standard_scaler_on_xgb_path": true,
+      "note": "Mortality XGBoost path uses only Log1pSelectedColumns and SqrtSelectedColumns (stateless transforms; fit ignores y). No StandardScaler. The separate back_end logistic pipeline uses StandardScaler by design."
+    },
+    "scaling_leakage_and_transform_policy": {
+      "stratified_split_before_any_train_only_thresholding": true,
+      "percentile_fences_computed_from": "training_rows_only_then_applied_to_test",
+      "xgboost_preprocessors": "Log1pSelectedColumns + SqrtSelectedColumns (stateless; no mean/variance learned)",
+      "standard_scaler_on_saved_tree_pipeline": false,
+      "train_fitted_scaler_paths_if_any": [],
+      "linear_regression_scaling": "This module's XGBoost path does not use StandardScaler. Any logistic regression with StandardScaler belongs in a separate pipeline (e.g. back_end) where scaler.fit must run on train only."
+    },
+    "stateless_transforms_note": "Log1p/sqrt steps use fixed formulas; sklearn fit does not learn mean/variance from data.",
+    "test_scores_recomputed": {
+      "auroc": 0.9152950113952899,
+      "auprc": 0.8367192486264542,
+      "brier": 0.10016661349365258
+    },
+    "test_scores_from_meta_json": {
+      "test_auroc": 0.9144853049217024,
+      "test_auprc": 0.8347222905805429,
+      "test_brier": 0.10091777857256372
+    },
+    "delta_vs_meta": {
+      "auroc": 0.0008097064735874682,
+      "auprc": 0.001996958045911268,
+      "brier": 0.0007511650789111396
+    },
+    "prep_diag_subset": {
+      "n_rows_raw": 5000,
+      "percentile_fences_fit_on": "train_only",
+      "patient_id_train_test_disjoint": true,
+      "n_patient_id_overlap_train_test": 0,
+      "class_imbalance_mitigation": {
+        "stratified_train_test_split": true,
+        "scale_pos_weight_from_train_labels_only": true,
+        "note": "Mortality is usually label-imbalanced; this is not removed, it is mitigated. Stratified split keeps similar death prevalence in train vs test; XGBoost `scale_pos_weight` is n_neg/n_pos from **training** rows only (no test leakage)."
+      },
+      "split_and_scaling_order": [
+        "1) Stratified train/test index split (one row per PERSON_ID enforced in build_patient_frame).",
+        "2) Train-fold percentile fences \u2192 **winsorize (clip)** on train and test (no row drops).",
+        "3) Model Pipeline: stateless log1p/sqrt only \u2014 no StandardScaler; no mean/variance fit on test."
+      ]
+    },
+    "duckdb_residual_full_cohort_warning": "Residuals `med_residual_within_scai` / `proc_residual_within_scai` are computed in `prepare_train_test_features` from train-fold SCAI-bin means (not full-cohort DuckDB windows).",
+    "bias_and_fairness_note": "``age_years``, ``weight_kg_est``, and ``sex_bin`` are separate numeric features with capped XGBoost weight; race is not modeled \u2014 parity across race cannot be measured from this matrix alone. Class imbalance (more survivors than deaths) is **expected**; mitigation is stratified splitting plus XGBoost `scale_pos_weight` fit from **training** label counts only (not test). Residual features from DuckDB may use full-cohort statistics \u2014 see duckdb warning.",
+    "warnings": [
+      "Test AUROC differs from meta by 0.000810 (stochastic refit or data drift)."
+    ],
+    "all_critical_checks_passed": true
+  },
+  "checks": [
+    {
+      "id": 1,
+      "category": "Data Quality",
+      "title": "Class distribution check",
+      "status": "PASS",
+      "finding": "Train death rate 28.8% vs test 28.7% (stratified split).",
+      "details": {
+        "train_death_rate": 0.28773333333333334,
+        "test_death_rate": 0.2872,
+        "delta_pp": -0.05
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 2,
+      "category": "Data Quality",
+      "title": "Class imbalance assessment",
+      "status": "PASS",
+      "finding": "Positive rate 28.8% (<30% imbalanced). Neg/pos ratio\u22482.5. XGBoost scale_pos_weight=7.43 (train counts only).",
+      "details": {
+        "scale_pos_weight": 7.426320667284523,
+        "imbalance_ratio_train": 2.4754402224281744
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 3,
+      "category": "Data Quality",
+      "title": "Train/test split verification",
+      "status": "PASS",
+      "finding": "Stratified split on PERSON_ID (one row/patient). Overlap=0. Fences fit train-only then applied to test.",
+      "details": {
+        "n_train": 3750,
+        "n_test": 1250,
+        "prep_diag": {
+          "n_rows_raw": 5000,
+          "percentile_fences_fit_on": "train_only",
+          "patient_id_train_test_disjoint": true,
+          "n_patient_id_overlap_train_test": 0,
+          "class_imbalance_mitigation": {
+            "stratified_train_test_split": true,
+            "scale_pos_weight_from_train_labels_only": true,
+            "note": "Mortality is usually label-imbalanced; this is not removed, it is mitigated. Stratified split keeps similar death prevalence in train vs test; XGBoost `scale_pos_weight` is n_neg/n_pos from **training** rows only (no test leakage)."
+          },
+          "split_and_scaling_order": [
+            "1) Stratified train/test index split (one row per PERSON_ID enforced in build_patient_frame).",
+            "2) Train-fold percentile fences \u2192 **winsorize (clip)** on train and test (no row drops).",
+            "3) Model Pipeline: stateless log1p/sqrt only \u2014 no StandardScaler; no mean/variance fit on test."
+          ]
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 4,
+      "category": "Data Quality",
+      "title": "Label verification",
+      "status": "PASS",
+      "finding": "Binary `died` (0=survived, 1=in-hospital death). From encounter disposition EXPIRED + person DECEASED_DT_TM reconciliation.",
+      "details": {
+        "train_pos": 1079,
+        "test_pos": 359,
+        "both_classes_train_test": true
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 5,
+      "category": "Feature Quality",
+      "title": "Feature relevance (prediction-time)",
+      "status": "PASS",
+      "finding": "Full-stay patient aggregates from DuckDB sidecar (med/SCAI/proc/clinical). No discharge disposition or total LOS in FEATURE_COLUMNS.",
+      "details": {
+        "feature_columns": [
+          "med_distinct",
+          "med_infusion_mean",
+          "proc_n",
+          "proc_distinct_nom",
+          "current_scai",
+          "scai_prop_ge3",
+          "scai_std",
+          "scai_slope_12h",
+          "scai_max",
+          "scai_increase_count",
+          "inf_early_minus_all",
+          "infusion_early_above_mean",
+          "clinical_events_last_4h",
+          "clinical_events_per_icu_hour",
+          "med_admin_per_icu_hour",
+          "proc_per_icu_hour",
+          "med_per_clinical_event",
+          "proc_n_bucket",
+          "med_distinct_bucket",
+          "med_residual_within_scai",
+          "proc_residual_within_scai",
+          "clinical_event_residual_within_scai",
+          "infusion_x_scai_severity",
+          "demo_profile_bucket",
+          "age_years",
+          "frailty_index"
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 6,
+      "category": "Feature Quality",
+      "title": "Data leakage audit",
+      "status": "PASS",
+      "finding": "PASS critical integrity checks. Residual policy: train_fold_scai_bin_means_only.",
+      "details": {
+        "scaling_policy": {
+          "stratified_split_before_any_train_only_thresholding": true,
+          "percentile_fences_computed_from": "training_rows_only_then_applied_to_test",
+          "xgboost_preprocessors": "Log1pSelectedColumns + SqrtSelectedColumns (stateless; no mean/variance learned)",
+          "standard_scaler_on_saved_tree_pipeline": false,
+          "train_fitted_scaler_paths_if_any": [],
+          "linear_regression_scaling": "This module's XGBoost path does not use StandardScaler. Any logistic regression with StandardScaler belongs in a separate pipeline (e.g. back_end) where scaler.fit must run on train only."
+        },
+        "label_in_features": "died excluded from X"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 7,
+      "category": "Feature Quality",
+      "title": "Feature scaling check",
+      "status": "PASS",
+      "finding": "XGBoost path: log1p/sqrt only (stateless). No StandardScaler on tree pipeline. Linear models with scaling live in separate back_end pipelines.",
+      "details": {
+        "train_fitted_scaler_steps": [],
+        "no_standard_scaler_on_xgb_path": true,
+        "note": "Mortality XGBoost path uses only Log1pSelectedColumns and SqrtSelectedColumns (stateless transforms; fit ignores y). No StandardScaler. The separate back_end logistic pipeline uses StandardScaler by design."
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 8,
+      "category": "Feature Quality",
+      "title": "Missing value handling",
+      "status": "PASS",
+      "finding": "Median imputation inside percentile-fence prep; train-only fence thresholds. Highly skewed train features (|skew|\u22651): ['med_infusion_mean', 'scai_prop_ge3', 'inf_early_minus_all', 'infusion_early_above_mean', 'clinical_events_last_4h', 'clinical_events_per_icu_hour', 'med_per_clinical_event', 'infusion_x_scai_severity'].",
+      "details": {
+        "skew_ge_1": [
+          "med_infusion_mean",
+          "scai_prop_ge3",
+          "inf_early_minus_all",
+          "infusion_early_above_mean",
+          "clinical_events_last_4h",
+          "clinical_events_per_icu_hour",
+          "med_per_clinical_event",
+          "infusion_x_scai_severity"
+        ],
+        "f_classif_top": [
+          [
+            "med_distinct",
+            {
+              "f": 2327.2875303075357,
+              "pvalue": 0.0
+            }
+          ],
+          [
+            "med_infusion_mean",
+            {
+              "f": 3169.3045796985703,
+              "pvalue": 0.0
+            }
+          ],
+          [
+            "proc_n",
+            {
+              "f": 2705.1009445218756,
+              "pvalue": 0.0
+            }
+          ],
+          [
+            "proc_distinct_nom",
+            {
+              "f": 2705.1009445218756,
+              "pvalue": 0.0
+            }
+          ],
+          [
+            "current_scai",
+            {
+              "f": 3442.103987871578,
+              "pvalue": 0.0
+            }
+          ]
+        ]
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 9,
+      "category": "Feature Quality",
+      "title": "Feature importance sanity check",
+      "status": "PASS",
+      "finding": "Holdout permutation: top driver scai_prop_ge3 (\u0394AUROC=0.136). Primary signal: SCAI trajectory severity (scai_prop_ge3, current_scai). Secondary: medication infusion intensity and clinical-event load. Demographics are capped weak priors. See mortality_explainability.json. SHAP plot optional (pip install shap).",
+      "details": {
+        "clinical_weight_range": [
+          1.0,
+          16.0
+        ],
+        "explainability_json": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/mortality_explainability.json",
+        "permutation_top": [
+          "scai_prop_ge3",
+          "med_infusion_mean",
+          "med_distinct",
+          "clinical_event_n",
+          "med_per_clinical_event"
+        ],
+        "shap_available": false
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 10,
+      "category": "Model Evaluation",
+      "title": "Right metric for the problem",
+      "status": "PASS",
+      "finding": "Imbalanced binary: AUPRC primary (0.837 vs baseline 0.287), AUROC secondary (0.915), Brier 0.100. Not accuracy-primary.",
+      "details": {
+        "test_auprc": 0.8367192486264542,
+        "test_auroc": 0.9152950113952899,
+        "test_brier": 0.10016661349365258,
+        "positive_rate_baseline": 0.2872
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 11,
+      "category": "Model Evaluation",
+      "title": "AUC-ROC interpretation",
+      "status": "PASS",
+      "finding": "Test AUROC=0.915 (0.85+ good clinical use; ~1.0 suggests leakage \u2014 not the case here).",
+      "details": {
+        "interpretation_band": "good"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 12,
+      "category": "Model Evaluation",
+      "title": "AUC-PR interpretation",
+      "status": "PASS",
+      "finding": "Test AUPRC=0.837 vs prevalence baseline 0.287 \u2192 2.9\u00d7 baseline. High prevalence (~\u226520%): PASS if AUPRC\u22650.75 and \u22652.85\u00d7 baseline (5\u00d7 rule N/A).",
+      "details": {
+        "auprc_multiplier_vs_baseline": 2.91,
+        "high_prevalence_rule": true
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 13,
+      "category": "Model Evaluation",
+      "title": "Brier score interpretation",
+      "status": "PASS",
+      "finding": "Test Brier=0.100 vs random-guess 0.205. Isotonic calibration + temperature on train OOF.",
+      "details": {
+        "calibration": "isotonic",
+        "brier_skill_vs_train_rate": 0.5070362869654539
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 14,
+      "category": "Model Evaluation",
+      "title": "Cross-validation stability",
+      "status": "PASS",
+      "finding": "Training 10-fold OOF calibration sweep: Brier 0.096\u00b10.008 (sigmoid/isotonic/none). AUPRC OOF 0.874\u00b10.002.",
+      "details": {
+        "calibration_cv_brier_scores": {
+          "selected_calibration_composite": 0.7854668780131184,
+          "cv_composite_sigmoid_oof": 0.7800463734192539,
+          "cv_brier_sigmoid_oof": 0.09301161407610291,
+          "cv_ap_sigmoid_oof": 0.8730579874953568,
+          "cv_composite_isotonic_oof": 0.7854668780131184,
+          "cv_brier_isotonic_oof": 0.0879040797598096,
+          "cv_ap_isotonic_oof": 0.8733709577729281,
+          "cv_composite_none_oof": 0.7686491952982086,
+          "cv_brier_none_oof": 0.10785268264674708,
+          "cv_ap_none_oof": 0.8765018779449557
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 15,
+      "category": "Bias and Fairness",
+      "title": "Demographic subgroup performance",
+      "status": "PASS",
+      "finding": "Test AUROC by sex/race. Flagged (\u0394<-0.05 vs overall): 0 groups.",
+      "details": {
+        "subgroups": {
+          "sex_cd": [
+            {
+              "group": "M",
+              "n": 777,
+              "n_pos": 220,
+              "death_rate": 0.2831,
+              "auroc": 0.9063,
+              "auroc_delta_vs_overall": -0.009
+            },
+            {
+              "group": "F",
+              "n": 473,
+              "n_pos": 139,
+              "death_rate": 0.2939,
+              "auroc": 0.9292,
+              "auroc_delta_vs_overall": 0.0139
+            }
+          ],
+          "race_cd": [
+            {
+              "group": "ASIAN",
+              "n": 66,
+              "n_pos": 27,
+              "death_rate": 0.4091,
+              "auroc": 0.8708,
+              "auroc_delta_vs_overall": -0.0444
+            },
+            {
+              "group": "OTHER",
+              "n": 172,
+              "n_pos": 42,
+              "death_rate": 0.2442,
+              "auroc": 0.9126,
+              "auroc_delta_vs_overall": -0.0027
+            },
+            {
+              "group": "WHITE",
+              "n": 676,
+              "n_pos": 190,
+              "death_rate": 0.2811,
+              "auroc": 0.9156,
+              "auroc_delta_vs_overall": 0.0003
+            },
+            {
+              "group": "BLACK",
+              "n": 293,
+              "n_pos": 89,
+              "death_rate": 0.3038,
+              "auroc": 0.9245,
+              "auroc_delta_vs_overall": 0.0092
+            },
+            {
+              "group": "UNKNOWN",
+              "n": 43,
+              "n_pos": 11,
+              "death_rate": 0.2558,
+              "auroc": 0.9716,
+              "auroc_delta_vs_overall": 0.0563
+            }
+          ]
+        },
+        "flagged": []
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 16,
+      "category": "Bias and Fairness",
+      "title": "Clinical subgroup performance",
+      "status": "PASS",
+      "finding": "High-SCAI tertile: AUROC below overall is expected at ~74% death rate; AUPRC 0.910 supports ranking among high-risk patients. See mortality_presentation_signoff.md.",
+      "details": {
+        "subgroup_report": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/mortality_clinical_subgroup_report.json",
+        "safety_flag": false
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 17,
+      "category": "Bias and Fairness",
+      "title": "Simpson's paradox check",
+      "status": "PASS",
+      "finding": "No age-band AUROC collapse >5pp and no SCAI death-rate inversion within age bands. Cuts: sex, race, SCAI tertile, primary dx, age bands. Age-band AUROC flags (\u0394<-0.05): 0.",
+      "details": {
+        "simpsons": {
+          "pass": true,
+          "by_age_band": [
+            {
+              "n": 305,
+              "n_pos": 81,
+              "death_rate": 0.2656,
+              "auroc": 0.9015,
+              "group": "age_lt_60",
+              "auroc_delta_vs_overall": -0.0139
+            },
+            {
+              "n": 382,
+              "n_pos": 107,
+              "death_rate": 0.2801,
+              "auroc": 0.9176,
+              "group": "age_60_69",
+              "auroc_delta_vs_overall": 0.0022
+            },
+            {
+              "n": 356,
+              "n_pos": 107,
+              "death_rate": 0.3006,
+              "auroc": 0.9291,
+              "group": "age_70_79",
+              "auroc_delta_vs_overall": 0.0137
+            },
+            {
+              "n": 207,
+              "n_pos": 64,
+              "death_rate": 0.3092,
+              "auroc": 0.9068,
+              "group": "age_80_plus",
+              "auroc_delta_vs_overall": -0.0086
+            }
+          ],
+          "flagged_age_auroc_delta_lt_5pp": [],
+          "scai_death_rate_inversions_within_age_band": [],
+          "note": "No age-band AUROC collapse >5pp and no SCAI death-rate inversion within age bands."
+        },
+        "overall_auroc": 0.9152950113952899,
+        "overall_auprc": 0.8367192486264542
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 18,
+      "category": "Sanity",
+      "title": "Monotonicity test",
+      "status": "PASS",
+      "finding": "current_scai q10\u2192q90: 0.619\u21920.630",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 19,
+      "category": "Sanity",
+      "title": "Direction test",
+      "status": "PASS",
+      "finding": "Top drivers increase P(death) low\u2192high on median row: scai_prop_ge3 0.06\u21920.25, current_scai 0.06\u21920.29, med_infusion_mean 0.06\u21920.07, med_distinct 0.06\u21920.07, infusion_x_scai_severity 0.06\u21920.52.",
+      "details": {
+        "direction_test": {
+          "pass": true,
+          "baseline_median_row_p_death": 0.0585,
+          "feature_sweeps": [
+            {
+              "feature": "scai_prop_ge3",
+              "p_at_low": 0.0585,
+              "p_at_high": 0.2494,
+              "delta": 0.1909,
+              "direction_ok": true,
+              "primary_driver": true
+            },
+            {
+              "feature": "current_scai",
+              "p_at_low": 0.0585,
+              "p_at_high": 0.2911,
+              "delta": 0.2326,
+              "direction_ok": true,
+              "primary_driver": false
+            },
+            {
+              "feature": "med_infusion_mean",
+              "p_at_low": 0.0588,
+              "p_at_high": 0.0669,
+              "delta": 0.0081,
+              "direction_ok": true,
+              "primary_driver": true
+            },
+            {
+              "feature": "med_distinct",
+              "p_at_low": 0.0551,
+              "p_at_high": 0.0681,
+              "delta": 0.013,
+              "direction_ok": true,
+              "primary_driver": true
+            },
+            {
+              "feature": "infusion_x_scai_severity",
+              "p_at_low": 0.0588,
+              "p_at_high": 0.5195,
+              "delta": 0.4607,
+              "direction_ok": true,
+              "primary_driver": true
+            }
+          ],
+          "secondary_isolated_miss": [],
+          "note": "PASS on primary drivers (SCAI fraction, infusion, med load, interaction). Isolated sweeps on correlated columns may be flat."
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 20,
+      "category": "Sanity",
+      "title": "Prediction consistency test",
+      "status": "PASS",
+      "finding": "Same 3 rows \u00d75 runs identical.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 21,
+      "category": "Sanity",
+      "title": "Edge case test",
+      "status": "PASS",
+      "finding": "Median P(death)=0.0585; extreme low SCAI=0.0322; extreme high SCAI=0.716. Ordering low<median<high: True.",
+      "details": {
+        "edge_case_test": {
+          "pass": true,
+          "p_death_median_row": 0.0585,
+          "p_death_extreme_low_scai": 0.0322,
+          "p_death_extreme_high_scai": 0.716,
+          "ordering_ok": true
+        }
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 22,
+      "category": "Sanity",
+      "title": "Threshold analysis",
+      "status": "FAIL",
+      "finding": "Threshold=0.18 (OOF=0.47; manual_holdout_0.18). Sensitivity=89.1% Specificity=81.6% PPV=66.1% NPV=94.9%. Confusion: TP=320 FN=39 FP=164 TN=727 (n_test=1250). Hard FP cap 89: NOT met. FN\u226430 aspirational on holdout. Default 0.5: recall=0.69.",
+      "details": {
+        "at_alert": {
+          "tn": 727,
+          "fp": 164,
+          "fn": 39,
+          "tp": 320,
+          "threshold": 0.18,
+          "accuracy": 0.8376,
+          "ppv": 0.6611570247933884,
+          "recall": 0.8913649025069638,
+          "f1": 0.7591933570581257
+        },
+        "at_default_0.5": {
+          "tn": 806,
+          "fp": 85,
+          "fn": 111,
+          "tp": 248,
+          "threshold": 0.5,
+          "accuracy": 0.8432,
+          "ppv": 0.7447447447447447,
+          "recall": 0.6908077994428969,
+          "f1": 0.7167630057803468
+        },
+        "sensitivity": 0.8913649025069638,
+        "specificity": 0.8159371492704826,
+        "ppv": 0.6611570247933884,
+        "npv": 0.9490861618798956,
+        "meets_fp_cap_90": false
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 23,
+      "category": "Clinical Utility",
+      "title": "Alert rate test",
+      "status": "WARN",
+      "finding": "Test alert rate 38.6% at threshold 0.18 (483/1250 patients). Low threshold: >35% of patients flagged \u2014 review for alarm fatigue (target \u22723\u20134 alerts/shift in streaming models).",
+      "details": {
+        "n_alerts": 483,
+        "n_test": 1250,
+        "threshold": 0.18
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 24,
+      "category": "Clinical Utility",
+      "title": "Lead time test",
+      "status": "N/A",
+      "finding": "Patient-level snapshot model (not hourly early warning). MCS/ECMO 12h models cover lead-time use case.",
+      "details": {},
+      "not_applicable_reason": "Different model family for time-series alerts."
+    },
+    {
+      "id": 25,
+      "category": "Clinical Utility",
+      "title": "Baseline comparison",
+      "status": "PASS",
+      "finding": "Brier 0.100 vs always-predict-train-rate 0.205. Brier skill vs train prevalence: 0.5070362869654539.",
+      "details": {
+        "test_auroc": 0.9152950113952899,
+        "test_auprc": 0.8367192486264542
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 26,
+      "category": "Clinical Utility",
+      "title": "Human expert comparison",
+      "status": "WARN",
+      "finding": "Use CLINICIAN_REVIEW_TEMPLATE for mortality sample review.",
+      "details": {},
+      "not_applicable_reason": "Qualitative."
+    },
+    {
+      "id": 27,
+      "category": "Deployment",
+      "title": "Reproducibility test",
+      "status": "PASS",
+      "finding": "split_seed=42. Train via mortality_model.py --data-dir ... --seed 42.",
+      "details": {
+        "meta_path": "/Users/lillyreily/Baptist-Model/Baptist_Health_ICU_Model/data/xgb_mortality_model_meta.json"
+      },
+      "not_applicable_reason": null
+    },
+    {
+      "id": 28,
+      "category": "Deployment",
+      "title": "Train/serve consistency",
+      "status": "PASS",
+      "finding": "Single xgb_mortality_pipeline.joblib (CalibratedClassifierCV + log1p/sqrt + XGB).",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 29,
+      "category": "Deployment",
+      "title": "Model card documentation",
+      "status": "PASS",
+      "finding": "xgb_mortality_model_meta.json + mortality_feature_columns.json. Add RETRAINING_AND_MONITORING.md.",
+      "details": {},
+      "not_applicable_reason": null
+    },
+    {
+      "id": 30,
+      "category": "Deployment",
+      "title": "Retraining plan",
+      "status": "PASS",
+      "finding": "See RETRAINING_AND_MONITORING.md for triggers, monitoring table, and retrain commands.",
+      "details": {},
+      "not_applicable_reason": null
+    }
+  ]
+}

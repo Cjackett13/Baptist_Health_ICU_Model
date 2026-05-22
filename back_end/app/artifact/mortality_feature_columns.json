@@ -1,0 +1,50 @@
+{
+  "feature_columns": [
+    "med_distinct",
+    "med_infusion_mean",
+    "proc_n",
+    "proc_distinct_nom",
+    "current_scai",
+    "scai_prop_ge3",
+    "scai_std",
+    "scai_slope_12h",
+    "scai_max",
+    "scai_increase_count",
+    "inf_early_minus_all",
+    "infusion_early_above_mean",
+    "clinical_events_last_4h",
+    "clinical_events_per_icu_hour",
+    "med_admin_per_icu_hour",
+    "proc_per_icu_hour",
+    "med_per_clinical_event",
+    "proc_n_bucket",
+    "med_distinct_bucket",
+    "med_residual_within_scai",
+    "proc_residual_within_scai",
+    "clinical_event_residual_within_scai",
+    "infusion_x_scai_severity",
+    "demo_profile_bucket",
+    "age_years",
+    "frailty_index"
+  ],
+  "n_features": 26,
+  "label_column": "died",
+  "log1p_columns": [
+    "clinical_events_last_4h",
+    "clinical_events_per_icu_hour",
+    "med_admin_per_icu_hour",
+    "med_per_clinical_event"
+  ],
+  "sqrt_columns": [
+    "med_infusion_mean",
+    "med_distinct",
+    "proc_n",
+    "proc_per_icu_hour",
+    "scai_std",
+    "scai_max",
+    "scai_increase_count",
+    "infusion_x_scai_severity"
+  ],
+  "bundle_artifact": "xgb_mortality_pipeline.joblib",
+  "meta_artifact": "xgb_mortality_model_meta.json"
+}

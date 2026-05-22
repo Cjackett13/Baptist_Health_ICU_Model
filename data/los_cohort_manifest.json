@@ -1,6 +1,6 @@
 {
   "inclusion_rules": {
-    "grain": "one_row_per_person_id",
+    "grain": "one_row_per_encounter_id",
     "age_years_min": 18,
     "encounter_type": "INPATIENT",
     "unit_codes": [
@@ -31,17 +31,27 @@
   },
   "counts": {
     "encounters_raw": 5000,
-    "patients_included": 5000,
-    "patients_excluded": 0,
-    "los_truncated_flagged": 1502
+    "encounters_included": 5000,
+    "encounters_excluded": 0,
+    "los_truncated_flagged": 1474
   },
   "outputs": {
     "patient_frame": "los_patient_frame.parquet",
     "checkpoint_frame": "los_checkpoint_frame.parquet",
+    "duckdb_los_features": "duckdb_los_features.parquet",
+    "duckdb_los_feature_audit": "duckdb_los_feature_audit.json",
+    "encounter_labels": "los_encounter_labels.parquet",
+    "modeling_features": "los_modeling_features.parquet",
+    "modeling_column_groups": "los_modeling_column_groups.json",
+    "imputation_policy": "los_imputation_policy.json",
+    "feature_missingness": "los_feature_missingness.json",
+    "cohort_excluded": "los_cohort_excluded.parquet",
     "admit_features": "los_admit_features.parquet",
     "feature_columns": "los_feature_columns.json",
     "prediction_policy": "los_prediction_policy.json",
-    "early_window_doc": "los_early_window_per_table.json"
+    "early_window_doc": "los_early_window_per_table.json",
+    "data_cleaning_audit": "los_data_cleaning_audit.json",
+    "frontend_value_ranges": "los_frontend_value_ranges.json"
   },
   "prediction_schedule_v2": {
     "cadence_hours": 24,

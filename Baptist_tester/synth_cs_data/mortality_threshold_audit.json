@@ -1,0 +1,222 @@
+{
+  "good_patient_row": {
+    "med_distinct": 1.0,
+    "med_infusion_mean": 0.05,
+    "proc_n": 0.0,
+    "proc_distinct_nom": 0.0,
+    "scai_std": 0.0,
+    "current_scai": 0.0,
+    "scai_prop_ge3": 0.0
+  },
+  "p_death_good_row": 0.17016098934343343,
+  "test_metrics": {
+    "auroc": 0.847741935483871,
+    "auprc": 0.8583047840977156,
+    "brier": 0.14440269389931526,
+    "pr_auc": 0.8544850255750135
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 0.05,
+      "frac_pred_positive": 1.0,
+      "precision": 0.5535714285714286,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "npv": 0.0,
+      "net_benefit": 0.5300751879699248,
+      "f1": 0.7126436781609196
+    },
+    {
+      "threshold": 0.1,
+      "frac_pred_positive": 1.0,
+      "precision": 0.5535714285714286,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "npv": 0.0,
+      "net_benefit": 0.503968253968254,
+      "f1": 0.7126436781609196
+    },
+    {
+      "threshold": 0.15,
+      "frac_pred_positive": 0.9821428571428571,
+      "precision": 0.5636363636363636,
+      "recall": 1.0,
+      "specificity": 0.04,
+      "npv": 1.0,
+      "net_benefit": 0.47794117647058826,
+      "f1": 0.7209302325581396
+    },
+    {
+      "threshold": 0.2,
+      "frac_pred_positive": 0.8035714285714286,
+      "precision": 0.6666666666666666,
+      "recall": 0.967741935483871,
+      "specificity": 0.4,
+      "npv": 0.9090909090909091,
+      "net_benefit": 0.46875,
+      "f1": 0.7894736842105263
+    },
+    {
+      "threshold": 0.25,
+      "frac_pred_positive": 0.7321428571428571,
+      "precision": 0.6829268292682927,
+      "recall": 0.9032258064516129,
+      "specificity": 0.48,
+      "npv": 0.8,
+      "net_benefit": 0.4226190476190476,
+      "f1": 0.7777777777777778
+    },
+    {
+      "threshold": 0.3,
+      "frac_pred_positive": 0.625,
+      "precision": 0.7428571428571429,
+      "recall": 0.8387096774193549,
+      "specificity": 0.64,
+      "npv": 0.7619047619047619,
+      "net_benefit": 0.39540816326530615,
+      "f1": 0.787878787878788
+    },
+    {
+      "threshold": 0.35,
+      "frac_pred_positive": 0.5714285714285714,
+      "precision": 0.8125,
+      "recall": 0.8387096774193549,
+      "specificity": 0.76,
+      "npv": 0.7916666666666666,
+      "net_benefit": 0.4065934065934066,
+      "f1": 0.8253968253968254
+    },
+    {
+      "threshold": 0.4,
+      "frac_pred_positive": 0.5357142857142857,
+      "precision": 0.8333333333333334,
+      "recall": 0.8064516129032258,
+      "specificity": 0.8,
+      "npv": 0.7692307692307693,
+      "net_benefit": 0.3869047619047619,
+      "f1": 0.819672131147541
+    },
+    {
+      "threshold": 0.45,
+      "frac_pred_positive": 0.5357142857142857,
+      "precision": 0.8333333333333334,
+      "recall": 0.8064516129032258,
+      "specificity": 0.8,
+      "npv": 0.7692307692307693,
+      "net_benefit": 0.3733766233766234,
+      "f1": 0.819672131147541
+    },
+    {
+      "threshold": 0.5,
+      "frac_pred_positive": 0.5178571428571429,
+      "precision": 0.8275862068965517,
+      "recall": 0.7741935483870968,
+      "specificity": 0.8,
+      "npv": 0.7407407407407407,
+      "net_benefit": 0.33928571428571425,
+      "f1": 0.7999999999999999
+    },
+    {
+      "threshold": 0.55,
+      "frac_pred_positive": 0.5178571428571429,
+      "precision": 0.8275862068965517,
+      "recall": 0.7741935483870968,
+      "specificity": 0.8,
+      "npv": 0.7407407407407407,
+      "net_benefit": 0.3194444444444444,
+      "f1": 0.7999999999999999
+    },
+    {
+      "threshold": 0.6,
+      "frac_pred_positive": 0.5,
+      "precision": 0.8571428571428571,
+      "recall": 0.7741935483870968,
+      "specificity": 0.84,
+      "npv": 0.75,
+      "net_benefit": 0.3214285714285714,
+      "f1": 0.8135593220338982
+    },
+    {
+      "threshold": 0.65,
+      "frac_pred_positive": 0.48214285714285715,
+      "precision": 0.8888888888888888,
+      "recall": 0.7741935483870968,
+      "specificity": 0.88,
+      "npv": 0.7586206896551724,
+      "net_benefit": 0.3290816326530612,
+      "f1": 0.8275862068965517
+    },
+    {
+      "threshold": 0.7,
+      "frac_pred_positive": 0.48214285714285715,
+      "precision": 0.8888888888888888,
+      "recall": 0.7741935483870968,
+      "specificity": 0.88,
+      "npv": 0.7586206896551724,
+      "net_benefit": 0.3035714285714286,
+      "f1": 0.8275862068965517
+    },
+    {
+      "threshold": 0.75,
+      "frac_pred_positive": 0.48214285714285715,
+      "precision": 0.8888888888888888,
+      "recall": 0.7741935483870968,
+      "specificity": 0.88,
+      "npv": 0.7586206896551724,
+      "net_benefit": 0.26785714285714285,
+      "f1": 0.8275862068965517
+    },
+    {
+      "threshold": 0.8,
+      "frac_pred_positive": 0.48214285714285715,
+      "precision": 0.8888888888888888,
+      "recall": 0.7741935483870968,
+      "specificity": 0.88,
+      "npv": 0.7586206896551724,
+      "net_benefit": 0.21428571428571422,
+      "f1": 0.8275862068965517
+    },
+    {
+      "threshold": 0.85,
+      "frac_pred_positive": 0.48214285714285715,
+      "precision": 0.8888888888888888,
+      "recall": 0.7741935483870968,
+      "specificity": 0.88,
+      "npv": 0.7586206896551724,
+      "net_benefit": 0.125,
+      "f1": 0.8275862068965517
+    },
+    {
+      "threshold": 0.9,
+      "frac_pred_positive": 0.4107142857142857,
+      "precision": 0.8695652173913043,
+      "recall": 0.6451612903225806,
+      "specificity": 0.88,
+      "npv": 0.6666666666666666,
+      "net_benefit": -0.12500000000000006,
+      "f1": 0.7407407407407407
+    },
+    {
+      "threshold": 0.95,
+      "frac_pred_positive": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "specificity": 1.0,
+      "npv": 0.44642857142857145,
+      "net_benefit": 0.0,
+      "f1": 0.0
+    }
+  ],
+  "suggested_threshold_max_f1": 0.65,
+  "suggested_threshold_max_net_benefit": 0.05,
+  "suggested_threshold_max_net_benefit_mid_flag_rate": 0.25,
+  "permutation_importance_mean": {
+    "med_distinct": 0.021451612903225854,
+    "med_infusion_mean": -0.017806451612903194,
+    "proc_n": 0.0012258064516129374,
+    "proc_distinct_nom": 0.0029677419354838972,
+    "scai_std": 0.0151935483870968,
+    "current_scai": 0.17000000000000007,
+    "scai_prop_ge3": 0.009129032258064579
+  }
+}

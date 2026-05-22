@@ -1,0 +1,27 @@
+{
+  "targets": {
+    "mae_hours_max": 36.0,
+    "rmse_hours_max": 48.0,
+    "r2_hours_min": 0.65,
+    "mae_days_max": 1.5,
+    "rmse_days_max": 2.0
+  },
+  "metrics_test": {
+    "mae_hours": 9.583667510986329,
+    "rmse_hours": 11.964125377442508,
+    "r2_hours": 0.7721840919040197,
+    "mae_days": 0.399,
+    "rmse_days": 0.499,
+    "mae_log1p": 0.11562293986096032,
+    "baseline_mae_hours_median_predictor": 20.199,
+    "mae_improvement_vs_baseline_pct": 52.55,
+    "pct_within_24h": 95.0,
+    "pct_within_36h": 99.7,
+    "pct_within_48h": 100.0
+  },
+  "targets_met_test": {
+    "mae_hours": true,
+    "rmse_hours": true,
+    "r2_hours": true
+  }
+}

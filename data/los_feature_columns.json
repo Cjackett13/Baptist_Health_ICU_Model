@@ -35,6 +35,7 @@
     "feature_window_hours"
   ],
   "feature_columns_v1_snapshot": [
+    "demo_profile_bucket",
     "med_infusion_mean_12h",
     "scai_mean_12h",
     "scai_last_12h",
@@ -44,7 +45,13 @@
     "scai_slope_12h",
     "scai_first_12h",
     "scai_std_12h",
+    "scai_prop_ge3_12h",
     "med_per_clinical_event_12h",
+    "med_residual_within_scai_12h",
+    "infusion_residual_within_scai_12h",
+    "proc_residual_within_scai_12h",
+    "dx_cat_acute_mi",
+    "dx_cat_adhf",
     "icd_prefix",
     "age_years",
     "sex_bin",
@@ -83,10 +90,12 @@
     "feature_window_hours"
   ],
   "blocked_label_derived": [
+    "ADMIT_LOS_INDEX_H",
     "DECEASED_DT_TM",
     "DISCH_DISPOSITION_CD",
     "DISCH_DT_TM",
     "LOS_HOURS",
+    "admit_los_index_h",
     "log1p_los_hours",
     "log1p_los_hours_total",
     "log1p_remaining_los_hours",
@@ -124,6 +133,7 @@
     "scai_std"
   ],
   "blocked_combined": [
+    "ADMIT_LOS_INDEX_H",
     "DECEASED_DT_TM",
     "DISCH_DISPOSITION_CD",
     "DISCH_DT_TM",
@@ -132,6 +142,7 @@
     "NAME_FIRST_TXT",
     "NAME_LAST_TXT",
     "PERSON_ID",
+    "admit_los_index_h",
     "clinical_event_n",
     "current_scai",
     "died",

@@ -1,0 +1,65 @@
+{
+  "tables_cleaned": [
+    "code_value",
+    "person",
+    "encounter",
+    "diagnosis",
+    "clinical_event",
+    "medication_admin",
+    "procedure_event",
+    "scai_stage_hourly"
+  ],
+  "per_table": {
+    "code_value": {
+      "table": "code_value",
+      "n_rows_in": 35,
+      "sentinels_to_missing": {
+        "RESULT_UNITS_CD": 5
+      },
+      "n_rows_out": 35
+    },
+    "person": {
+      "table": "person",
+      "n_rows_in": 500,
+      "n_rows_out": 500
+    },
+    "encounter": {
+      "table": "encounter",
+      "n_rows_in": 500,
+      "n_rows_out": 500
+    },
+    "diagnosis": {
+      "table": "diagnosis",
+      "n_rows_in": 1503,
+      "n_rows_out": 1503
+    },
+    "clinical_event": {
+      "table": "clinical_event",
+      "n_rows_in": 674227,
+      "sentinels_to_missing": {
+        "RESULT_UNITS_CD": 118225
+      },
+      "n_rows_out": 674227
+    },
+    "medication_admin": {
+      "table": "medication_admin",
+      "n_rows_in": 2037,
+      "n_rows_out": 2037
+    },
+    "procedure_event": {
+      "table": "procedure_event",
+      "n_rows_in": 485,
+      "n_rows_out": 485
+    },
+    "scai_stage_hourly": {
+      "table": "scai_stage_hourly",
+      "n_rows_in": 48534,
+      "n_rows_out": 48534
+    }
+  },
+  "totals": {
+    "sentinels_to_missing": 118230,
+    "invalid_icd_to_missing": 0,
+    "invalid_event_cd_to_missing": 0
+  }
+}

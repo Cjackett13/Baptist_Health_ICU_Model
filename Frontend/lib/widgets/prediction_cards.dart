@@ -4,7 +4,9 @@
 // Each section is self-contained — plug real data in without touching layout.
 
 import 'package:flutter/material.dart';
+import '../models/mortality_model.dart';
 import '../models/patient_prediction.dart';
+import '../services/mortality_api_client.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION HEADER
@@ -353,18 +355,58 @@ class _LosTile extends StatelessWidget {
 // Prediction 4: Hospital mortality
 // Prediction 5: ICU mortality
 // Prediction 6: In-hospital expiry
+// Fetches from `back_end` FastAPI when the patient sheet opens (Cloud Run URL
+// via --dart-define=MORTALITY_API_BASE_URL=...).
 // ─────────────────────────────────────────────────────────────────────────────
-class MortalityRiskSection extends StatelessWidget {
+class MortalityRiskSection extends StatefulWidget {
   const MortalityRiskSection({
-    required this.predictions,
+    required this.patient,
     super.key,
   });
 
-  final PatientPredictions predictions;
+  final PatientRecord patient;
+
+  @override
+  State<MortalityRiskSection> createState() => _MortalityRiskSectionState();
+}
+
+class _MortalityRiskSectionState extends State<MortalityRiskSection> {
+  late PatientPredictions _predictions;
+  bool _loading = true;
+  String? _apiStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _predictions = widget.patient.predictions;
+    _loadRemoteMortality();
+  }
+
+  @override
+  void didUpdateWidget(covariant MortalityRiskSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.patient.id != widget.patient.id) {
+      _predictions = widget.patient.predictions;
+      _loading = true;
+      _apiStatus = null;
+      _loadRemoteMortality();
+    }
+  }
+
+  Future<void> _loadRemoteMortality() async {
+    // Patient list/seed already carries 26-feature model scores when useLiveApi=true.
+    // Do not replace with legacy 8-field POST (wrong features → wrong risk).
+    if (!mounted) return;
+    setState(() {
+      _predictions = widget.patient.predictions;
+      _apiStatus = 'Trained mortality bundle (patient feature row)';
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final peak = predictions.peakMortality;
+    final peak = _predictions.peakMortality;
     final peakColor = riskColor(peak);
 
     return Column(
@@ -373,9 +415,35 @@ class MortalityRiskSection extends StatelessWidget {
         const PredictionSectionHeader(
           title: 'Mortality Risk',
           subtitle:
-              'Hospital, ICU, and in-hospital expiry predictions',
+              'Hospital, ICU, and in-hospital expiry (Baptist_tester model via API)',
           icon: Icons.monitor_heart_outlined,
         ),
+        if (_loading)
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'Fetching mortality model…',
+                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                ),
+              ],
+            ),
+          )
+        else if (_apiStatus != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              _apiStatus!,
+              style: const TextStyle(fontSize: 11, color: Colors.black45),
+            ),
+          ),
         _PredictionCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,19 +479,19 @@ class MortalityRiskSection extends StatelessWidget {
               // Three mortality predictions
               _MortalityRow(
                 label: 'Hospital mortality',
-                value: predictions.hospitalMortality,
+                value: _predictions.hospitalMortality,
                 description: 'Overall in-hospital death risk',
               ),
               const SizedBox(height: 14),
               _MortalityRow(
                 label: 'ICU mortality',
-                value: predictions.icuMortality,
+                value: _predictions.icuMortality,
                 description: 'Death risk specific to ICU stay',
               ),
               const SizedBox(height: 14),
               _MortalityRow(
                 label: 'In-hospital expiry',
-                value: predictions.inHospitalExpiry,
+                value: _predictions.inHospitalExpiry,
                 description: 'Broader expiry estimate during admission',
               ),
             ],
@@ -519,15 +587,30 @@ class ShapPanel extends StatefulWidget {
 
 class _ShapPanelState extends State<ShapPanel> {
   int _selected = 0; // 0=transfer, 1=readmission, 2=mortality
+  List<ShapValue>? _mortalityShapFromApi;
 
   static const _tabs = ['ICU Transfer', 'Readmission', 'Mortality'];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMortalityShapBundle();
+  }
+
+  Future<void> _loadMortalityShapBundle() async {
+    final bundle = await fetchMortalityShapBundleJson();
+    if (!mounted || bundle == null) return;
+    final list = shapMortalityFromBundle(bundle);
+    if (list.isEmpty) return;
+    setState(() => _mortalityShapFromApi = list);
+  }
 
   List<ShapValue> get _activeShap {
     switch (_selected) {
       case 1:
         return widget.predictions.shapReadmission;
       case 2:
-        return widget.predictions.shapMortality;
+        return _mortalityShapFromApi ?? widget.predictions.shapMortality;
       default:
         return widget.predictions.shapTransfer;
     }
@@ -788,8 +871,16 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
         (base.icuTransferRisk + totalDelta).clamp(0.02, 0.99);
     _simReadmission =
         (base.readmissionRisk + totalDelta * 0.7).clamp(0.02, 0.99);
-    _simMortality =
-        (base.peakMortality + totalDelta * 0.5).clamp(0.02, 0.99);
+    _simMortality = MortalityModel.predict(
+      numMedications: _features.numMedications,
+      numberInpatient: _features.numberInpatient,
+      numLabProcedures: _features.numLabProcedures,
+      timeInHospital: _features.timeInHospital,
+      numberDiagnoses: _features.numberDiagnoses,
+      numberEmergency: _features.numberEmergency,
+      numberOutpatient: _features.numberOutpatient,
+      ageMid: _features.ageMid,
+    ).peak.clamp(0.02, 0.99);
     _simHospLos =
         (base.hospitalLosDays + hosDelta * 8 + medDelta * 3)
             .clamp(0.5, 21.0);
@@ -938,7 +1029,7 @@ class _SimResultGrid extends StatelessWidget {
           children: [
             Expanded(
                 child: _SimResultTile(
-                    label: 'Hospital LOS',
+                    label: 'Remaining hospital LOS',
                     value: '${hospLos.toStringAsFixed(1)}d',
                     color: losColor(hospLos))),
           ],
@@ -1220,7 +1311,7 @@ class ClinicalPredictionsSection extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               _LosPredictionRow(
-                label: 'Length of stay (hospital)',
+                label: 'Est. remaining stay (hospital)',
                 days: predictions.hospitalLosDays,
               ),
               const SizedBox(height: 14),

@@ -216,16 +216,22 @@ class PatientVital {
   final String normalcy;
   final DateTime? recordedAt;
 
-  factory PatientVital.fromJson(Map<String, dynamic> json) => PatientVital(
-        code: json['code'] as String,
-        title: json['title'] as String,
-        value: (json['value'] as num).toDouble(),
-        units: json['units'] as String? ?? '',
-        normalcy: json['normalcy'] as String? ?? 'NORMAL',
-        recordedAt: json['recorded_at'] != null
-            ? DateTime.tryParse(json['recorded_at'] as String)
-            : null,
-      );
+  factory PatientVital.fromJson(Map<String, dynamic> json) {
+    final raw = json['value'];
+    if (raw == null) {
+      throw FormatException('Vital ${json['code']} has null value');
+    }
+    return PatientVital(
+      code: json['code'] as String,
+      title: json['title'] as String,
+      value: (raw as num).toDouble(),
+      units: json['units'] as String? ?? '',
+      normalcy: json['normalcy'] as String? ?? 'NORMAL',
+      recordedAt: json['recorded_at'] != null
+          ? DateTime.tryParse(json['recorded_at'] as String)
+          : null,
+    );
+  }
 }
 
 class PatientMedication {
@@ -367,34 +373,45 @@ class PatientPredictions {
   factory PatientPredictions.fromSeedMap(Map<String, dynamic> p) {
     final lastUpdated = DateTime.tryParse(p['last_updated'] as String? ?? '') ??
         DateTime.now();
-    final mortality = (p['mortality_risk'] as num).toDouble();
+    final mortality = (p['mortality_risk'] as num?)?.toDouble() ??
+        (p['hospital_mortality'] as num?)?.toDouble() ??
+        0.0;
     final icuRisk = (p['icu_transfer_risk'] as num?)?.toDouble() ?? mortality;
     final readmit = (p['readmission_risk'] as num?)?.toDouble() ?? mortality * 0.7;
 
     return PatientPredictions(
       readmissionRisk: readmit,
-      hospitalLosDays: (p['hospital_los_days'] as num).toDouble(),
-      icuLosDays: (p['icu_los_days'] as num).toDouble(),
+      hospitalLosDays: (p['hospital_los_days'] as num?)?.toDouble() ?? 0.0,
+      icuLosDays: (p['icu_los_days'] as num?)?.toDouble() ?? 0.0,
       homeCareSuggestions: const [],
-      hospitalMortality: mortality,
-      icuMortality: (mortality * 1.1).clamp(0.0, 1.0),
-      inHospitalExpiry: mortality,
+      hospitalMortality:
+          (p['hospital_mortality'] as num?)?.toDouble() ?? mortality,
+      icuMortality:
+          (p['icu_mortality'] as num?)?.toDouble() ??
+          (mortality * 1.1).clamp(0.0, 1.0),
+      inHospitalExpiry:
+          (p['in_hospital_expiry'] as num?)?.toDouble() ?? mortality,
       icuTransferRisk: icuRisk,
       shapTransfer: const [],
       shapReadmission: const [],
       shapMortality: const [],
       lastUpdated: lastUpdated,
       scaiDeterioration6hProb:
-          (p['scai_deterioration_6h_prob'] as num).toDouble(),
-      scaiDeterioration6hLabel: p['scai_deterioration_6h_label'] as String,
-      currentScaiStage: p['current_scai_stage'] as String,
-      vasopressorProbability: (p['vasopressor_probability'] as num).toDouble(),
-      predictedVasopressorCount: p['predicted_vasopressor_count'] as int,
+          (p['scai_deterioration_6h_prob'] as num?)?.toDouble() ?? 0.2,
+      scaiDeterioration6hLabel:
+          p['scai_deterioration_6h_label'] as String? ?? 'Unknown',
+      currentScaiStage: p['current_scai_stage'] as String? ?? 'B',
+      vasopressorProbability:
+          (p['vasopressor_probability'] as num?)?.toDouble() ?? 0.2,
+      predictedVasopressorCount:
+          p['predicted_vasopressor_count'] as int? ?? 0,
       mortalityRisk: mortality,
-      mcs12hProbability: (p['mcs_12h_probability'] as num).toDouble(),
-      mcs12hNeeded: p['mcs_12h_needed'] as bool,
-      vaEcmo12hProbability: (p['va_ecmo_12h_probability'] as num).toDouble(),
-      vaEcmo12hNeeded: p['va_ecmo_12h_needed'] as bool,
+      mcs12hProbability:
+          (p['mcs_12h_probability'] as num?)?.toDouble() ?? 0.15,
+      mcs12hNeeded: p['mcs_12h_needed'] as bool? ?? false,
+      vaEcmo12hProbability:
+          (p['va_ecmo_12h_probability'] as num?)?.toDouble() ?? 0.1,
+      vaEcmo12hNeeded: p['va_ecmo_12h_needed'] as bool? ?? false,
       shapMcs12h: _parseShapList(p['shap_mcs_12h']),
       shapVaEcmo12h: _parseShapList(p['shap_va_ecmo_12h']),
     );
@@ -500,6 +517,44 @@ class PatientPredictions {
         shapMcs12h: shapMcs12h ?? this.shapMcs12h,
         shapVaEcmo12h: shapVaEcmo12h ?? this.shapVaEcmo12h,
       );
+
+  PatientPredictions copyWith({
+    double? hospitalMortality,
+    double? icuMortality,
+    double? inHospitalExpiry,
+    DateTime? lastUpdated,
+  }) {
+    final h = hospitalMortality ?? this.hospitalMortality;
+    final i = icuMortality ?? this.icuMortality;
+    final e = inHospitalExpiry ?? this.inHospitalExpiry;
+    final peak = [h, i, e].reduce((a, b) => a > b ? a : b);
+    return PatientPredictions(
+      readmissionRisk: readmissionRisk,
+      hospitalLosDays: hospitalLosDays,
+      icuLosDays: icuLosDays,
+      homeCareSuggestions: homeCareSuggestions,
+      hospitalMortality: h,
+      icuMortality: i,
+      inHospitalExpiry: e,
+      icuTransferRisk: icuTransferRisk,
+      shapTransfer: shapTransfer,
+      shapReadmission: shapReadmission,
+      shapMortality: shapMortality,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+      scaiDeterioration6hProb: scaiDeterioration6hProb,
+      scaiDeterioration6hLabel: scaiDeterioration6hLabel,
+      currentScaiStage: currentScaiStage,
+      vasopressorProbability: vasopressorProbability,
+      predictedVasopressorCount: predictedVasopressorCount,
+      mortalityRisk: peak,
+      mcs12hProbability: mcs12hProbability,
+      mcs12hNeeded: mcs12hNeeded,
+      vaEcmo12hProbability: vaEcmo12hProbability,
+      vaEcmo12hNeeded: vaEcmo12hNeeded,
+      shapMcs12h: shapMcs12h,
+      shapVaEcmo12h: shapVaEcmo12h,
+    );
+  }
 
   PatientPredictions copyWithHomeCare(List<HomeCareSuggestion> recs) =>
       PatientPredictions(
@@ -690,9 +745,12 @@ class PatientRecord {
     final recs = (json['recommendations'] as List<dynamic>? ?? [])
         .map((e) => HomeCareSuggestion.fromJson(e as Map<String, dynamic>))
         .toList();
-    final vitals = (json['vitals'] as List<dynamic>? ?? [])
-        .map((e) => PatientVital.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final vitals = <PatientVital>[];
+    for (final raw in json['vitals'] as List<dynamic>? ?? []) {
+      final map = raw as Map<String, dynamic>;
+      if (map['value'] == null) continue;
+      vitals.add(PatientVital.fromJson(map));
+    }
     final dx = (json['diagnoses'] as List<dynamic>? ?? [])
         .map((e) => PatientDiagnosis.fromJson(e as Map<String, dynamic>))
         .toList();
@@ -704,11 +762,15 @@ class PatientRecord {
     final days = json['days_admitted'] as int?;
     final hourFromAdmit = json['hour_from_admit'] as int?;
 
+    final modelPersonId = json['model_person_id'] as String? ?? json['id'] as String;
+    final modelEncounterId =
+        json['model_encounter_id'] as String? ?? json['encounter_id'] as String?;
+
     return PatientRecord(
       rank: json['rank'] as int,
       name: json['name'] as String,
-      id: json['id'] as String,
-      encounterId: json['encounter_id'] as String?,
+      id: modelPersonId,
+      encounterId: modelEncounterId,
       roomNumber: json['room_number'] as String,
       predictions: predictions.copyWithHomeCare(recs),
       features: PatientFeatures(

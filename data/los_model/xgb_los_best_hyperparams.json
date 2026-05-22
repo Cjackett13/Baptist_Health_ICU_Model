@@ -1,0 +1,43 @@
+{
+  "performance_targets": {
+    "mae_hours_max": 36.0,
+    "rmse_hours_max": 48.0,
+    "r2_hours_min": 0.65,
+    "mae_days_max": 1.5,
+    "rmse_days_max": 2.0
+  },
+  "use_feature_weights": true,
+  "trials": 50,
+  "seed": 42,
+  "best_trial": 42,
+  "val_mae_hours": 2.4202578544616697,
+  "val_rmse_hours": 3.076113602922452,
+  "val_r2_hours": 0.9827695202559116,
+  "xgb_best_iteration": 278,
+  "xgb_params": {
+    "max_depth": 9,
+    "learning_rate": 0.02,
+    "subsample": 0.92,
+    "colsample_bytree": 1.0,
+    "colsample_bylevel": 1.0,
+    "reg_lambda": 0.3,
+    "reg_alpha": 0.2,
+    "min_child_weight": 3.0,
+    "gamma": 0.03,
+    "max_delta_step": 1.0,
+    "n_estimators": 279
+  },
+  "metrics_test_after_tune": {
+    "mae_hours": 2.4347881240844726,
+    "rmse_hours": 3.1433980414223486,
+    "r2_hours": 0.9842739050895618,
+    "mae_days": 0.101,
+    "rmse_days": 0.131,
+    "mae_log1p": 0.02910683262714911,
+    "baseline_mae_hours_median_predictor": 20.199,
+    "mae_improvement_vs_baseline_pct": 87.95,
+    "pct_within_24h": 100.0,
+    "pct_within_36h": 100.0,
+    "pct_within_48h": 100.0
+  }
+}

@@ -1,0 +1,48 @@
+In-hospital death = (DECEASED_DT_TM is not null). N = 500 patients.
+Death rate: 29.2%
+
+DISCH_DISPOSITION_CD excluded (EXPIRED is definitional of death in simulation).
+
+Top variables by |Pearson r| with died (patient-level aggregates):
+------------------------------------------------------------------------
+  scai_max                                 r = +0.7354
+  scai_mean                                r = +0.6827
+  mean_SCAI_STAGE_all_hours                r = +0.6827
+  mean_LACTATE_all_hours                   r = +0.6724
+  mean_NT_PROBNP_all_hours                 r = +0.6667
+  mean_VIS_all_hours                       r = +0.6566
+  n_procedures                             r = +0.6554
+  mean_HR_all_hours                        r = +0.6519
+  mean_RR_all_hours                        r = +0.6470
+  mean_TROPONIN_I_all_hours                r = +0.6458
+  mean_MAP_all_hours                       r = -0.6453
+  mean_SBP_all_hours                       r = -0.6393
+  mean_BUN_all_hours                       r = +0.6282
+  mean_DBP_all_hours                       r = -0.6281
+  mean_PH_all_hours                        r = -0.6015
+  mean_CREATININE_all_hours                r = +0.5930
+  mean_SPO2_all_hours                      r = -0.5898
+  prop_hours_stage_ge4                     r = +0.5856
+  mean_TEMP_all_hours                      r = -0.5686
+  scai_min                                 r = +0.5666
+  n_med_admin                              r = +0.4899
+  scai_std                                 r = +0.4888
+  mean_CO_all_hours                        r = -0.4724
+  mean_CI_all_hours                        r = -0.4548
+  mean_PCWP_all_hours                      r = +0.4305
+  dx_I49.02                                r = +0.2065
+  dx_I46.9                                 r = +0.1158
+  dx_I21.4                                 r = -0.1096
+  LOS_HOURS                                r = -0.1083
+  dx_I49.01                                r = +0.0884
+
+Quartile death-rate contrast (top quartile vs bottom of same variable):
+------------------------------------------------------------------------
+  scai_max: high-Q death rate=0.739, low-Q=0.005, ratio=148.52x
+  scai_mean: high-Q death rate=0.776, low-Q=0.008, ratio=97.00x
+  mean_SCAI_STAGE_all_hours: high-Q death rate=0.776, low-Q=0.008, ratio=97.00x
+  mean_LACTATE_all_hours: high-Q death rate=0.776, low-Q=0.016, ratio=48.50x
+  mean_NT_PROBNP_all_hours: high-Q death rate=0.768, low-Q=0.008, ratio=96.00x
+  mean_VIS_all_hours: high-Q death rate=0.792, low-Q=0.016, ratio=49.50x
+  n_procedures: high-Q death rate=0.797, low-Q=0.197, ratio=4.04x
+  mean_HR_all_hours: high-Q death rate=0.736, low-Q=0.016, ratio=46.00x
