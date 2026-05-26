@@ -8,6 +8,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'shap_factor_descriptions.dart';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SHAP VALUE
 // One feature's contribution to a prediction.
@@ -18,25 +20,59 @@ class ShapValue {
     required this.feature,
     required this.value,
     required this.direction,
+    required this.description,
   });
 
   final String feature;
   final double value;
   final String direction; // 'positive' | 'negative'
+  final String description;
 
   bool get isPositive => direction == 'positive';
 
-  factory ShapValue.fromJson(Map<String, dynamic> json) => ShapValue(
-        feature: json['feature'] as String,
-        value: (json['value'] as num).toDouble(),
-        direction: json['direction'] as String,
-      );
+  factory ShapValue.fromJson(Map<String, dynamic> json) {
+    final rawDir = json['direction'] as String?;
+    final isPositive = json['is_positive'] as bool?;
+    final value = (json['value'] as num).toDouble();
+    final direction = rawDir ??
+        (isPositive != null
+            ? (isPositive ? 'positive' : 'negative')
+            : (value >= 0 ? 'positive' : 'negative'));
+    final feature = json['feature'] as String? ?? 'Unknown factor';
+    final increasesRisk = direction == 'positive';
+    return ShapValue(
+      feature: feature,
+      value: value,
+      direction: direction,
+      description: json['description'] as String? ??
+          describeShapFactor(feature, increasesRisk: increasesRisk),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'feature': feature,
         'value': value,
+        'is_positive': isPositive,
         'direction': direction,
+        'description': description,
       };
+
+  /// Top [k] unique features ranked by |SHAP| (for MCS/ECMO escalation).
+  static List<ShapValue> topByShapMagnitude(
+    List<ShapValue> raw, {
+    int k = 5,
+  }) {
+    final sorted = List<ShapValue>.from(raw)
+      ..sort((a, b) => b.value.abs().compareTo(a.value.abs()));
+    final seen = <String>{};
+    final out = <ShapValue>[];
+    for (final s in sorted) {
+      if (!seen.add(s.feature)) continue;
+      out.add(s);
+      if (out.length >= k) break;
+    }
+    return out;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -145,6 +181,19 @@ class HomeCareSuggestion {
         'description': description,
         'impact': impact,
       };
+
+  HomeCareSuggestion copyWith({
+    String? category,
+    String? title,
+    String? description,
+    String? impact,
+  }) =>
+      HomeCareSuggestion(
+        category: category ?? this.category,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        impact: impact ?? this.impact,
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -259,6 +308,8 @@ class PatientPredictions {
     required this.mcs12hNeeded,
     required this.vaEcmo12hProbability,
     required this.vaEcmo12hNeeded,
+    this.shapMcs12h = const [],
+    this.shapVaEcmo12h = const [],
   });
 
   final double readmissionRisk;
@@ -285,6 +336,8 @@ class PatientPredictions {
   final bool mcs12hNeeded;
   final double vaEcmo12hProbability;
   final bool vaEcmo12hNeeded;
+  final List<ShapValue> shapMcs12h;
+  final List<ShapValue> shapVaEcmo12h;
 
   // Convenience — highest mortality across all three scopes
   double get peakMortality =>
@@ -292,18 +345,22 @@ class PatientPredictions {
         (a, b) => a > b ? a : b,
       );
 
+  /// List acuity tier — SCAI stage first; not MCS/ECMO screening scores.
   String get overallTier {
-    final maxRisk = [
-      icuTransferRisk,
-      readmissionRisk,
-      peakMortality,
-      mortalityRisk,
-      scaiDeterioration6hProb,
-      mcs12hProbability,
-      vaEcmo12hProbability,
-    ].reduce((a, b) => a > b ? a : b);
-    if (maxRisk >= 0.65) return 'Critical';
-    if (maxRisk >= 0.40) return 'Moderate';
+    final stage = currentScaiStage.toUpperCase();
+    if (stage == 'D' || stage == 'E') return 'Critical';
+    if (stage == 'C') return 'Moderate';
+    if (stage == 'A' || stage == 'B') {
+      if (mortalityRisk >= 0.75 || scaiDeterioration6hProb >= 0.65) {
+        return 'Critical';
+      }
+      if (mortalityRisk >= 0.45 || scaiDeterioration6hProb >= 0.45) {
+        return 'Moderate';
+      }
+      return 'Stable';
+    }
+    if (mortalityRisk >= 0.70) return 'Critical';
+    if (mortalityRisk >= 0.40) return 'Moderate';
     return 'Stable';
   }
 
@@ -338,7 +395,17 @@ class PatientPredictions {
       mcs12hNeeded: p['mcs_12h_needed'] as bool,
       vaEcmo12hProbability: (p['va_ecmo_12h_probability'] as num).toDouble(),
       vaEcmo12hNeeded: p['va_ecmo_12h_needed'] as bool,
+      shapMcs12h: _parseShapList(p['shap_mcs_12h']),
+      shapVaEcmo12h: _parseShapList(p['shap_va_ecmo_12h']),
     );
+  }
+
+  static List<ShapValue> _parseShapList(dynamic raw) {
+    if (raw is! List<dynamic>) return const [];
+    final parsed = raw
+        .map((e) => ShapValue.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return ShapValue.topByShapMagnitude(parsed, k: 5);
   }
 
   factory PatientPredictions.fromJson(Map<String, dynamic> json) =>
@@ -394,6 +461,44 @@ class PatientPredictions {
         vaEcmo12hProbability:
             (json['va_ecmo_12h_probability'] as num?)?.toDouble() ?? 0.1,
         vaEcmo12hNeeded: json['va_ecmo_12h_needed'] as bool? ?? false,
+        shapMcs12h: _parseShapList(json['shap_mcs_12h']),
+        shapVaEcmo12h: _parseShapList(json['shap_va_ecmo_12h']),
+      );
+
+  PatientPredictions copyWithMcsEcmo({
+    required double mcs12hProbability,
+    required bool mcs12hNeeded,
+    required double vaEcmo12hProbability,
+    required bool vaEcmo12hNeeded,
+    List<ShapValue>? shapMcs12h,
+    List<ShapValue>? shapVaEcmo12h,
+    DateTime? lastUpdated,
+  }) =>
+      PatientPredictions(
+        readmissionRisk: readmissionRisk,
+        hospitalLosDays: hospitalLosDays,
+        icuLosDays: icuLosDays,
+        homeCareSuggestions: homeCareSuggestions,
+        hospitalMortality: hospitalMortality,
+        icuMortality: icuMortality,
+        inHospitalExpiry: inHospitalExpiry,
+        icuTransferRisk: icuTransferRisk,
+        shapTransfer: shapTransfer,
+        shapReadmission: shapReadmission,
+        shapMortality: shapMortality,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+        scaiDeterioration6hProb: scaiDeterioration6hProb,
+        scaiDeterioration6hLabel: scaiDeterioration6hLabel,
+        currentScaiStage: currentScaiStage,
+        vasopressorProbability: vasopressorProbability,
+        predictedVasopressorCount: predictedVasopressorCount,
+        mortalityRisk: mortalityRisk,
+        mcs12hProbability: mcs12hProbability,
+        mcs12hNeeded: mcs12hNeeded,
+        vaEcmo12hProbability: vaEcmo12hProbability,
+        vaEcmo12hNeeded: vaEcmo12hNeeded,
+        shapMcs12h: shapMcs12h ?? this.shapMcs12h,
+        shapVaEcmo12h: shapVaEcmo12h ?? this.shapVaEcmo12h,
       );
 
   PatientPredictions copyWithHomeCare(List<HomeCareSuggestion> recs) =>
@@ -420,6 +525,8 @@ class PatientPredictions {
         mcs12hNeeded: mcs12hNeeded,
         vaEcmo12hProbability: vaEcmo12hProbability,
         vaEcmo12hNeeded: vaEcmo12hNeeded,
+        shapMcs12h: shapMcs12h,
+        shapVaEcmo12h: shapVaEcmo12h,
       );
 
   Map<String, dynamic> toJson() => {
@@ -440,6 +547,71 @@ class PatientPredictions {
             shapMortality.map((s) => s.toJson()).toList(),
         'last_updated': lastUpdated.toIso8601String(),
       };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MECHANICAL SUPPORT (from procedure_event at scoring hour)
+// ─────────────────────────────────────────────────────────────────────────────
+class PatientMechanicalSupport {
+  const PatientMechanicalSupport({
+    required this.onMcs,
+    required this.onVaEcmo,
+    required this.activeDevices,
+  });
+
+  final bool onMcs;
+  final bool onVaEcmo;
+  final List<ActiveSupportDevice> activeDevices;
+
+  factory PatientMechanicalSupport.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return const PatientMechanicalSupport(
+        onMcs: false,
+        onVaEcmo: false,
+        activeDevices: [],
+      );
+    }
+    final devices = (json['active_devices'] as List<dynamic>? ?? [])
+        .map((e) => ActiveSupportDevice.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return PatientMechanicalSupport(
+      onMcs: json['on_mcs'] as bool? ?? devices.isNotEmpty,
+      onVaEcmo: json['on_va_ecmo'] as bool? ?? false,
+      activeDevices: devices,
+    );
+  }
+
+  String get summaryLabel {
+    if (!onMcs) return 'No MCS/ECMO at this hour';
+    if (onVaEcmo) return 'On VA-ECMO';
+    if (activeDevices.length == 1) return 'On ${activeDevices.first.label}';
+    return 'On ${activeDevices.length} MCS devices';
+  }
+}
+
+class ActiveSupportDevice {
+  const ActiveSupportDevice({
+    required this.code,
+    required this.label,
+    this.start,
+    this.end,
+  });
+
+  final String code;
+  final String label;
+  final DateTime? start;
+  final DateTime? end;
+
+  factory ActiveSupportDevice.fromJson(Map<String, dynamic> json) =>
+      ActiveSupportDevice(
+        code: json['code'] as String,
+        label: json['label'] as String,
+        start: json['start'] != null
+            ? DateTime.tryParse(json['start'] as String)
+            : null,
+        end:
+            json['end'] != null ? DateTime.tryParse(json['end'] as String) : null,
+      );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -464,12 +636,19 @@ class PatientRecord {
     this.daysAdmitted,
     this.unitCd,
     this.facilityCd,
+    this.demoHospitalId,
     this.scaiStageCurrent,
+    this.hourFromAdmit,
     this.clinicalVitals = const [],
     this.diagnoses = const [],
     this.medications = const [],
     this.recommendations = const [],
     this.conditionOverride,
+    this.mechanicalSupport = const PatientMechanicalSupport(
+      onMcs: false,
+      onVaEcmo: false,
+      activeDevices: [],
+    ),
   });
 
   final int rank;
@@ -487,12 +666,17 @@ class PatientRecord {
   final int? daysAdmitted;
   final String? unitCd;
   final String? facilityCd;
+  /// Demo hospital picker id (`bh-jax`, `bh-mia`, …) from seed export.
+  final String? demoHospitalId;
   final String? scaiStageCurrent;
+  /// ICU hour aligned to the MCS/ECMO model feature row in parquet cache.
+  final int? hourFromAdmit;
   final List<PatientVital> clinicalVitals;
   final List<PatientDiagnosis> diagnoses;
   final List<PatientMedication> medications;
   final List<HomeCareSuggestion> recommendations;
   final String? conditionOverride;
+  final PatientMechanicalSupport mechanicalSupport;
 
   double get icuRisk => predictions.icuTransferRisk;
   double get readmissionRisk => predictions.readmissionRisk;
@@ -518,6 +702,7 @@ class PatientRecord {
 
     final age = json['age'] as int?;
     final days = json['days_admitted'] as int?;
+    final hourFromAdmit = json['hour_from_admit'] as int?;
 
     return PatientRecord(
       rank: json['rank'] as int,
@@ -544,14 +729,75 @@ class PatientRecord {
       daysAdmitted: days,
       unitCd: json['unit_cd'] as String?,
       facilityCd: json['facility_cd'] as String?,
+      demoHospitalId: json['demo_hospital_id'] as String?,
       scaiStageCurrent: json['scai_stage_current'] as String?,
+      hourFromAdmit: hourFromAdmit,
       clinicalVitals: vitals,
       diagnoses: dx,
       medications: meds,
       recommendations: recs,
       conditionOverride: json['condition'] as String?,
+      mechanicalSupport: PatientMechanicalSupport.fromJson(
+        json['mechanical_support'] as Map<String, dynamic>?,
+      ),
     );
   }
+
+  PatientRecord copyWithRecommendations(List<HomeCareSuggestion> recs) =>
+      PatientRecord(
+        rank: rank,
+        name: name,
+        id: id,
+        roomNumber: roomNumber,
+        predictions: predictions.copyWithHomeCare(recs),
+        features: features,
+        encounterId: encounterId,
+        primaryDoctor: primaryDoctor,
+        issue: issue,
+        age: age,
+        gender: gender,
+        diagnosis: diagnosis,
+        daysAdmitted: daysAdmitted,
+        unitCd: unitCd,
+        facilityCd: facilityCd,
+        demoHospitalId: demoHospitalId,
+        scaiStageCurrent: scaiStageCurrent,
+        hourFromAdmit: hourFromAdmit,
+        clinicalVitals: clinicalVitals,
+        diagnoses: diagnoses,
+        medications: medications,
+        recommendations: recs,
+        mechanicalSupport: mechanicalSupport,
+        conditionOverride: conditionOverride,
+      );
+
+  PatientRecord copyWithPredictions(PatientPredictions newPredictions) =>
+      PatientRecord(
+        rank: rank,
+        name: name,
+        id: id,
+        roomNumber: roomNumber,
+        predictions: newPredictions,
+        features: features,
+        encounterId: encounterId,
+        primaryDoctor: primaryDoctor,
+        issue: issue,
+        age: age,
+        gender: gender,
+        diagnosis: diagnosis,
+        daysAdmitted: daysAdmitted,
+        unitCd: unitCd,
+        facilityCd: facilityCd,
+        demoHospitalId: demoHospitalId,
+        scaiStageCurrent: scaiStageCurrent,
+        hourFromAdmit: hourFromAdmit,
+        clinicalVitals: clinicalVitals,
+        diagnoses: diagnoses,
+        medications: medications,
+        recommendations: recommendations,
+        mechanicalSupport: mechanicalSupport,
+        conditionOverride: conditionOverride,
+      );
 
   PatientRecord copyWithRank(int newRank) => PatientRecord(
         rank: newRank,
@@ -569,11 +815,14 @@ class PatientRecord {
         daysAdmitted: daysAdmitted,
         unitCd: unitCd,
         facilityCd: facilityCd,
+        demoHospitalId: demoHospitalId,
         scaiStageCurrent: scaiStageCurrent,
+        hourFromAdmit: hourFromAdmit,
         clinicalVitals: clinicalVitals,
         diagnoses: diagnoses,
         medications: medications,
         recommendations: recommendations,
+        mechanicalSupport: mechanicalSupport,
         conditionOverride: conditionOverride,
       );
 }
@@ -610,6 +859,42 @@ Color losColor(double days) {
   if (days >= 7) return const Color(0xFFE05A5A);
   if (days >= 3) return const Color(0xFFD4A030);
   return const Color(0xFF4A9E6A);
+}
+
+/// Vitals/labs urgency from NORMALCY_CD (e.g. CRITICAL_HIGH, LOW, NORMAL).
+Color normalcyColor(String normalcy) {
+  final n = normalcy.toUpperCase().replaceAll(' ', '_');
+  if (n.contains('CRITICAL')) return const Color(0xFFE05A5A);
+  if (n == 'HIGH' || n == 'LOW' || n == 'ABNORMAL') {
+    return const Color(0xFFD4A030);
+  }
+  if (n == 'NORMAL') return const Color(0xFF4A9E6A);
+  if (n == 'UNKNOWN') return const Color(0xFF9E9E9E);
+  return const Color(0xFF9E9E9E);
+}
+
+String normalcyLabel(String normalcy) {
+  final n = normalcy.toUpperCase().replaceAll(' ', '_');
+  switch (n) {
+    case 'CRITICAL_HIGH':
+      return 'Critical high';
+    case 'CRITICAL_LOW':
+      return 'Critical low';
+    case 'CRITICAL':
+      return 'Critical';
+    case 'HIGH':
+      return 'High';
+    case 'LOW':
+      return 'Low';
+    case 'ABNORMAL':
+      return 'Abnormal';
+    case 'NORMAL':
+      return 'Normal';
+    case 'UNKNOWN':
+      return 'No reference range';
+    default:
+      return normalcy.replaceAll('_', ' ').toLowerCase();
+  }
 }
 
 String categoryIcon(String category) {
@@ -676,10 +961,15 @@ List<ShapValue> generateMockShapValues(
     final magnitude =
         (risk * (0.5 - i * 0.07) * (0.85 + rng.nextDouble() * 0.3))
             .clamp(0.04, 0.55);
+    final increases = feat.$2;
     shapValues.add(ShapValue(
       feature: feat.$1,
       value: double.parse(magnitude.toStringAsFixed(2)),
-      direction: feat.$2 ? 'positive' : 'negative',
+      direction: increases ? 'positive' : 'negative',
+      description: describeShapFactor(
+        feat.$1,
+        increasesRisk: increases,
+      ),
     ));
   }
 
@@ -693,9 +983,62 @@ List<ShapValue> generateMockShapValues(
     value: double.parse(
         (0.04 + rng.nextDouble() * 0.14).toStringAsFixed(2)),
     direction: 'negative',
+    description: describeShapFactor(
+      protective.$1,
+      increasesRisk: false,
+    ),
   ));
 
   return shapValues;
+}
+
+/// Top 5 SHAP-style factors for MCS / VA-ECMO when the live API is unavailable.
+List<ShapValue> generateMockEscalationShapValues(
+  double risk,
+  Random rng, {
+  required bool forEcmo,
+}) {
+  final features = forEcmo
+      ? [
+          ('SCAI stage (current)', true),
+          ('Shock burden (now)', true),
+          ('Mean arterial pressure', true),
+          ('Lactate', true),
+          ('Vasoactive-inotrope score', true),
+          ('Oxygen saturation', false),
+          ('Hours on current SCAI stage', true),
+        ]
+      : [
+          ('SCAI stage (current)', true),
+          ('Shock burden (now)', true),
+          ('Vasoactive-inotrope score', true),
+          ('Mean arterial pressure', true),
+          ('Lactate', true),
+          ('Vasopressor use', true),
+          ('Oxygen saturation', false),
+        ];
+
+  final shapValues = <ShapValue>[];
+  for (var i = 0; i < 5; i++) {
+    final feat = features[i];
+    final base = risk * (0.55 - i * 0.08) * (0.9 + rng.nextDouble() * 0.25);
+    final signed = feat.$2 ? base : -base * 0.65;
+    final magnitude = signed.abs().clamp(0.05, 0.85);
+    shapValues.add(
+      ShapValue(
+        feature: feat.$1,
+        value: double.parse(
+          (feat.$2 ? magnitude : -magnitude).toStringAsFixed(4),
+        ),
+        direction: feat.$2 ? 'positive' : 'negative',
+        description: describeShapFactor(
+          feat.$1,
+          increasesRisk: feat.$2,
+        ),
+      ),
+    );
+  }
+  return ShapValue.topByShapMagnitude(shapValues, k: 5);
 }
 
 List<HomeCareSuggestion> generateMockHomeCareSuggestions(
@@ -802,5 +1145,7 @@ PatientPredictions generateMockPredictions(
     vaEcmo12hProbability:
         double.parse((icuRisk * 0.45).clamp(0.02, 0.85).toStringAsFixed(2)),
     vaEcmo12hNeeded: icuRisk >= 0.65,
+    shapMcs12h: generateMockEscalationShapValues(icuRisk, rng, forEcmo: false),
+    shapVaEcmo12h: generateMockEscalationShapValues(icuRisk, rng, forEcmo: true),
   );
 }
