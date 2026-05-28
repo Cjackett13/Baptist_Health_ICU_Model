@@ -1,0 +1,40 @@
+steps:
+  # Build the Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - build
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/bh-icu-api/server:$COMMIT_SHA
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/bh-icu-api/server:latest
+      - .
+    dir: "baptist_health_api"
+
+  # Push to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - push
+      - --all-tags
+      - us-docker.pkg.dev/$PROJECT_ID/bh-icu-api/server
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - bh-icu-api
+      - --image=us-docker.pkg.dev/$PROJECT_ID/bh-icu-api/server:$COMMIT_SHA
+      - --region=us-east1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=4Gi
+      - --cpu=2
+      - --min-instances=0
+      - --max-instances=10
+      - --set-env-vars=GCS_BUCKET=gs://bh-icu-models
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/bh-icu-api/server:$COMMIT_SHA
+  - us-docker.pkg.dev/$PROJECT_ID/bh-icu-api/server:latest

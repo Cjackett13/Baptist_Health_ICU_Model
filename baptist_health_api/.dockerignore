@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+model_files/
+*.pkl
+*.joblib
+.git/
+.gitignore

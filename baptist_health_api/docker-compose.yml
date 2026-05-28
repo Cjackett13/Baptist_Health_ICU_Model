@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8080"
+    volumes:
+      # model_files/ is excluded from the image; mount it from the host for local dev.
+      - ./model_files:/app/model_files:ro
+    environment:
+      MODEL_DIR: ./model_files
+      GCS_BUCKET: ""
+      LOG_LEVEL: info
