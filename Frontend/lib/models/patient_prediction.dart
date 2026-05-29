@@ -310,6 +310,8 @@ class PatientPredictions {
     required this.vaEcmo12hNeeded,
     this.shapMcs12h = const [],
     this.shapVaEcmo12h = const [],
+    this.shapScai = const [],
+    this.shapVasopressor = const [],
   });
 
   final double readmissionRisk;
@@ -338,6 +340,8 @@ class PatientPredictions {
   final bool vaEcmo12hNeeded;
   final List<ShapValue> shapMcs12h;
   final List<ShapValue> shapVaEcmo12h;
+  final List<ShapValue> shapScai;
+  final List<ShapValue> shapVasopressor;
 
   // Convenience — highest mortality across all three scopes
   double get peakMortality =>
@@ -499,6 +503,8 @@ class PatientPredictions {
         vaEcmo12hNeeded: vaEcmo12hNeeded,
         shapMcs12h: shapMcs12h ?? this.shapMcs12h,
         shapVaEcmo12h: shapVaEcmo12h ?? this.shapVaEcmo12h,
+        shapScai: shapScai,
+        shapVasopressor: shapVasopressor,
       );
 
   PatientPredictions copyWithHomeCare(List<HomeCareSuggestion> recs) =>
@@ -527,6 +533,8 @@ class PatientPredictions {
         vaEcmo12hNeeded: vaEcmo12hNeeded,
         shapMcs12h: shapMcs12h,
         shapVaEcmo12h: shapVaEcmo12h,
+        shapScai: shapScai,
+        shapVasopressor: shapVasopressor,
       );
 
   Map<String, dynamic> toJson() => {

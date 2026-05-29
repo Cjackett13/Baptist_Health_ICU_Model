@@ -51,11 +51,13 @@ class PredictionsOut(BaseModel):
     scai_deterioration_6h_prob: float
     scai_deterioration_6h_label: str  # 'Likely to worsen' | 'Unlikely to worsen'
     current_scai_stage: str           # 'A' | 'B' | 'C' | 'D' | 'E'
+    shap_scai: list[ShapValueOut] = []
 
     # ── Christie — vasopressor ────────────────────────────────────────────────
     vasopressor_probability: float
     predicted_vasopressor_count: int
     critical_alert: bool             # high_severity_classifier, P(≥2); internal only
+    shap_vasopressor: list[ShapValueOut] = []
 
     # ── Johnathan — MCS / VA-ECMO ────────────────────────────────────────────
     mcs_12h_probability: float

@@ -56,8 +56,9 @@ log = logging.getLogger(__name__)
 _registry: dict = {}
 
 _MODEL_PATHS = {
-    # Christie
-    "scai":                 ("scai",       "xgboost_unified_final.pkl"),
+    # Christie — SCAI (two models: A/B/C stages and D stage)
+    "scai_abc":             ("scai",       "scai_deterioration_model.pkl"),
+    "scai_d":               ("scai",       "scai_stage_d_model.pkl"),
     "vasopressor_binary":   ("vasopressor","binary_alert_model.pkl"),
     "vasopressor_count":    ("vasopressor","ordinal_count_model.pkl"),
     "vasopressor_severity": ("vasopressor","high_severity_classifier.pkl"),
@@ -70,7 +71,7 @@ _MODEL_PATHS = {
 }
 
 # Models that must be present for the API to be considered healthy.
-_REQUIRED = {"scai", "vasopressor_binary", "vasopressor_count", "vasopressor_severity", "vasopressor_prep"}
+_REQUIRED = {"scai_abc", "scai_d", "vasopressor_binary", "vasopressor_count", "vasopressor_severity", "vasopressor_prep"}
 
 # Non-model artifacts for vasopressor preprocessing (loaded into a single bundle)
 _VASO_PREP_FILES = {

@@ -22,30 +22,43 @@ from app.models.features import (
 from app.schemas.output import PredictionsOut
 from app.services import shap_service, derive
 
-# Thresholds from deployment_config_clean.json (approximate; load from file if available)
-_SCAI_THRESHOLDS: dict[int, float] = {0: 0.15, 1: 0.15, 2: 0.15, 3: 0.02}
-_VASOPRESSOR_THRESHOLD = 0.1882
-_HIGH_SEVERITY_THRESHOLD = 0.50
+# SCAI thresholds: A/B/C from scai_deterioration_model; D from scai_stage_d_model bundle
+_SCAI_ABC_THRESHOLDS: dict[int, float] = {0: 0.15, 1: 0.15, 2: 0.15}
+_SCAI_D_THRESHOLD = 0.14          # bundle threshold is None; use tuned default
+_VASOPRESSOR_THRESHOLD = 0.19     # from binary_alert_model bundle["threshold"]
+_HIGH_SEVERITY_THRESHOLD = 0.01   # from high_severity_classifier bundle["threshold"]
 
 _SCAI_STAGE_LABEL = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E"}
 
 
 def _unwrap_xgb(model):
-    """Strip calibration/ensemble wrappers to reach the first raw XGBClassifier for SHAP."""
-    if hasattr(model, "base"):                 # SigmoidCalibratedModel / BetaCalibratedModel
-        model = model.base
-    if hasattr(model, "models"):               # EnsembleXGBClassifier
-        model = model.models[0]
-    if hasattr(model, "calibrated_estimator"): # TemperatureScaledBinaryCalibrator
-        model = model.calibrated_estimator
-    if hasattr(model, "calibrators"):          # AveragedBinaryCalibrators
-        model = model.calibrators[0]
-    if hasattr(model, "estimator"):            # CalibratedClassifierCV
-        model = model.estimator
-    elif hasattr(model, "base_estimator"):
-        model = model.base_estimator
-    if hasattr(model, "steps"):               # sklearn Pipeline — pick final step
-        model = model.steps[-1][1]
+    """Iteratively strip calibration/ensemble wrappers to reach the raw XGBClassifier for SHAP."""
+    from xgboost import XGBClassifier, XGBRegressor
+    for _ in range(10):
+        if isinstance(model, (XGBClassifier, XGBRegressor)):
+            return model
+        if hasattr(model, "base_model"):              # IsotonicCalibratedModel
+            model = model.base_model
+        elif hasattr(model, "xgb_model"):             # PlattXGB
+            model = model.xgb_model
+        elif hasattr(model, "calibrated_estimator"):  # TemperatureScaledBinaryCalibrator
+            model = model.calibrated_estimator
+        elif hasattr(model, "calibrators"):           # AveragedBinaryCalibrators
+            model = model.calibrators[0]
+        elif hasattr(model, "models"):                # EnsembleXGBClassifier
+            model = model.models[0]
+        elif hasattr(model, "calibrated_classifiers_"):  # CalibratedClassifierCV — use fitted copy
+            model = model.calibrated_classifiers_[0].estimator
+        elif hasattr(model, "estimator"):
+            model = model.estimator
+        elif hasattr(model, "base_estimator"):
+            model = model.base_estimator
+        elif hasattr(model, "base"):
+            model = model.base
+        elif hasattr(model, "steps"):                 # sklearn Pipeline
+            model = model.steps[-1][1]
+        else:
+            break
     return model
 
 
@@ -67,33 +80,62 @@ async def run_all_models(
         from app.services.data_access import get_patient_data
         raw_data = await get_patient_data(encounter_id, hour_from_admit)
 
-    # ── Christie — SCAI deterioration ─────────────────────────────────────────
-    scai_bundle = loader.get("scai")
-    scai_feature_cols: list[str] = scai_bundle["feature_cols"]
-    scai_df = scai_features.extract(raw_data, feature_cols=scai_feature_cols)
+    # ── Christie — SCAI deterioration (split model: ABC vs D) ─────────────────
+    # extract() picks the right bundle based on the patient's current stage
+    scai_stage_num = int(
+        raw_data.get("df", raw_data.get("scai_stage_hourly", {}))
+        if False else  # placeholder — stage read below after extract
+        0
+    )
+    # Build features first (extract reads stage internally to choose bundle)
+    scai_df = scai_features.extract(raw_data)
+
+    # Determine stage from the feature frame (SCAI_STAGE_NUM passes through)
+    if "SCAI_STAGE_NUM" in scai_df.columns:
+        scai_stage_num = int(scai_df["SCAI_STAGE_NUM"].iloc[0])
+    else:
+        df_raw = raw_data.get("df")
+        scai_stage_num = int(df_raw["SCAI_STAGE_NUM"].iloc[-1]) if df_raw is not None else 1
+
+    bundle_key = "scai_d" if scai_stage_num == 3 else "scai_abc"
+    scai_bundle = loader.get(bundle_key)
 
     scai_raw = scai_bundle["xgboost_model"].predict_proba(scai_df)[:, 1]
     scai_prob = float(
         scai_bundle["platt_scaler"].predict_proba(scai_raw.reshape(-1, 1))[:, 1][0]
     )
-    scai_stage_num = int(scai_df["SCAI_STAGE_NUM"].iloc[0])
-    scai_threshold = _SCAI_THRESHOLDS.get(scai_stage_num, 0.15)
+    if scai_stage_num == 3:
+        scai_threshold = _SCAI_D_THRESHOLD
+    else:
+        scai_threshold = _SCAI_ABC_THRESHOLDS.get(scai_stage_num, 0.15)
     current_scai_stage = _SCAI_STAGE_LABEL.get(scai_stage_num, "B")
     scai_label = "Likely to worsen" if scai_prob >= scai_threshold else "Unlikely to worsen"
+    shap_scai = shap_service.compute_shap("scai", _unwrap_xgb(scai_bundle["xgboost_model"]), scai_df)
 
     # ── Christie — vasopressor ────────────────────────────────────────────────
     vaso_df = vasopressor_features.extract(raw_data)
 
+    # binary_alert: dict with "model" (XGBClassifier) + "platt" (LogisticRegression)
+    vaso_bin_bundle = loader.get("vasopressor_binary")
+    vaso_raw = vaso_bin_bundle["model"].predict_proba(vaso_df)[:, 1]
     vaso_prob = float(
-        loader.get("vasopressor_binary").predict_proba(vaso_df)[:, 1][0]
+        vaso_bin_bundle["platt"].predict_proba(vaso_raw.reshape(-1, 1))[:, 1][0]
     )
-    count_probs = loader.get("vasopressor_count").predict_proba(vaso_df)
-    vaso_count = int(np.argmax(count_probs, axis=1)[0])
 
-    high_sev_prob = float(
-        loader.get("vasopressor_severity").predict_proba(vaso_df)[:, 1][0]
-    )
+    # ordinal_count: dict with "model" + "label_map" {0:1, 1:2, 2:3}
+    vaso_cnt_bundle = loader.get("vasopressor_count")
+    count_probs = vaso_cnt_bundle["model"].predict_proba(vaso_df)
+    count_raw = int(np.argmax(count_probs, axis=1)[0])
+    label_map = vaso_cnt_bundle.get("label_map", {0: 1, 1: 2, 2: 3})
+    vaso_count = label_map.get(count_raw, count_raw)
+
+    # high_severity: dict with "model" (PlattXGB) — call predict_proba directly
+    vaso_sev_bundle = loader.get("vasopressor_severity")
+    high_sev_prob = float(vaso_sev_bundle["model"].predict_proba(vaso_df)[:, 1][0])
     critical_alert = high_sev_prob >= _HIGH_SEVERITY_THRESHOLD
+    shap_vasopressor = shap_service.compute_shap(
+        "vasopressor", _unwrap_xgb(vaso_bin_bundle["model"]), vaso_df
+    )
 
     # ── Johnathan — MCS ──────────────────────────────────────────────────────
     mcs_prob, mcs_needed, shap_mcs = 0.15, False, []
@@ -160,9 +202,11 @@ async def run_all_models(
         scai_deterioration_6h_prob=round(scai_prob, 4),
         scai_deterioration_6h_label=scai_label,
         current_scai_stage=current_scai_stage,
+        shap_scai=shap_scai,
         vasopressor_probability=round(vaso_prob, 4),
         predicted_vasopressor_count=vaso_count,
         critical_alert=critical_alert,
+        shap_vasopressor=shap_vasopressor,
         mcs_12h_probability=round(mcs_prob, 4),
         mcs_12h_needed=mcs_needed,
         va_ecmo_12h_probability=round(ecmo_prob, 4),

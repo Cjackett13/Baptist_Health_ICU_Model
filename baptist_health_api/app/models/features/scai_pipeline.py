@@ -146,10 +146,13 @@ def apply_vis_normalisation(df: pd.DataFrame, stats: dict, features: list) -> pd
 def build_features(
     df: pd.DataFrame,
     hourly_df: pd.DataFrame,
-    norm_stats_dict: dict,
+    norm_stats_dict: dict | None = None,
 ) -> pd.DataFrame:
-    """Run all four feature engineering steps in order."""
+    """Run feature engineering steps.  Pass norm_stats_dict=None to skip VIS normalisation
+    (required for scai_deterioration_model and scai_stage_d_model — those were trained on
+    raw feature values with no z-scoring)."""
     df = build_trajectory_features(df, hourly_df)
     df = add_extended_lookback(df, LOOKBACK_BASE)
-    df = apply_vis_normalisation(df, norm_stats_dict, VIS_FEATURES)
+    if norm_stats_dict:
+        df = apply_vis_normalisation(df, norm_stats_dict, VIS_FEATURES)
     return df

@@ -6,7 +6,7 @@ diabetic_data.csv
 *.log
 *.pyc
 *.swp
-.DS_Store
+**/.DS_Store
 .atom/
 .build/
 .buildlog/
@@ -46,3 +46,18 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Raw patient data / training data — never commit (HIPAA)
+baptist_health_api/data/
+*.parquet
+
+# Generated dashboard snapshot (regenerate with generate_dashboard_json.py)
+Frontend/assets/dashboard_results.json
+
+# Oversized model artifact — too large for GitHub (718 MB); store externally
+baptist_health_api/model_files/vasopressor/knn_imputer.pkl

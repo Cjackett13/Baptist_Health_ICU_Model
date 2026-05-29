@@ -112,7 +112,17 @@ class _HomePageState extends State<HomePage> {
           matchesUnit &&
           matchesScai &&
           matchesEscalation;
-    }).toList();
+    }).toList()
+      ..sort((a, b) => _conditionOrder(a.condition)
+          .compareTo(_conditionOrder(b.condition)));
+  }
+
+  static int _conditionOrder(String condition) {
+    switch (condition) {
+      case 'Critical': return 0;
+      case 'Moderate': return 1;
+      default:         return 2; // Stable
+    }
   }
 
   bool _matchesEscalationFilter(PatientRecord p) {

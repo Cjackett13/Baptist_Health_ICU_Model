@@ -1203,6 +1203,7 @@ class ClinicalPredictionsSection extends StatelessWidget {
                     'Current stage ${predictions.currentScaiStage} · ${predictions.scaiDeterioration6hLabel}',
                 value: predictions.scaiDeterioration6hProb,
                 trailing: predictions.scaiDeterioration6hLabel,
+                reasons: predictions.shapScai,
               ),
               const SizedBox(height: 14),
               _PredictionRow(
@@ -1211,12 +1212,14 @@ class ClinicalPredictionsSection extends StatelessWidget {
                     'Predicted count: ${predictions.predictedVasopressorCount}',
                 value: predictions.vasopressorProbability,
                 trailing: '${predictions.predictedVasopressorCount} agents',
+                reasons: predictions.shapVasopressor,
               ),
               const SizedBox(height: 14),
               _PredictionRow(
                 label: 'Mortality risk',
                 subtitle: 'In-hospital mortality probability',
                 value: predictions.mortalityRisk,
+                reasons: predictions.shapMortality,
               ),
               const SizedBox(height: 14),
               _LosPredictionRow(
@@ -1250,17 +1253,21 @@ class _PredictionRow extends StatelessWidget {
     required this.subtitle,
     required this.value,
     this.trailing,
+    this.reasons = const [],
   });
 
   final String label;
   final String subtitle;
   final double value;
   final String? trailing;
+  final List<ShapValue> reasons;
 
   @override
   Widget build(BuildContext context) {
     final color = riskColor(value);
-    return Column(
+
+    // Header content shared by both collapsed and expanded states.
+    Widget header = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -1307,6 +1314,43 @@ class _PredictionRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+
+    if (reasons.isEmpty) return header;
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        title: header,
+        subtitle: const Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(
+            'Tap to see why  ↓',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.black38,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ),
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 6),
+            child: Text(
+              'Top factors driving this score (SHAP)',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.black45,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          ...ShapValue.topByShapMagnitude(reasons, k: 5)
+              .map((s) => _ShapRow(shap: s, showShapValue: true)),
+        ],
+      ),
     );
   }
 }
